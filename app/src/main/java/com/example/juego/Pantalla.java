@@ -50,14 +50,14 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
     private Hilo hilo; // Hilo encargado de dibujar y actualizar la física
     private boolean funcionando = false;
 
-    ArrayList<Coche> coches;
+    //ArrayList<Coche> coches;
+    Trafico trafico;
+    Coche[] coches;
     Bitmap bitmapCoche;
     int velCoche = 5;
 
     Gato gato;
     Bitmap bitmapGato;
-    int velGato = 30;
-    private static final int V_gato = 30;
 
     Escenario escenario;
     RectF[] arboles;
@@ -69,10 +69,16 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
     Paint p3;
     TextPaint tpaint;
 
-    RectF gatoPosFutura;
-    int mov;
+    static int mov = 3;
     int cont = 0;
     int puntos;
+
+    Bitmap[] imgCochesLeft;
+    Bitmap[] imgCochesRight;
+
+    int anchoCoche;
+    int altoCoche;
+
 
     public Pantalla(Context context) {
         super(context);
@@ -85,6 +91,16 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true); // Aseguramos que reciba eventos de toque
 
         bitmapFondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.street);
+
+        this.anchoCoche = anchoPantalla/32;
+        this.altoCoche = altoPantalla/16;
+
+       // escalaCoches();
+
+//        trafico = new Trafico(imgCochesRight, imgCochesLeft, anchoPantalla, altoPantalla);
+//        coches = trafico.getCoches();
+//
+//        coches = trafico.getCoches();
 
         controles();
         pistas();
@@ -111,23 +127,26 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
         //tpaint.setTextAlign(Paint.Align.CENTER); // Alineación del texto
         tpaint.setColor(Color.WHITE); // Color del texto
 
-        coches = new ArrayList<Coche>();
+        //coches = new ArrayList<Coche>();
     }
 
     public void actualizarFisica() {
-        for (int i = 0; i < coches.size(); i++) {
-            if (i % 2 == 0) {
-                coches.get(i).moverDerecha(anchoPantalla,altoPantalla,  velCoche);
-            } else {
-                coches.get(i).moverIzquierda(anchoPantalla,altoPantalla,  velCoche);// Actualizamos la física de los elementos en pantalla
-            }
-            if(coches.get(i).rectangulo.intersect(gato.rectangulo)){
-                //velCoche = 0;
-                //velGato=0;
-                //funcionando = false;
-               // break;
+        if(trafico.coches.length > 0){
+            for (int i = 0; i < coches.length; i++) {
+                if (i % 2 == 0) {
+                    coches[i].moverDerecha(anchoPantalla,altoPantalla,  velCoche);
+                } else {
+                    coches[i].moverIzquierda(anchoPantalla,altoPantalla,  velCoche);// Actualizamos la física de los elementos en pantalla
+                }
+                if(coches[i].rectangulo.intersect(gato.rectangulo)){
+                    //velCoche = 0;
+                    //velGato=0;
+                    //funcionando = false;
+                    // break;
+                }
             }
         }
+
 
         //rectsMoneda = escenario.getRectMonedas();
         for (int i = escenario.monedasRect.size() -1 ; i >= 0; i--) {
@@ -144,13 +163,8 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
         try {
             c.drawBitmap(bitmapFondo, 0, 0, null);
             c.drawBitmap(gato.imagen, gato.posicion.x, gato.posicion.y, null);
-            //c.drawRect(gato.rectangulo, p);
-
-            escenario.setRectArboles(anchoPantalla, altoPantalla);
-//            arboles = escenario.getRectArboles();
-//            for (RectF arbol : arboles) {
-//                c.drawRect(arbol, p);
-//            }
+            c.drawRect(gato.rectangulo, p2);
+            c.drawRect(gato.posicionFutura, p);
 
             cont++;
             if(cont%10==0){
@@ -158,19 +172,23 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
             }else if(cont == 99){
                 cont = 0;
             }
-            //escenario.setRectMonedas(anchoPantalla, altoPantalla);
-            //rectsMoneda = escenario.getRectMonedas();
-            Log.i("monedas", escenario.monedasRect.size()+"");
-            for (RectF m: escenario.monedasRect) {
-                //c.drawRect(m, p2);
-                c.drawBitmap(moneda, m.left, m.top, p2);
-            }
 
             for (Coche coche : coches) {
                 c.drawBitmap(coche.imagen, coche.posicion.x, coche.posicion.y, null);
-                //c.drawRect(coche.rectangulo,p);
+                c.drawRect(coche.rectangulo,p);
             }
-            //c.drawRect(gato.posicionFutura, p);
+
+            rectsMoneda = escenario.getRectMonedas();
+            for (RectF m: escenario.monedasRect) {
+                c.drawRect(m, p2);
+                c.drawBitmap(moneda, m.left, m.top, p2);
+            }
+
+            escenario.setRectArboles(anchoPantalla, altoPantalla);
+            arboles = escenario.getRectArboles();
+            for (RectF arbol : arboles) {
+                c.drawRect(arbol, p);
+            }
 
             dibujaControles(c);
 
@@ -202,27 +220,23 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
                 case MotionEvent.ACTION_DOWN:       //non hai mov cte
                     if(abajo.contains(x, y)){
                         mov = 0;
-                        if(!gato.puedeMoverse && mov != gato.fila) gato.puedeMoverse= true;
-                        else gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverAbajo(anchoPantalla, altoPantalla, velGato);
+                        gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                        gato.moverAbajo(anchoPantalla, altoPantalla);
 
                     }else if(izq.contains(x,y)){
                         mov = 1;
-                        if(!gato.puedeMoverse && mov != gato.fila) gato.puedeMoverse= true;
-                        else gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverIzquierda(anchoPantalla, altoPantalla, velGato);
+                        gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                        gato.moverIzquierda(anchoPantalla, altoPantalla);
 
                     }else if(der.contains(x, y))  {
                         mov = 2;
-                        if(!gato.puedeMoverse && mov != gato.fila) gato.puedeMoverse= true;
-                        else gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverDerecha(anchoPantalla, altoPantalla, velGato);
+                        gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                        gato.moverDerecha(anchoPantalla, altoPantalla);
 
                     }else if(arriba.contains(x, y)){
                         mov = 3;
-                        if(!gato.puedeMoverse && mov != gato.fila) gato.puedeMoverse= true;
-                        else gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverArriba(anchoPantalla, altoPantalla, velGato);
+                        gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                        gato.moverArriba(anchoPantalla, altoPantalla);
                     }
                     //gato.actualizaImagen();
                     break;
@@ -313,8 +327,6 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override           // En cuanto se crea el SurfaceView se lanze el hilo
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
-        crearCoches();
-        arboles = escenario.getRectArboles();
         hilo.setFuncionando(true);
         if (hilo.getState() == Thread.State.NEW) hilo.start();
         if (hilo.getState() == Thread.State.TERMINATED) {
@@ -392,71 +404,39 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
                 if (bitmapFondo != null) { // Cambiamos el tamaño de la imagen de fondo al tamaño de la pantalla
                     bitmapFondo = Bitmap.createScaledBitmap(bitmapFondo, width, height, true);
                 }
-                bitmapGato = escala(R.drawable.gato, (anchoPantalla/32)*4, (altoPantalla/16)*6);
+
+                bitmapGato = escala( R.drawable.gato, (anchoPantalla/32)*4, (altoPantalla/16)*6);
                 gato = new Gato(bitmapGato, anchoPantalla/2, altoPantalla/16*14);
 
-                moneda = escala(R.drawable.moneda, anchoPantalla/32*5, altoPantalla/16);
+                escalaCoches();
+                trafico = new Trafico(imgCochesRight, imgCochesLeft, anchoPantalla, altoPantalla);
+                //coches = trafico.getCoches();
+
+                moneda = escala( R.drawable.moneda, anchoPantalla/32*5, altoPantalla/16);
                 escenario = new Escenario(moneda, anchoPantalla, altoPantalla);
-                //escenario.setRectArboles(anchoPantalla, altoPantalla);
 
                 moneda = escenario.actualizaImagenMoneda();
-//                if(rectsMoneda==null) {
-//                    rectsMoneda = new ArrayList<>();
-//                    rectsMoneda = escenario.getRectMonedas();
-//                }
             }
         }
     }
 
-    public void crearCoches(){
-        bitmapCoche = escala(R.drawable.blue_car_right, anchoPantalla / 32, altoPantalla / 16);
-        coches.add(new Coche(bitmapCoche, anchoPantalla / 2, (altoPantalla / 16) * 11));
+    public void escalaCoches() {
+        imgCochesRight = new Bitmap[5];
+        imgCochesLeft = new Bitmap[5];
 
-        bitmapCoche = escala(R.drawable.white_car_left, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla / 5, (altoPantalla / 16) * 10));
+        imgCochesLeft[0] = escala(R.drawable.blue_car_left, anchoPantalla / 32, altoPantalla / 16);
+        imgCochesLeft[1] = escala(R.drawable.green_car_left, anchoPantalla / 32, altoPantalla / 16);
+        imgCochesLeft[2] = escala(R.drawable.red_car_left, anchoPantalla / 32, altoPantalla / 16);
+        imgCochesLeft[3] = escala(R.drawable.white_car_left, anchoPantalla / 32, altoPantalla / 16);
+        imgCochesLeft[4] = escala(R.drawable.orange_car_left, anchoPantalla / 32, altoPantalla / 16);
 
-        bitmapCoche = escala(R.drawable.green_car_right, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla / 7, (altoPantalla / 16) * 8));
-
-        bitmapCoche = escala(R.drawable.blue_car_left, anchoPantalla / 32 , altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla, (altoPantalla / 16) * 7));
-
-        bitmapCoche = escala(R.drawable.red_car_right, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, -bitmapCoche.getWidth(), (altoPantalla / 16) * 4));
-
-        bitmapCoche = escala(R.drawable.orange_car_left, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla, (altoPantalla / 16) * 3));
-
-        bitmapCoche = escala(R.drawable.white_car_right, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla / 16, (altoPantalla / 16) * 2));
-
-        bitmapCoche = escala(R.drawable.red_car_left, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, -bitmapCoche.getWidth(), (altoPantalla / 16) * 1));
-
-        bitmapCoche = escala(R.drawable.red_car_right, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, -bitmapCoche.getWidth(), (altoPantalla / 16) * 11));
-
-        bitmapCoche = escala(R.drawable.green_car_left, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla, (altoPantalla / 16) * 10));
-
-        bitmapCoche = escala(R.drawable.orange_car_right, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla, (altoPantalla / 16) * 8));
-
-        bitmapCoche = escala(R.drawable.white_car_left, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla/2, (altoPantalla / 16) * 7));
-
-        bitmapCoche = escala(R.drawable.white_car_right, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla/2, (altoPantalla / 16) * 4));
-
-        bitmapCoche = escala(R.drawable.white_car_left, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla/3, (altoPantalla / 16) * 3));
-
-        bitmapCoche = escala(R.drawable.blue_car_right, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla/3, (altoPantalla / 16) * 2));
-
-        bitmapCoche = escala(R.drawable.white_car_left, anchoPantalla / 32, altoPantalla / 16 );
-        coches.add(new Coche(bitmapCoche, anchoPantalla/2, (altoPantalla / 16) * 1));
+        imgCochesRight[0] = escala(R.drawable.blue_car_right, anchoPantalla / 32, altoPantalla / 16);
+        imgCochesRight[1] = escala(R.drawable.green_car_right, anchoPantalla / 32, altoPantalla / 16);
+        imgCochesRight[2] = escala(R.drawable.red_car_right, anchoPantalla / 32, altoPantalla / 16);
+        imgCochesRight[3] = escala(R.drawable.white_car_right, anchoPantalla / 32, altoPantalla / 16);
+        imgCochesRight[4] = escala(R.drawable.orange_car_right, anchoPantalla / 32, altoPantalla / 16);
     }
+
 
 }
 

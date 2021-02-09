@@ -1,6 +1,7 @@
 package com.example.juego;
 
 import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.graphics.RectF;
 
 import java.util.ArrayList;
@@ -50,36 +51,40 @@ public class Escenario {
         return moneda;
     }
 
-    public void setRectArboles(int anchoPantalla, int altoPantalla){
+    public void setRectArboles(int w, int h){
         //fila1
-        arbolesRect[0] = new RectF(0, (altoPantalla / 16) * 12, (anchoPantalla / 32) *4*1.005f, altoPantalla );
-        arbolesRect[1] = new RectF(anchoPantalla / 32 * 4, (altoPantalla / 16) * 13, (anchoPantalla / 32) *7 *1.015f, altoPantalla);
-        arbolesRect[2] = new RectF(anchoPantalla / 32 * 7, (altoPantalla / 16) * 14, (anchoPantalla / 32)*8*1.015f, altoPantalla);
-        arbolesRect[3] = new RectF(anchoPantalla / 32 * 8, (altoPantalla / 16) * 15, (anchoPantalla / 32)*11*1.015f, altoPantalla);
-        arbolesRect[4] = new RectF(anchoPantalla / 32 * 11 * 1.005f, (altoPantalla / 16) * 13, (anchoPantalla / 32) * 12 *1.01f, (altoPantalla / 16) * 14);
-        arbolesRect[5] = new RectF(anchoPantalla / 32 * 14 * 1.005f, (altoPantalla / 16) * 15, (anchoPantalla / 32)*15*1.01f, altoPantalla);
-        arbolesRect[6] = new RectF(anchoPantalla / 32 * 18 *1.005f, (altoPantalla / 16) * 15, (anchoPantalla / 32)*20*1.01f, altoPantalla);
-        arbolesRect[7] = new RectF(anchoPantalla / 32 * 23*1.005f, (altoPantalla / 16) * 14, (anchoPantalla / 32)*25, altoPantalla);
-        arbolesRect[8] = new RectF(anchoPantalla / 32 * 25*1.005f , (altoPantalla / 16) * 13, (anchoPantalla / 32)*29, altoPantalla);
-        arbolesRect[9] = new RectF(anchoPantalla / 32 * 29*1.007f , (altoPantalla / 16) * 12, anchoPantalla, altoPantalla);
+        arbolesRect[0] = new RectF(0, h / 16 * 12, w / 32 *4*1.005f, h );
+        arbolesRect[1] = new RectF(w / 32 * 4, h / 16 * 13 * 1.02f, w / 32 *7 *0.99f, h);
+        arbolesRect[2] = new RectF(w / 32 * 7, h / 16 * 14 * 1.015f, w / 32 *8 * 0.99f, h);
+        arbolesRect[3] = new RectF(w / 32 * 8, h / 16 * 15 * 1.007f, w / 32*11 * 1.01f, h);
+        arbolesRect[4] = new RectF(w / 32 * 11 * 1.005f, h / 16 * 13 * 1.02f, w / 32 * 12 , h / 16 * 14);
+        arbolesRect[5] = new RectF(w / 32 * 14 * 1.005f, h / 16 * 15 * 1.02f, w / 32*15 * 1.01f, h);
+        arbolesRect[6] = new RectF(w / 32 * 18 *1.005f, h / 16 * 15 * 1.02f, w / 32*20, h);
+        arbolesRect[7] = new RectF(w / 32 * 23*1.005f, h / 16 * 14 * 1.02f, w / 32*25, h);
+        arbolesRect[8] = new RectF(w / 32 * 25 * 1.015f , h / 16 * 13 * 1.02f, w / 32*29, h);
+        arbolesRect[9] = new RectF(w / 32 * 29*1.02f , h / 16 * 12, w, h);
         //fila2
-        arbolesRect[10] = new RectF(anchoPantalla / 32 * 1 * 1.01f, (altoPantalla / 16) * 9, (anchoPantalla / 32) *2*1.005f, altoPantalla / 16 * 10 / 1.04f );
-        arbolesRect[11] = new RectF(anchoPantalla / 32 * 10, (altoPantalla / 16) * 9, (anchoPantalla / 32) *12 *1.015f, altoPantalla / 16 * 10 / 1.04f);
-        arbolesRect[12] = new RectF(anchoPantalla / 32 * 29*1.015f, (altoPantalla / 16) * 9, (anchoPantalla / 32)*30, altoPantalla / 16 * 10/ 1.04f);
+        arbolesRect[10] = new RectF(w / 32 * 1 * 1.05f, h / 16 * 9 * 1.03f, w / 32 *2 , h / 16 * 10 / 1.04f);
+        arbolesRect[11] = new RectF(w / 32 * 10, (h / 16) * 9*1.03f, (w / 32) *12, h / 16 * 10 / 1.04f);
+        arbolesRect[12] = new RectF(w / 32 * 29*1.015f, (h / 16) * 9 *1.03f, (w / 32)*30, h / 16 * 10/ 1.04f);
         //fila3
-        arbolesRect[13] = new RectF(0, (altoPantalla / 16) * 6, (anchoPantalla / 32)*1*1.015f, altoPantalla / 16 * 7/ 1.03f);
-        arbolesRect[14] = new RectF(anchoPantalla / 32 * 3*1.007f, (altoPantalla / 16) * 5, (anchoPantalla / 32) * 4 *1.015f, (altoPantalla / 16) * 6/ 1.03f);
-        arbolesRect[15] = new RectF(anchoPantalla / 32 * 8*1.007f, (altoPantalla / 16) * 6, (anchoPantalla / 32)* 10 *1.015f, altoPantalla / 16 * 7/ 1.03f);
-        arbolesRect[16] = new RectF(anchoPantalla / 32 * 18 *1.005f, (altoPantalla / 16) * 5, (anchoPantalla / 32)*19*1.005f, altoPantalla / 16 * 6/ 1.03f);
-        arbolesRect[17] = new RectF(anchoPantalla / 32 * 21 *1.007f, (altoPantalla / 16) * 6, (anchoPantalla / 32)*22, altoPantalla / 16 * 7/ 1.03f);
-        arbolesRect[18] = new RectF(anchoPantalla / 32 * 29 * 1.01f, (altoPantalla / 16) * 5, (anchoPantalla / 32)*30, altoPantalla / 16 * 6/ 1.03f);
-        arbolesRect[19] = new RectF(anchoPantalla / 32 * 31 * 1.01f, (altoPantalla / 16) * 6, anchoPantalla, altoPantalla / 16 * 7/ 1.03f);
+        arbolesRect[13] = new RectF(0, (h / 16) * 6*1.015f, (w / 32)*1 * 1.03f, h / 16 * 7 / 1.04f);
+
+        arbolesRect[14] = new RectF(w / 32 * 3*1.015f, (h / 16) * 5*1.05f, (w / 32) * 4 * 0.99f, (h / 16) * 6/ 1.03f);
+
+        arbolesRect[15] = new RectF(w / 32 * 8*1.02f, (h / 16) * 6 * 1.015f, (w / 32)* 10 *1.015f, h / 16 * 7/ 1.03f);
+
+        arbolesRect[16] = new RectF(w / 32 * 18 *1.005f, (h / 16) * 5*1.05f, (w / 32)*19*1.005f, h / 16 * 6/ 1.03f);
+
+        arbolesRect[17] = new RectF(w / 32 * 21 *1.007f * 1.007f, (h / 16) * 6 * 1.05f, (w / 32)*22 , h / 16 * 7/ 1.03f);
+        arbolesRect[18] = new RectF(w / 32 * 29 * 1.01f, (h / 16) * 5*1.05f, (w / 32)*30, h / 16 * 6/ 1.03f);
+        arbolesRect[19] = new RectF(w / 32 * 31 * 1.015f, (h / 16) * 6 *1.03f, w, h / 16 * 7/ 1.03f);
         //fila4
-        arbolesRect[20] =  new RectF(0, 0, (anchoPantalla / 32)* 7 *1.015f, altoPantalla / 16 * 1/ 1.03f);
-        arbolesRect[21] = new RectF(anchoPantalla / 32 * 11 * 1.01f, 0, (anchoPantalla / 32)* 12 *1.005f, altoPantalla / 16 * 1 / 1.06f);
-        arbolesRect[22] = new RectF(anchoPantalla / 32 * 21 *1.007f, 0, (anchoPantalla / 32) * 22, altoPantalla / 16 * 1 / 1.06f);
-        arbolesRect[23] = new RectF(anchoPantalla / 32 * 25 * 1.01f, 0, (anchoPantalla / 32) * 26, altoPantalla / 16 * 1 / 1.06f);
-        arbolesRect[24] = new RectF(anchoPantalla / 32 * 29 * 1.01f, 0, anchoPantalla, altoPantalla / 16 * 1 / 1.03f);
+        arbolesRect[20] =  new RectF(0, 0, (w / 32)* 7 *1.015f, h / 16 * 1/ 1.03f);
+        arbolesRect[21] = new RectF(w / 32 * 11 * 1.01f, 0, (w / 32)* 12 *1.005f, h / 16 * 1 / 1.06f);
+        arbolesRect[22] = new RectF(w / 32 * 21 *1.02f, 0, (w / 32) * 22, h / 16 * 1 / 1.06f);
+        arbolesRect[23] = new RectF(w / 32 * 25 * 1.01f, 0, (w / 32) * 26, h / 16 * 1 / 1.06f);
+        arbolesRect[24] = new RectF(w / 32 * 29 * 1.01f, 0, w, h / 16 * 1 / 1.03f);
     }
 
     public RectF[] getRectArboles(){
@@ -132,4 +137,5 @@ public class Escenario {
         }
         return imgMoneda;
     }
+
 }

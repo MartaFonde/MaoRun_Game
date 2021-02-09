@@ -28,8 +28,6 @@ public class Coche {
 
     //Establece el movimiento de un enemigo en una pantalla definida por alto y ancho y cierta velocidad
     public void moverCoche(int alto,int ancho, int velocidad) {
-        //posicion.x += velocidad;
-        //moverDerecha(alto, ancho, velocidad);
         moverIzquierda(alto, ancho, velocidad);
         if (posicion.x > ancho) {
             posicion.x = 0;

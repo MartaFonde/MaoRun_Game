@@ -21,13 +21,15 @@ public class Gato {
     int altoImagen;
     Bitmap[][] img = new Bitmap[4][3];
     boolean puedeMoverse = true;
-    int velocidad = 30;
+    int velocidad;
 
     RectF posicionFutura;
 
     public Gato(Bitmap imagenes, float x, float y) {
         this.imagenes = imagenes;
         this.posicion = new PointF(x, y);
+
+        this.velocidad = 30;
 
         anchoImagenes = imagenes.getWidth();
         altoImagenes = imagenes.getHeight();
@@ -42,6 +44,9 @@ public class Gato {
         }
 
         this.imagen = Bitmap.createBitmap(imagenes, anchoImagenes/3,(altoImagenes / 4)*3, anchoImagen,altoImagen);
+        //por defecto estará direccion arriba
+        posicionFutura = new RectF(x+anchoImagen*0.3f, y+altoImagen-velocidad*0.6f,  x+anchoImagen*0.7f, y+altoImagen);
+
         g = new Random();
         this.setRectangulo();
     }
@@ -50,13 +55,13 @@ public class Gato {
         float x = posicion.x;
         float y = posicion.y;
         rectangulo = new RectF(x+anchoImagen*0.3f, y+altoImagen*0.6f,  x+anchoImagen*0.7f, y+altoImagen);
-        //posicionFutura = new RectF(x+anchoImagen*0.3f, y+altoImagen*0.6f,  x+anchoImagen*0.7f, y+altoImagen);
+        posicionFutura = getPosicionFutura(Pantalla.mov);
+        //posicionFutura = new RectF(x+anchoImagen*0.3f, y+altoImagen-velocidad*0.6f,  x+anchoImagen*0.7f, y+altoImagen);
 
     }
 
-    public void moverAbajo(int anchoPantalla, int altoPantalla, int velocidad) { // Mueve la nave a la izquierda
+    public void moverAbajo(int anchoPantalla, int altoPantalla) { // Mueve la nave a la izquierda
         fila = 0;
-        velocidad = anchoPantalla / 72;
         if (puedeMoverse && posicion.y<= altoPantalla-imagen.getHeight()) {
             posicion.y += velocidad;
             this.setRectangulo();
@@ -64,9 +69,8 @@ public class Gato {
         actualizaImagen();
     }
 
-    public void moverIzquierda(int anchoPantalla, int altoPantalla, int velocidad) { // Mueve la nave a la izquierda
+    public void moverIzquierda(int anchoPantalla, int altoPantalla) { // Mueve la nave a la izquierda
         fila = 1;
-        velocidad = anchoPantalla / 72;
 
         if (puedeMoverse && posicion.x >= 0) {
             posicion.x -= velocidad;
@@ -75,9 +79,8 @@ public class Gato {
         actualizaImagen();
     }
 
-    public void moverDerecha(int anchoPantalla, int altoPantalla,int velocidad) { // Mueve la nave a la derecha
+    public void moverDerecha(int anchoPantalla, int altoPantalla) { // Mueve la nave a la derecha
         fila = 2;
-        velocidad = anchoPantalla / 72;
 
         if (puedeMoverse &&  posicion.x <= anchoPantalla-imagen.getWidth()) {
             posicion.x += velocidad;
@@ -86,15 +89,12 @@ public class Gato {
         actualizaImagen();
     }
 
-    public void moverArriba(int anchoPantalla, int altoPantalla,int velocidad) { // Mueve la nave a la izquierda
+    public void moverArriba(int anchoPantalla, int altoPantalla) { // Mueve la nave a la izquierda
         fila = 3;
-        velocidad = anchoPantalla / 72;
 
         if (puedeMoverse && posicion.y >= -40) {
             posicion.y -= velocidad;
             this.setRectangulo();
-        }else{
-            posicionFutura = rectangulo;
         }
         actualizaImagen();
     }
@@ -105,8 +105,11 @@ public class Gato {
 
         switch (mov){
             case 0: posY += velocidad;
+                    break;
             case 1: posX -= velocidad;
+                    break;
             case 2: posX += velocidad;
+                    break;
             case 3: posY -= velocidad;
         }
         PointF pos= new PointF(posX, posY);
