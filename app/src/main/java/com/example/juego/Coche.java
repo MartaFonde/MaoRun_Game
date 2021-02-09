@@ -8,6 +8,8 @@ import java.util.Random;
 
 public class Coche {
     public PointF posicion;
+    float x;
+    float y;
     public Bitmap imagen;
     public RectF rectangulo;
     int anchoCoche;
@@ -17,33 +19,49 @@ public class Coche {
     public Coche(Bitmap imagen, float x, float y, int velocidad) {
         this.imagen = imagen;
         this.posicion = new PointF(x, y);
+        setX(x);
+        setY(y);
         this.anchoCoche = imagen.getWidth();
         this.altoCoche = imagen.getHeight();
         this.velocidad = velocidad;
-        this.setRectangulo();
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+        posicion.x = x;
+        setRectangulo();
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+        posicion.y = y;
+        setRectangulo();
     }
 
     public void setRectangulo() {
-        float x = posicion.x;
-        float y = posicion.y;
-        //rectangulo = new Rect((int)x+ancho/6, (int)(y+alto/2.8), (int)(x+ancho/1.2), (int)(y+alto/1.5));
-        rectangulo = new RectF(x, y+ altoCoche *0.3f, x+ anchoCoche, y+ altoCoche);
+        rectangulo = new RectF(posicion.x, posicion.y+ altoCoche *0.3f, posicion.x+ anchoCoche, posicion.y+ altoCoche);
     }
 
     public void moverDerecha(int anchoPantalla) {
         if (posicion.x <= anchoPantalla) {
-            posicion.x += velocidad;
-            this.setRectangulo();
+            setX(posicion.x + velocidad);
         }else{
-            posicion.x = -imagen.getWidth();
+            setX(-imagen.getWidth());
         }
     }
     public void moverIzquierda(int anchoPantalla) {
         if (posicion.x>= 0) {
-            posicion.x -= velocidad;
-            this.setRectangulo();
+            setX(posicion.x - velocidad);
         }else{
-            posicion.x = anchoPantalla;
+            setX(anchoPantalla);
         }
     }
 

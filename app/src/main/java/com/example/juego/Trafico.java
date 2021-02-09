@@ -65,12 +65,12 @@ public class Trafico {
     }
 
     public void setCoches() {
-        coches[0] = new Coche(getImgCochesRight()[0], anchoPantalla / 2, altoPantalla / 16 * 11, velocidadCoche);
-        coches[1] = new Coche(getImgCochesLeft()[1], anchoPantalla / 5, altoPantalla / 16 * 10, velocidadCoche);
-        coches[2] = new Coche(getImgCochesRight()[2], anchoPantalla / 7, altoPantalla / 16 * 8, velocidadCoche);
-        coches[3] = new Coche(getImgCochesLeft()[3], anchoPantalla, altoPantalla / 16 * 7, velocidadCoche);
-        coches[4] = new Coche(getImgCochesRight()[4], -anchoCoche, altoPantalla / 16 * 4, velocidadCoche);
-        coches[5] = new Coche(getImgCochesLeft()[0], anchoPantalla, altoPantalla / 16 * 3, velocidadCoche);
+        coches[0] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], anchoPantalla / 2, altoPantalla / 16 * 11, velocidadCoche);
+        coches[1] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], anchoPantalla / 5, altoPantalla / 16 * 10, velocidadCoche);
+        coches[2] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], anchoPantalla / 7, altoPantalla / 16 * 8, velocidadCoche);
+        coches[3] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 7, velocidadCoche);
+        coches[4] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], -anchoCoche, altoPantalla / 16 * 4, velocidadCoche);
+        coches[5] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 3, velocidadCoche);
         coches[6] = new Coche(getImgCochesRight()[4], anchoPantalla / 16, altoPantalla / 16 * 2, velocidadCoche);
         coches[7] = new Coche(getImgCochesLeft()[1], -anchoCoche, altoPantalla / 16 * 1, velocidadCoche);
         coches[8] = new Coche(getImgCochesRight()[3], -anchoCoche, altoPantalla / 16 * 11, velocidadCoche);

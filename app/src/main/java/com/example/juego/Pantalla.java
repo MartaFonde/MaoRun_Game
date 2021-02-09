@@ -36,17 +36,17 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
     Bitmap[] imgCochesRight;
     int anchoCoche;
     int altoCoche;
-    int velCoches;
+    int velCoches;      //pendiente
 
     Gato gato;
     Bitmap bitmapGato;
 
-    Paint p;
-    Paint p2;
+//    Paint p;
+//    Paint p2;
 
     static int mov = 3;
 
-    int cocheColision;
+    int cocheColision = -1;
     int nuevoCoche;
 
     public Pantalla(Context context) {
@@ -61,32 +61,34 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
 
         fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.street);
 
-        p = new Paint();
-        p.setColor(Color.RED);
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(5);
-        p.setAlpha(150);
-
-        p2 = new Paint();
-        p2.setColor(Color.BLUE);
-        p2.setStyle(Paint.Style.STROKE);
-        p2.setStrokeWidth(5);
-        p2.setAlpha(150);
+//        p = new Paint();
+//        p.setColor(Color.RED);
+//        p.setStyle(Paint.Style.STROKE);
+//        p.setStrokeWidth(5);
+//        p.setAlpha(150);
+//
+//        p2 = new Paint();
+//        p2.setColor(Color.BLUE);
+//        p2.setStyle(Paint.Style.STROKE);
+//        p2.setStrokeWidth(5);
+//        p2.setAlpha(150);
 
     }
 
-    public void actualizarFisica() {
+    public void actualizarFisica() {        //movimiento automatico del juego
         if(trafico.coches.length > 0){
             for (int i = 0; i < trafico.coches.length; i++) {
                 nuevoCoche = i;
                 if (i % 2 == 0) {
                     trafico.coches[i].moverDerecha(anchoPantalla);
                 } else {
-                    trafico.coches[i].moverIzquierda(anchoPantalla);// Actualizamos la física de los elementos en pantalla
+                    trafico.coches[i].moverIzquierda(anchoPantalla);
                 }
                 if(trafico.coches[i].rectangulo.intersect(gato.rectangulo) && nuevoCoche != cocheColision){
                     cocheColision = i;
                     controles.vidas--;
+
+                    //VIBRACION + SONIDO
 
                     //velCoche = 0;
                     //velGato=0;
@@ -95,25 +97,16 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         }
-
-        //rectsMoneda = escenario.getRectMonedas();
-        for (int i = escenario.monedasRect.size() -1 ; i >= 0; i--) {
-            if(escenario.monedasRect.get(i).intersect(gato.rectangulo)){
-                controles.puntos+=100;
-                escenario.monedasRect.remove(i);
-                //break;
-            }
-        }
     }
 
 
     public void dibujar(Canvas c) { // Rutina de dibujo en el lienzo. Se le llamará desde el hilo
         try {
             escenario.dibujaFondo(c);
-            gato.dibujaGato(c);
-            trafico.dibujaCoches(c);
-            escenario.dibujaMonedas(c);
             escenario.dibujaArboles(c, anchoPantalla, altoPantalla);
+            escenario.dibujaMonedas(c);
+            trafico.dibujaCoches(c);
+            gato.dibujaGato(c);
             controles.dibujaControles(c, anchoPantalla, altoPantalla);
 
         } catch (Exception e) {
@@ -130,6 +123,17 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
         return false;
     }
 
+    public void colisionMonedas(){
+        //rectsMoneda = escenario.getRectMonedas();
+        for (int i = escenario.monedasRect.size() -1 ; i >= 0; i--) {
+            if(escenario.monedasRect.get(i).intersect(gato.rectangulo)){
+                controles.puntos+=100;
+                escenario.monedasRect.remove(i);
+                //break;
+            }
+        }
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         synchronized(surfaceHolder) {
@@ -143,24 +147,24 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
                     if(controles.abajo.contains(x, y)){
                         mov = 0;
                         gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverAbajo(anchoPantalla, altoPantalla);
-
+                        gato.moverAbajo(altoPantalla);
+                        colisionMonedas();
                     }else if(controles.izq.contains(x,y)){
                         mov = 1;
                         gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverIzquierda(anchoPantalla, altoPantalla);
-
+                        gato.moverIzquierda();
+                        colisionMonedas();
                     }else if(controles.der.contains(x, y))  {
                         mov = 2;
                         gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverDerecha(anchoPantalla, altoPantalla);
-
+                        gato.moverDerecha(anchoPantalla);
+                        colisionMonedas();
                     }else if(controles.arriba.contains(x, y)){
                         mov = 3;
                         gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverArriba(anchoPantalla, altoPantalla);
+                        gato.moverArriba();
+                        colisionMonedas();
                     }
-                    //gato.actualizaImagen();
                     break;
                 case MotionEvent.ACTION_UP:
                     gato.parado();
@@ -227,6 +231,13 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
 
         @Override
         public void run() {
+            long tiempoDormido = 0; //Tiempo que va a dormir el hilo
+            final int FPS = 50; // Frames Por Segundo --- Nuestro objetivo
+            final int TPS = 1000000000; //Ticks en un segundo para la función usada nanoTime()
+            final int FRAGMENTO_TEMPORAL = TPS / FPS; // Espacio de tiempo en el que haremos todo de forma repetida
+            // Tomamos un tiempo de referencia actual en nanosegundos más preciso que currenTimeMillis()
+            long tiempoReferencia = System.nanoTime();
+
             while (funcionando) {
                 Canvas c = null; //Siempre es necesario repintar todo el lienzo
                 try {
@@ -241,6 +252,18 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
                 } finally { // Haya o no excepción, hay que liberar el lienzo
                     if (c != null) {
                         surfaceHolder.unlockCanvasAndPost(c);
+                    }
+                }
+                // Calculamos el siguiente instante temporal donde volveremos a actualizar y pintar
+                tiempoReferencia += FRAGMENTO_TEMPORAL;
+                // El tiempo que duerme será el siguiente menos el actual (Ya ha terminado de pintar y actualizar)
+                tiempoDormido = tiempoReferencia - System.nanoTime();
+                //Si tarda mucho, dormimos.
+                if (tiempoDormido > 0) {
+                    try {
+                        Thread.sleep(tiempoDormido / 1000000); //Convertimos a ms
+                    } catch(InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -269,7 +292,6 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
 
                 escalaControles();
                 controles = new Controles(bitmapControles, anchoPantalla, altoPantalla);
-                //moneda = escenario.actualizaImagenMoneda();
             }
         }
     }

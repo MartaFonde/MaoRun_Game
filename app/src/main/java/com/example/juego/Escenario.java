@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Escenario {
 
-    Bitmap fondo;       //PENDIENTE
+    Bitmap fondo;
 
     int anchoPantalla;
     int altoPantalla;
@@ -120,6 +120,8 @@ public class Escenario {
         RectF pos;
 
         while(monedasRect.size() <= totalMonedas) {
+            //para que las monedas no se situen muy en los extremos de la pantalla
+            //limito la superficie en la que pueden aparecer las monedas
             x = (float)Math.random()*(anchoPantalla-anchoMoneda*5)+anchoMoneda*2;
             y = (float)Math.random()*(altoPantalla-altoMoneda*5)+altoMoneda*2;
             pos = new RectF(x, y, x+anchoMoneda, y+altoMoneda);
@@ -143,7 +145,7 @@ public class Escenario {
                     }
                 }
             }
-            if(posValida) monedasRect.add(pos);
+            if(posValida) monedasRect.add(pos);  //coleccion de los rect que contienen monedas -> posiciones
         }
     }
 
@@ -160,23 +162,23 @@ public class Escenario {
 
         cont++;
         if(cont%10==0){
-            monedaActual = actualizaImagenMoneda();     //bitmap de moeda que se vai mostrar
+            monedaActual = actualizaImagenMoneda();     //bitmap de la animacion de moneda que se va a mostrar
         }else if(cont == 99){
             cont = 0;
         }
-
+        //repinta Rect de monedasRect
         for (RectF m: monedasRect) {
             rect = new RectF(m.left, m.top, m.left+anchoMoneda,m.top+ altoMoneda);
-            c.drawRect(rect, p2);
+            //c.drawRect(rect, p2);
             c.drawBitmap(monedaActual, rect.left, rect.top, p2);
         }
     }
 
     public void dibujaArboles(Canvas c, int anchoPantalla, int altoPantalla){
         setRectArboles(anchoPantalla, altoPantalla);
-        for (RectF arbol : arbolesRect) {
-            c.drawRect(arbol, p2);
-        }
+//        for (RectF arbol : arbolesRect) {
+//            c.drawRect(arbol, p2);
+//        }
     }
 
     public Bitmap actualizaImagenMoneda() {
