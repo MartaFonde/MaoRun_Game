@@ -1,10 +1,11 @@
 package com.example.juego;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 
 import java.util.Random;
 
@@ -13,23 +14,26 @@ public class Gato {
     public PointF posicion;
     private int anchoImagenes; //Ancho del bitmap
     private int altoImagenes; //alto del bitmap
-    public int fila = 2, col = 1; //Fila y columna de la imagen a representar
-    Bitmap imagen;
-    Random g;
+    public int fila = 2;
+    int col = 1; //Fila y columna de la imagen a representar
+    Bitmap imagen;      //imagen actual del gato
     RectF rectangulo;
     int anchoImagen;
     int altoImagen;
-    Bitmap[][] img = new Bitmap[4][3];
+
+    Bitmap[][] imgGato;
     boolean puedeMoverse = true;
     int velocidad;
+    Paint p;
+    Paint p2;
 
     RectF posicionFutura;
 
-    public Gato(Bitmap imagenes, float x, float y) {
+    public Gato(Bitmap imagenes, float x, float y, int velocidad) {
         this.imagenes = imagenes;
         this.posicion = new PointF(x, y);
 
-        this.velocidad = 30;
+        this.velocidad = velocidad;
 
         anchoImagenes = imagenes.getWidth();
         altoImagenes = imagenes.getHeight();
@@ -37,18 +41,38 @@ public class Gato {
         anchoImagen = anchoImagenes/3;
         altoImagen = altoImagenes /4;
 
-        for (int i = 0; i < img.length; i++) {     
-            for (int j = 0; j < img[i].length; j++) {
-                img[i][j] = Bitmap.createBitmap(imagenes, (anchoImagenes/3)*j,(altoImagenes / 4)*i, anchoImagen,altoImagen);
-            }
-        }
+        imgGato = new Bitmap[4][3];
+        setImgGato(imagenes);
 
+        //por defecto estará direccion arriba:
         this.imagen = Bitmap.createBitmap(imagenes, anchoImagenes/3,(altoImagenes / 4)*3, anchoImagen,altoImagen);
-        //por defecto estará direccion arriba
         posicionFutura = new RectF(x+anchoImagen*0.3f, y+altoImagen-velocidad*0.6f,  x+anchoImagen*0.7f, y+altoImagen);
 
-        g = new Random();
         this.setRectangulo();
+
+        p = new Paint();
+        p.setColor(Color.RED);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(5);
+        p.setAlpha(150);
+
+        p2 = new Paint();
+        p2.setColor(Color.BLUE);
+        p2.setStyle(Paint.Style.STROKE);
+        p2.setStrokeWidth(5);
+        p2.setAlpha(150);
+    }
+
+    public Bitmap[][] getImgGato() {
+        return imgGato;
+    }
+
+    public void setImgGato(Bitmap img) {
+        for (int i = 0; i < imgGato.length; i++) {
+            for (int j = 0; j < imgGato[i].length; j++) {
+                imgGato[i][j] = Bitmap.createBitmap(img, (anchoImagenes/3)*j,(altoImagenes / 4)*i, anchoImagen,altoImagen);
+            }
+        }
     }
 
     public void setRectangulo() {
@@ -71,7 +95,6 @@ public class Gato {
 
     public void moverIzquierda(int anchoPantalla, int altoPantalla) { // Mueve la nave a la izquierda
         fila = 1;
-
         if (puedeMoverse && posicion.x >= 0) {
             posicion.x -= velocidad;
             this.setRectangulo();
@@ -120,8 +143,8 @@ public class Gato {
     }
 
     public void actualizaImagen() {
-        if(col < img[fila].length){
-            this.imagen = img[fila][col];
+        if(col < imgGato[fila].length){
+            this.imagen = imgGato[fila][col];
             col++;
         }else{
             col = 0;
@@ -129,20 +152,12 @@ public class Gato {
     }
 
     public void parado(){
-        this.imagen = img[fila][1];
+        this.imagen = imgGato[fila][1];
     }
 
-
-//    public void actualizarFisicaGato(){
-//        switch (gato.fila){
-//            case 0: gato.moverAbajo(anchoPantalla, altoPantalla, velGato);
-//            break;
-//            case 1: gato.moverIzquierda(anchoPantalla, altoPantalla, velGato);
-//            break;
-//            case 2: gato.moverDerecha(anchoPantalla, altoPantalla, velGato);
-//            break;
-//            case 3: gato.moverArriba(anchoPantalla, altoPantalla, velGato);
-//            break;
-//        }
-//    }
+    public void dibujaGato(Canvas c){
+        c.drawBitmap(imagen, posicion.x, posicion.y, null);
+        c.drawRect(rectangulo, p);
+        c.drawRect(posicionFutura, p2);
+    }
 }

@@ -1,7 +1,11 @@
 package com.example.juego;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 import java.util.ArrayList;
@@ -23,10 +27,23 @@ public class Escenario {
     Bitmap imgMoneda;
     Bitmap[] moneda;
     int col = 0;
+    int cont;
+    Bitmap monedaActual;
 
-    public Escenario(Bitmap imagenMoneda, int anchoPantalla, int altoPantalla) {
+    Paint p2;
+
+    Rect pista1;
+    Rect pista2;
+    Rect pista3;
+    Rect pista4;
+
+    Paint pPista;
+
+    public Escenario(Bitmap fondo, Bitmap imagenMoneda, int anchoPantalla, int altoPantalla) {
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
+
+        this.fondo = fondo;
 
         arbolesRect = new RectF[25];
         monedasRect = new ArrayList<>();
@@ -35,6 +52,12 @@ public class Escenario {
         this.altoMoneda = altoPantalla/16;
         this.imgMoneda = imagenMoneda;
         moneda = new Bitmap[5];
+
+        p2 = new Paint();
+        p2.setColor(Color.BLUE);
+        p2.setStyle(Paint.Style.STROKE);
+        p2.setStrokeWidth(5);
+        p2.setAlpha(150);
 
         setRectArboles(anchoPantalla, altoPantalla);
         setRectMonedas(anchoPantalla, altoPantalla);
@@ -128,6 +151,34 @@ public class Escenario {
         return monedasRect;
     }
 
+    public void dibujaFondo(Canvas c){
+        c.drawBitmap(fondo, 0, 0, null);
+    }
+
+    public void dibujaMonedas(Canvas c){
+        RectF rect;
+
+        cont++;
+        if(cont%10==0){
+            monedaActual = actualizaImagenMoneda();     //bitmap de moeda que se vai mostrar
+        }else if(cont == 99){
+            cont = 0;
+        }
+
+        for (RectF m: monedasRect) {
+            rect = new RectF(m.left, m.top, m.left+anchoMoneda,m.top+ altoMoneda);
+            c.drawRect(rect, p2);
+            c.drawBitmap(monedaActual, rect.left, rect.top, p2);
+        }
+    }
+
+    public void dibujaArboles(Canvas c, int anchoPantalla, int altoPantalla){
+        setRectArboles(anchoPantalla, altoPantalla);
+        for (RectF arbol : arbolesRect) {
+            c.drawRect(arbol, p2);
+        }
+    }
+
     public Bitmap actualizaImagenMoneda() {
         if(col < moneda.length){
             this.imgMoneda = moneda[col];
@@ -137,5 +188,27 @@ public class Escenario {
         }
         return imgMoneda;
     }
+
+//    public void pistas() {
+//        pista1 = new Rect(0, (altoPantalla / 16) * 10, anchoPantalla, (altoPantalla / 16) * 12);
+//        pista2 = new Rect(0, (altoPantalla / 16) * 7, anchoPantalla, (altoPantalla / 16) * 9);
+//        pista3 = new Rect(0, (altoPantalla / 16) * 3, anchoPantalla, (altoPantalla / 16) * 5);
+//        pista4 = new Rect(0, (altoPantalla / 16) * 1, anchoPantalla, (altoPantalla / 16) * 3);
+//        pPista = new Paint();
+//        pPista.setColor(Color.MAGENTA);
+//        pPista.setAlpha(50);
+//    }
+//
+//    public void dibujaPistas(Canvas c) {
+//        pista1 = new Rect(0, (altoPantalla / 16) * 10, anchoPantalla, (altoPantalla / 16) * 12);
+//        pista2 = new Rect(0, (altoPantalla / 16) * 7, anchoPantalla, (altoPantalla / 16) * 9);
+//        pista3 = new Rect(0, (altoPantalla / 16) * 3, anchoPantalla, (altoPantalla / 16) * 5);
+//        pista4 = new Rect(0, altoPantalla / 16, anchoPantalla, (altoPantalla / 16) * 3);
+//        c.drawRect(pista1, pPista);
+//        c.drawRect(pista2, pPista);
+//        c.drawRect(pista3, pPista);
+//        c.drawRect(pista4, pPista);
+//    }
+
 
 }
