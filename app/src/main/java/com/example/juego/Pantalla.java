@@ -29,20 +29,17 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
 
     Escenario escenario;
     Bitmap moneda;
-    Bitmap fondo;     //Escenario
+    Bitmap fondo[];     //Escenario
 
     Trafico trafico;
     Bitmap[] imgCochesLeft;
     Bitmap[] imgCochesRight;
     int anchoCoche;
     int altoCoche;
-    int velCoches;      //pendiente
+    int velocidadCoches = 5;      //pendiente
 
     Gato gato;
     Bitmap bitmapGato;
-
-//    Paint p;
-//    Paint p2;
 
     static int mov = 3;
 
@@ -59,20 +56,7 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
         hilo = new Hilo(); // Inicializamos el hilo
         setFocusable(true); // Aseguramos que reciba eventos de toque
 
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.street);
-
-//        p = new Paint();
-//        p.setColor(Color.RED);
-//        p.setStyle(Paint.Style.STROKE);
-//        p.setStrokeWidth(5);
-//        p.setAlpha(150);
-//
-//        p2 = new Paint();
-//        p2.setColor(Color.BLUE);
-//        p2.setStyle(Paint.Style.STROKE);
-//        p2.setStrokeWidth(5);
-//        p2.setAlpha(150);
-
+        fondo = new Bitmap[3];
     }
 
     public void actualizarFisica() {        //movimiento automatico del juego
@@ -87,13 +71,7 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
                 if(trafico.coches[i].rectangulo.intersect(gato.rectangulo) && nuevoCoche != cocheColision){
                     cocheColision = i;
                     controles.vidas--;
-
-                    //VIBRACION + SONIDO
-
-                    //velCoche = 0;
-                    //velGato=0;
-                    //funcionando = false;
-                    // break;
+                    //TODO vibración+sonido
                 }
             }
         }
@@ -104,7 +82,7 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
         try {
             escenario.dibujaFondo(c);
             escenario.dibujaArboles(c, anchoPantalla, altoPantalla);
-            escenario.dibujaMonedas(c);
+            escenario.dibujaMonedas(c, anchoPantalla, altoPantalla);
             trafico.dibujaCoches(c);
             gato.dibujaGato(c);
             controles.dibujaControles(c, anchoPantalla, altoPantalla);
@@ -124,11 +102,11 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void colisionMonedas(){
-        //rectsMoneda = escenario.getRectMonedas();
         for (int i = escenario.monedasRect.size() -1 ; i >= 0; i--) {
             if(escenario.monedasRect.get(i).intersect(gato.rectangulo)){
                 controles.puntos+=100;
                 escenario.monedasRect.remove(i);
+                escenario.posicionMonedas.remove(i);
                 //break;
             }
         }
@@ -164,6 +142,18 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
                         gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
                         gato.moverArriba();
                         colisionMonedas();
+
+                        //TODO crear una función para esto
+                        if(escenario.numFondo < escenario.fondos.length){
+                            if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *14, 0,
+                                    anchoPantalla/32*17, 0))){
+                                escenario.numFondo++;
+                                escenario.setFondos(escenario.numFondo);
+                                gato.setX(gato.getX());
+                                gato.setY(altoPantalla/16*15);
+                                trafico.setCoches(escenario.numFondo, trafico.velocidadCoche+5);
+                            }
+                        }
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -278,14 +268,18 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
         public void setSurfaceSize(int width, int height) {
             synchronized (surfaceHolder) { // Se recomienda realizarlo de forma atómica
                 if (fondo != null) { // Cambiamos el tamaño de la imagen de fondo al tamaño de la pantalla
-                    fondo = Bitmap.createScaledBitmap(fondo, width, height, true);
+                    //fondo = Bitmap.createScaledBitmap(fondo, width, height, true);
+                    //imgFondo = escala(R.drawable.mapa_nivel1, width, height);
+                    fondo[0] = escala(R.drawable.mapa_nivel1, width, height);
+                    fondo[1] = escala(R.drawable.mapa_nivel2, width, height);
+                    fondo[2] = escala(R.drawable.mapa_nivel3, width, height);
                 }
 
                 bitmapGato = escala( R.drawable.gato, (anchoPantalla/32)*4, (altoPantalla/16)*6);
-                gato = new Gato(bitmapGato, anchoPantalla/2, altoPantalla/16*14, 30);
+                gato = new Gato(bitmapGato, anchoPantalla/2-1, altoPantalla/16*14, 30);
 
                 escalaCoches();
-                trafico = new Trafico(imgCochesRight, imgCochesLeft, 5, anchoPantalla, altoPantalla);
+                trafico = new Trafico(imgCochesRight, imgCochesLeft, velocidadCoches, anchoPantalla, altoPantalla);
 
                 moneda = escala( R.drawable.moneda, anchoPantalla/32*5, altoPantalla/16);
                 escenario = new Escenario(fondo, moneda, anchoPantalla, altoPantalla);
