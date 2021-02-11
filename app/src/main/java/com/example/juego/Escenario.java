@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 
 import java.util.ArrayList;
@@ -22,7 +21,8 @@ public class Escenario {
     RectF[] arbolesRect;
 
     ArrayList<RectF> monedasRect;
-    int totalMonedas = 15;
+    ArrayList<PointF> posicionMonedas;
+    int totalMonedas = 10;       //pantalla pequeña no ejecuta con >8 monedas
     int anchoMoneda;
     int altoMoneda;
 
@@ -31,14 +31,13 @@ public class Escenario {
     int col = 0;
     int cont;
     Bitmap monedaActual;
-    ArrayList<PointF> posicionMonedas;
 
-    Paint p2;
+    Paint p;
 
     float propW;
     float propH;
 
-    public Escenario(Bitmap[] fondos, Bitmap imagenMoneda, int anchoPantalla, int altoPantalla) {
+    public Escenario(Bitmap[] fondos, Bitmap imagenMoneda, int numFondo, int anchoPantalla, int altoPantalla) {
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
 
@@ -56,11 +55,11 @@ public class Escenario {
         moneda = new Bitmap[5];
         setBitmapMoneda();
 
-        p2 = new Paint();
-        p2.setColor(Color.BLUE);
-        p2.setStyle(Paint.Style.STROKE);
-        p2.setStrokeWidth(5);
-        p2.setAlpha(150);
+        p = new Paint();
+        p.setColor(Color.RED);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(5);
+        p.setAlpha(150);
 
         this.fondos = fondos;
         setFondos(numFondo);   //1er nivel
@@ -69,6 +68,95 @@ public class Escenario {
     public void setFondos(int numFondo){
         this.numFondo = numFondo;
         fondo = fondos[numFondo];
+
+        if(numFondo == 0){
+            setRectArbolesMapa1();
+            setPosicionMonedas();
+        }else if(numFondo == 1){
+            setRectArbolesMapa2();
+            setPosicionMonedas();
+        }else if(numFondo == 2){
+            setRectArbolesMapa3();
+            setPosicionMonedas();
+        }
+    }
+
+    public void setBitmapMoneda(){
+        for (int i = 0; i < moneda.length; i++) {
+            moneda[i] = Bitmap.createBitmap(imgMoneda, imgMoneda.getWidth()/5*i, 0, anchoMoneda, altoMoneda);
+        }
+        this.monedaActual = moneda[0];
+    }
+
+    public Bitmap[] getBitmapMoneda(){
+        return moneda;
+    }
+
+    public void setPosicionMonedas(){
+        float x;
+        float y;
+        //RectF pos;
+
+        while(monedasRect.size() < totalMonedas) {
+            //para que las monedas no se situen muy en los extremos de la pantalla
+            //limito la superficie en la que pueden aparecer las monedas
+            x = (float)Math.random()*(anchoPantalla-anchoMoneda*4)+anchoMoneda*2;
+            y = (float)Math.random()*(altoPantalla-altoMoneda*4)+altoMoneda*2;
+            //pos = new RectF(x, y, x+anchoMoneda, y+altoMoneda);
+            boolean posValida = true;
+
+            for (int i = 0; i < arbolesRect.length; i++) {
+                if(arbolesRect[i].contains(new RectF(x, y, x+anchoMoneda, y+altoMoneda)) ||
+                        arbolesRect[i].intersect(new RectF(x, y, x+anchoMoneda, y+altoMoneda))){
+                    posValida = false;
+                    break;
+                }
+            }
+            if(posValida){
+                for (int i = 0; i < monedasRect.size(); i++) {
+                    if(monedasRect.get(i).intersect(new RectF(x, y, x+anchoMoneda, y+altoMoneda))
+                            || monedasRect.get(i).contains(new RectF(x, y, x+anchoMoneda, y+altoMoneda))
+                            || Math.abs(monedasRect.get(i).right - x) < anchoMoneda * 2
+                            || Math.abs(monedasRect.get(i).left - x+anchoMoneda) < anchoMoneda *2
+                        || Math.abs(monedasRect.get(i).top - y+altoMoneda) < altoMoneda
+                        || Math.abs(monedasRect.get(i).bottom - y) < altoMoneda){
+                        posValida = false;
+                        break;
+                    }
+                }
+            }
+
+            if(posValida){
+                monedasRect.add(new RectF(x, y, x+anchoMoneda, y+altoMoneda));
+                posicionMonedas.add(new PointF(x,y));
+            }
+        }
+    }
+
+    public void dibujaFondo(Canvas c){
+        c.drawBitmap(fondo, 0, 0, null);
+    }
+
+    public void dibujaMonedas(Canvas c, int anchoPantalla, int altoPantalla){
+//        RectF rect;
+        int anchoMoneda = anchoPantalla / 32;
+        int altoMoneda = altoPantalla / 16;
+
+        if(++cont % 10 == 0){
+            monedaActual = actualizaImagenMoneda();     //bitmap de la animacion de moneda que se va a mostrar
+        }
+
+        //Repintando os rect de monedasRect algúns cambiaban de dimensions ancho + alto
+        //Gardo pos left, top e repinto coas súas medidas. Volvo asignar a monedasRect
+        for (int i = 0; i < monedasRect.size(); i++) {
+            monedasRect.set(i, new RectF(posicionMonedas.get(i).x, posicionMonedas.get(i).y,
+                    posicionMonedas.get(i).x+anchoMoneda, posicionMonedas.get(i).y + altoMoneda));
+            c.drawBitmap(monedaActual, monedasRect.get(i).left, monedasRect.get(i).top, null);
+            c.drawRect(monedasRect.get(i), p);
+        }
+    }
+
+    public void dibujaArboles(Canvas c, int anchoPantalla, int altoPantalla){
         if(numFondo == 0){
             setRectArbolesMapa1();
         }else if(numFondo == 1){
@@ -76,17 +164,20 @@ public class Escenario {
         }else if(numFondo == 2){
             setRectArbolesMapa3();
         }
-        setRectMonedas(anchoPantalla, altoPantalla);
-    }
 
-    public void setBitmapMoneda(){
-        for (int i = 0; i < moneda.length; i++) {
-            moneda[i] = Bitmap.createBitmap(imgMoneda, imgMoneda.getWidth()/5*i, 0, anchoMoneda, altoMoneda);
+        for (RectF arbol : arbolesRect) {
+            c.drawRect(arbol, p);
         }
     }
 
-    public Bitmap[] getBitmapMoneda(){
-        return moneda;
+    public Bitmap actualizaImagenMoneda() {
+        if(col < moneda.length){
+            this.imgMoneda = moneda[col];
+            col++;
+        }else{
+            col = 0;
+        }
+        return imgMoneda;
     }
 
     public void setRectArbolesMapa1(){
@@ -94,7 +185,7 @@ public class Escenario {
         arbolesRect[0] = new RectF(0, propH  * 12, propW  *4*1.005f, altoPantalla );
         arbolesRect[1] = new RectF(propW * 4, propH  * 13 * 1.02f, propW *7 *0.99f, altoPantalla);
         arbolesRect[2] = new RectF(propW  * 7, propH  * 14 * 1.015f, propW  *8 * 0.99f, altoPantalla);
-        arbolesRect[3] = new RectF(propW  * 8, propH  * 15 * 1.007f, propW *11 * 1.01f, altoPantalla);
+        arbolesRect[3] = new RectF(propW  * 8, propH  * 15 * 1.007f, propW *11, altoPantalla);
         arbolesRect[4] = new RectF(propW  * 11 * 1.005f, propH  * 13 * 1.02f, propW  * 12 , propH  * 14);
         arbolesRect[5] = new RectF(propW  * 14 * 1.005f, propH  * 15 * 1.02f, propW *15 * 1.01f, altoPantalla);
         arbolesRect[6] = new RectF(propW  * 18 *1.005f, propH  * 15 * 1.02f, propW * 20, altoPantalla);
@@ -119,10 +210,7 @@ public class Escenario {
         arbolesRect[22] = new RectF(propW * 21 *1.02f, 0, propW  * 22, propH   / 1.06f);
         arbolesRect[23] = new RectF(propW  * 25 * 1.01f, 0, propW  * 26, propH  / 1.06f);
         arbolesRect[24] = new RectF(propW  * 29 * 1.01f, 0, anchoPantalla, propH   / 1.03f);
-    }
 
-    public RectF[] getRectArboles1(){
-        return arbolesRect;
     }
 
     public void setRectArbolesMapa2(){
@@ -158,7 +246,6 @@ public class Escenario {
         arbolesRect[23] = new RectF(propW  * 22 * 1.01f, 0, propW  * 28, propH / 1.06f);
         arbolesRect[24] = new RectF(propW  * 28 * 1.015f, 0, anchoPantalla, propH *2 / 1.03f);
     }
-
 
     public void setRectArbolesMapa3(){      //TODO retocar bordes
         //fila1
@@ -197,100 +284,6 @@ public class Escenario {
         arbolesRect[22] = new RectF(0,0,0,0);
         arbolesRect[23] = new RectF(0,0,0,0);
         arbolesRect[24] = new RectF(0,0,0,0);
-    }
-
-    public void setRectMonedas(int anchoPantalla, int altoPantalla){
-        float x;
-        float y;
-        RectF pos;
-
-        while(monedasRect.size() <= totalMonedas) {
-            //para que las monedas no se situen muy en los extremos de la pantalla
-            //limito la superficie en la que pueden aparecer las monedas
-            x = (float)Math.random()*(anchoPantalla-anchoMoneda*5)+anchoMoneda*2;
-            y = (float)Math.random()*(altoPantalla-altoMoneda*5)+altoMoneda*2;
-            pos = new RectF(x, y, x+anchoMoneda, y+altoMoneda);
-            boolean posValida = true;
-
-            for (int i = 0; i < arbolesRect.length; i++) {
-                if(arbolesRect[i].contains(pos) || arbolesRect[i].intersect(pos)){
-                    posValida = false;
-                    break;
-                }
-            }
-            if(posValida){
-                for (int i = 0; i < monedasRect.size(); i++) {
-                    if(monedasRect.get(i).intersect(pos) || monedasRect.get(i).contains(pos)
-                    || Math.abs(monedasRect.get(i).right - pos.left) < 40
-                    || Math.abs(monedasRect.get(i).left - pos.right) < 40
-                    || Math.abs(monedasRect.get(i).top - pos.bottom) < 20
-                    || Math.abs(monedasRect.get(i).bottom - pos.top) < 20){
-                        posValida = false;
-                        break;
-                    }
-                }
-            }
-
-            if(posValida){
-                monedasRect.add(pos);  //coleccion de los rect que contienen monedas -> posiciones
-                posicionMonedas.add(new PointF(x,y));
-            }
-
-        }
-    }
-
-    public ArrayList<RectF> getRectMonedas(){
-        return monedasRect;
-    }
-
-    public void dibujaFondo(Canvas c){
-        c.drawBitmap(fondo, 0, 0, null);
-    }
-
-    public void dibujaMonedas(Canvas c, int anchoPantalla, int altoPantalla){
-//        RectF rect;
-        int anchoMoneda = anchoPantalla / 32;
-        int altoMoneda = altoPantalla / 16;
-
-        cont++;
-        if(cont%10==0){
-            monedaActual = actualizaImagenMoneda();     //bitmap de la animacion de moneda que se va a mostrar
-        }else if(cont == 99){
-            cont = 0;
-        }
-
-        //Repintando os rect de monedasRect algúns cambiaban de dimensions ancho + alto
-        //Gardo pos right, top e repinto coas súas medidas. Volvo asignar a monedasRect
-        for (int i = 0; i < monedasRect.size(); i++) {
-            monedasRect.set(i, new RectF(posicionMonedas.get(i).x, posicionMonedas.get(i).y,
-                    posicionMonedas.get(i).x+anchoMoneda, posicionMonedas.get(i).y + altoMoneda));
-            c.drawBitmap(monedaActual, monedasRect.get(i).left, monedasRect.get(i).top, null);
-            //c.drawRect(monedasRect.get(i), p2);
-        }
-    }
-
-    public void dibujaArboles(Canvas c, int anchoPantalla, int altoPantalla){
-        if(numFondo == 0){
-            setRectArbolesMapa1();
-        }else if(numFondo == 1){
-            setRectArbolesMapa2();
-        }else if(numFondo == 2){
-            setRectArbolesMapa3();
-        }
-
-        for (RectF arbol : arbolesRect) {
-            c.drawRect(arbol, p2);
-        }
-    }
-
-    public Bitmap actualizaImagenMoneda() {
-        if(col < moneda.length){
-            this.imgMoneda = moneda[col];
-            col++;
-        }else{
-            col = 0;
-        }
-        return imgMoneda;
     }
 
 }

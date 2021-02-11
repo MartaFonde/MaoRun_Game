@@ -30,6 +30,9 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
     Escenario escenario;
     Bitmap moneda;
     Bitmap fondo[];     //Escenario
+    Bitmap fondo1;
+    Bitmap fondo2;
+    Bitmap fondo3;
 
     Trafico trafico;
     Bitmap[] imgCochesLeft;
@@ -56,6 +59,9 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
         hilo = new Hilo(); // Inicializamos el hilo
         setFocusable(true); // Aseguramos que reciba eventos de toque
 
+        fondo1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel1);
+        fondo2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel2);
+        fondo3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel3);
         fondo = new Bitmap[3];
     }
 
@@ -268,21 +274,24 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
         public void setSurfaceSize(int width, int height) {
             synchronized (surfaceHolder) { // Se recomienda realizarlo de forma atómica
                 if (fondo != null) { // Cambiamos el tamaño de la imagen de fondo al tamaño de la pantalla
-                    //fondo = Bitmap.createScaledBitmap(fondo, width, height, true);
-                    //imgFondo = escala(R.drawable.mapa_nivel1, width, height);
-                    fondo[0] = escala(R.drawable.mapa_nivel1, width, height);
-                    fondo[1] = escala(R.drawable.mapa_nivel2, width, height);
-                    fondo[2] = escala(R.drawable.mapa_nivel3, width, height);
+                    fondo[0] = Bitmap.createScaledBitmap(fondo1, width, height, true);
+                    fondo[1] = Bitmap.createScaledBitmap(fondo2, width, height, true);
+                    fondo[2] = Bitmap.createScaledBitmap(fondo3, width, height, true);
+
+                    //NO SE AJUSTA BIEN A PANTALLA:
+//                    fondo[0] = escala(R.drawable.mapa_nivel1, width, height);
+//                    fondo[1] = escala(R.drawable.mapa_nivel2, width, height);
+//                    fondo[2] = escala(R.drawable.mapa_nivel3, width, height);
                 }
 
                 bitmapGato = escala( R.drawable.gato, (anchoPantalla/32)*4, (altoPantalla/16)*6);
-                gato = new Gato(bitmapGato, anchoPantalla/2-1, altoPantalla/16*14, 30);
+                gato = new Gato(bitmapGato, anchoPantalla/2-1, altoPantalla/16*14, 15);
 
                 escalaCoches();
                 trafico = new Trafico(imgCochesRight, imgCochesLeft, velocidadCoches, anchoPantalla, altoPantalla);
 
                 moneda = escala( R.drawable.moneda, anchoPantalla/32*5, altoPantalla/16);
-                escenario = new Escenario(fondo, moneda, anchoPantalla, altoPantalla);
+                escenario = new Escenario(fondo, moneda, 0, anchoPantalla, altoPantalla);
 
                 escalaControles();
                 controles = new Controles(bitmapControles, anchoPantalla, altoPantalla);
