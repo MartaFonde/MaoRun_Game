@@ -78,7 +78,7 @@ public class Controles {
         pPuntuacion.setAlpha(150);
 
         tpaint = new TextPaint();
-        tpaint.setTextSize(50); // tamaño del texto en pixels
+        tpaint.setTextSize(anchoPantalla / (32*1.5f)); // tamaño del texto en pixels
         //tpaint.setTextAlign(Paint.Align.CENTER); // Alineación del texto
         tpaint.setColor(Color.BLACK); // Color del texto
     }

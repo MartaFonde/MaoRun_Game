@@ -25,11 +25,11 @@ public class Trafico {
 
     int anchoCoche;
     int altoCoche;
-    int velocidadCoche;
+    float velocidadCoche;
 
     Paint p;
 
-    public Trafico(Bitmap[] imgCochesRight, Bitmap[] imgCochesLeft, int velocidadCoche, int anchoPantalla, int altoPantalla) {
+    public Trafico(Bitmap[] imgCochesRight, Bitmap[] imgCochesLeft, float velocidadCoche, int anchoPantalla, int altoPantalla) {
         coches = new Coche[16];
 
         this.anchoPantalla = anchoPantalla;
@@ -37,6 +37,7 @@ public class Trafico {
 
         this.anchoCoche = anchoPantalla/32;
         this.altoCoche = altoPantalla/16;
+
         this.velocidadCoche = velocidadCoche;
 
         setImgCochesRight(imgCochesRight);
@@ -57,27 +58,27 @@ public class Trafico {
         return posicionesCoches;
     }
 
-    public void setCoches(int numFondo, int vel) {
+    public void setCoches(int numFondo, float vel) {
         if(numFondo == 0){
-            coches[0] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], anchoPantalla / 2, altoPantalla / 16 * 11, vel);
-            coches[1] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], anchoPantalla / 5, altoPantalla / 16 * 10, vel);
-            coches[2] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], -anchoCoche, altoPantalla / 16 * 11, vel);
-            coches[3] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 10, vel);
+            coches[0] = new Coche(imgCochesRight[(int)(Math.random()*5)], anchoPantalla / 2, altoPantalla / 16 * 11, vel);
+            coches[1] = new Coche(imgCochesLeft[(int)(Math.random()*5)], anchoPantalla / 5, altoPantalla / 16 * 10, vel);
+            coches[2] = new Coche(imgCochesRight[(int)(Math.random()*5)], -anchoCoche, altoPantalla / 16 * 11, vel);
+            coches[3] = new Coche(imgCochesLeft[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 10, vel);
 
-            coches[4] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], anchoPantalla / 7, altoPantalla / 16 * 8, vel);
-            coches[5] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 7, vel);
-            coches[6] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 8, vel);
-            coches[7] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], anchoPantalla/2, altoPantalla / 16 * 7, vel);
+            coches[4] = new Coche(imgCochesRight[(int)(Math.random()*5)], anchoPantalla / 7, altoPantalla / 16 * 8, vel);
+            coches[5] = new Coche(imgCochesLeft[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 7, vel);
+            coches[6] = new Coche(imgCochesRight[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 8, vel);
+            coches[7] = new Coche(imgCochesLeft[(int)(Math.random()*5)], anchoPantalla/2, altoPantalla / 16 * 7, vel);
 
-            coches[8] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], -anchoCoche, altoPantalla / 16 * 4, vel);
-            coches[9] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 3, vel);
-            coches[10] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], anchoPantalla/2, altoPantalla / 16 * 4, vel);
-            coches[11] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], anchoPantalla/3, altoPantalla / 16 * 3, vel);
+            coches[8] = new Coche(imgCochesRight[(int)(Math.random()*5)], -anchoCoche, altoPantalla / 16 * 4, vel);
+            coches[9] = new Coche(imgCochesLeft[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 3, vel);
+            coches[10] = new Coche(imgCochesRight[(int)(Math.random()*5)], anchoPantalla/2, altoPantalla / 16 * 4, vel);
+            coches[11] = new Coche(imgCochesLeft[(int)(Math.random()*5)], anchoPantalla/3, altoPantalla / 16 * 3, vel);
 
-            coches[12] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], anchoPantalla / 16, altoPantalla / 16 * 2, vel);
-            coches[13] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], -anchoCoche, altoPantalla / 16 * 1, vel);
-            coches[14] = new Coche(getImgCochesRight()[(int)(Math.random()*5)], anchoPantalla/3, altoPantalla / 16 * 2, vel);
-            coches[15] = new Coche(getImgCochesLeft()[(int)(Math.random()*5)], anchoPantalla/2, altoPantalla / 16 * 1, vel);
+            coches[12] = new Coche(imgCochesRight[(int)(Math.random()*5)], anchoPantalla / 16, altoPantalla / 16 * 2, vel);
+            coches[13] = new Coche(imgCochesLeft[(int)(Math.random()*5)], -anchoCoche, altoPantalla / 16 * 1, vel);
+            coches[14] = new Coche(imgCochesRight[(int)(Math.random()*5)], anchoPantalla/3, altoPantalla / 16 * 2, vel);
+            coches[15] = new Coche(imgCochesLeft[(int)(Math.random()*5)], anchoPantalla/2, altoPantalla / 16 * 1, vel);
 
         }else if(numFondo == 1){
             coches[8].setY(altoPantalla / 16 * 6);
@@ -90,6 +91,15 @@ public class Trafico {
             coches[14].setY(altoPantalla/16 * 3);
             coches[15].setY(altoPantalla/16 * 2);
 
+            for (int i = 0; i < coches.length; i++) {
+                if(i % 2 == 0){
+                    coches[i].setImagen(imgCochesRight[(int)(Math.random()*5)]);
+                }else{
+                    coches[i].setImagen(imgCochesLeft[(int)(Math.random()*5)]);
+                }
+                coches[i].setVelocidad(vel);
+            }
+
         } else if(numFondo == 2){
             coches[4].setY(altoPantalla / 16 * 9);
             coches[5].setY(altoPantalla / 16 * 8);
@@ -100,6 +110,15 @@ public class Trafico {
             coches[9].setY(altoPantalla /16 * 4);
             coches[10].setY(altoPantalla / 16 * 5);
             coches[11].setY(altoPantalla / 16 * 4);
+
+            for (int i = 0; i < coches.length; i++) {
+                if(i % 2 == 0){
+                    coches[i].setImagen(imgCochesRight[(int)(Math.random()*5)]);
+                }else{
+                    coches[i].setImagen(imgCochesLeft[(int)(Math.random()*5)]);
+                }
+                coches[i].setVelocidad(vel);
+            }
         }
     }
 

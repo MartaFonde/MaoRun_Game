@@ -10,20 +10,21 @@ public class Coche {
     public PointF posicion;
     float x;
     float y;
+
     public Bitmap imagen;
     public RectF rectangulo;
     int anchoCoche;
     int altoCoche;
-    int velocidad;
+    float velocidad;
 
-    public Coche(Bitmap imagen, float x, float y, int velocidad) {
-        this.imagen = imagen;
+    public Coche(Bitmap imagen, float x, float y, float velocidad) {
+        setImagen(imagen);
         this.posicion = new PointF(x, y);
         setX(x);
         setY(y);
         this.anchoCoche = imagen.getWidth();
         this.altoCoche = imagen.getHeight();
-        this.velocidad = velocidad;
+        setVelocidad(velocidad);
     }
 
     public float getX() {
@@ -44,6 +45,22 @@ public class Coche {
         this.y = y;
         posicion.y = y;
         setRectangulo();
+    }
+
+    public float getVelocidad() {
+        return velocidad;
+    }
+
+    public void setVelocidad(float velocidad) {
+        this.velocidad = velocidad;
+    }
+
+    public Bitmap getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(Bitmap imagen) {
+        this.imagen = imagen;
     }
 
     public void setRectangulo() {

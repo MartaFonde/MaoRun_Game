@@ -79,7 +79,12 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
                     controles.vidas--;
                     //TODO vibración+sonido
                 }
+                //Cando coche colisión deixe de interset o xogador, xa podería volver colisionar
+                if(cocheColision != -1 && !trafico.coches[cocheColision].rectangulo.intersect(gato.rectangulo)){
+                    cocheColision = -1;
+                }
             }
+
         }
     }
 
@@ -150,16 +155,20 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
                         colisionMonedas();
 
                         //TODO crear una función para esto
-                        if(escenario.numFondo < escenario.fondos.length){
+                        //if(escenario.numFondo < escenario.fondos.length){
                             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *14, 0,
                                     anchoPantalla/32*17, 0))){
                                 escenario.numFondo++;
                                 escenario.setFondos(escenario.numFondo);
                                 gato.setX(gato.getX());
                                 gato.setY(altoPantalla/16*15);
-                                trafico.setCoches(escenario.numFondo, trafico.velocidadCoche+5);
+                                Log.i("vel", trafico.velocidadCoche+"");
+                                trafico.velocidadCoche += anchoPantalla / (32*30);
+                                //FIXME en tamaños pequeños de pantalla no aumenta velocidad
+                                trafico.setCoches(escenario.numFondo, trafico.velocidadCoche);
+                                Log.i("vel", trafico.velocidadCoche+"");
                             }
-                        }
+                        //}
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -285,10 +294,10 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
                 }
 
                 bitmapGato = escala( R.drawable.gato, (anchoPantalla/32)*4, (altoPantalla/16)*6);
-                gato = new Gato(bitmapGato, anchoPantalla/2-1, altoPantalla/16*14, 15);
+                gato = new Gato(bitmapGato, anchoPantalla/2-1, altoPantalla/16*14, anchoPantalla / (32*2));
 
                 escalaCoches();
-                trafico = new Trafico(imgCochesRight, imgCochesLeft, velocidadCoches, anchoPantalla, altoPantalla);
+                trafico = new Trafico(imgCochesRight, imgCochesLeft, anchoPantalla / (32 * 10), anchoPantalla, altoPantalla);
 
                 moneda = escala( R.drawable.moneda, anchoPantalla/32*5, altoPantalla/16);
                 escenario = new Escenario(fondo, moneda, 0, anchoPantalla, altoPantalla);
@@ -305,7 +314,7 @@ public class Pantalla extends SurfaceView implements SurfaceHolder.Callback {
 
         this.anchoCoche = anchoPantalla/32;
         this.altoCoche = altoPantalla/16;
-        Log.i("dim coches ", anchoCoche+","+altoCoche);
+        //Log.i("dim coches ", anchoCoche+","+altoCoche);
 
         imgCochesLeft[0] = escala(R.drawable.blue_car_left, anchoCoche, altoCoche);
         imgCochesLeft[1] = escala(R.drawable.green_car_left, anchoCoche, altoCoche);
