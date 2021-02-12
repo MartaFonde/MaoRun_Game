@@ -1,18 +1,19 @@
 package com.example.juego;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.text.TextPaint;
-import android.util.Log;
 
 public class Controles {
+    Context context;
     int anchoPantalla;
     int altoPantalla;
 
-    Bitmap[] imgControles;
+    Bitmap[] bitmapControles;
 
     RectF der;
     RectF izq;
@@ -34,22 +35,35 @@ public class Controles {
     Paint pPuntuacion;
     TextPaint tpaint;
 
-    public Controles(Bitmap[] imgControles, int anchoPantalla, int altoPantalla) {
+    public Controles(Context context, int anchoPantalla, int altoPantalla) {
+        this.context = context;
+
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
+
+        bitmapControles = new Bitmap[6];
+        setBitmapControles();
+
         this.puntos = 0;
         this.vidas = 7;
 
+        setRectControles();
         setPaintControles();
-        setImgControles(imgControles);
     }
 
-    public Bitmap[] getImgControles() {
-        return imgControles;
+    public Bitmap[] getBitmapControles() {
+        return bitmapControles;
     }
 
-    public void setImgControles(Bitmap[] imgControles) {
-        this.imgControles = imgControles;
+    public void setBitmapControles() {
+        escalaControles();
+    }
+
+    public void setRectControles(){
+        abajo = new RectF(anchoPantalla / 32 * 24 , altoPantalla / 16 * 13, anchoPantalla / 32 * 27 , altoPantalla);
+        izq = new RectF(anchoPantalla / 32 , altoPantalla / 16 * 13, anchoPantalla / 32 * 4, altoPantalla);
+        der = new RectF(anchoPantalla / 32 * 5, altoPantalla / 16 * 13, anchoPantalla / 32 * 8, altoPantalla);
+        arriba = new RectF(anchoPantalla / 32 * 28, altoPantalla / 16 * 13, anchoPantalla/32 * 31, altoPantalla);
     }
 
     public void setPaintControles(){
@@ -83,32 +97,39 @@ public class Controles {
         tpaint.setColor(Color.BLACK); // Color del texto
     }
 
-    public void dibujaControles(Canvas c, int anchoPantalla, int altoPantalla) {
-        abajo = new RectF(anchoPantalla / 32 * 24 , altoPantalla / 16 * 13, anchoPantalla / 32 * 27 , altoPantalla);
-        //c.drawRect(abajo, pAbajo);
-        c.drawBitmap(imgControles[0], anchoPantalla/32 * 24, altoPantalla / 16 * 13,pControles);
-
-        izq = new RectF(anchoPantalla / 32 , altoPantalla / 16 * 13, anchoPantalla / 32 * 4, altoPantalla);
-        //c.drawRect(izq, pIzq);
-        c.drawBitmap(imgControles[1], anchoPantalla / 32, altoPantalla / 16 * 13, pControles);
-
-        der = new RectF(anchoPantalla / 32 * 5, altoPantalla / 16 * 13, anchoPantalla / 32 * 8, altoPantalla);
-        //c.drawRect(der, pDer);
-        c.drawBitmap(imgControles[2], anchoPantalla / 32 * 5, altoPantalla / 16 * 13, pControles);
-
-        arriba = new RectF(anchoPantalla / 32 * 28, altoPantalla / 16 * 13, anchoPantalla/32 * 31, altoPantalla);
-        //c.drawRect(arriba, pArriba);
-        c.drawBitmap(imgControles[3], anchoPantalla / 32 * 28, altoPantalla / 16 * 13, pControles);
+    public void dibujaControles(Canvas c) {
+        c.drawBitmap(bitmapControles[0], anchoPantalla/32 * 24, altoPantalla / 16 * 13,pControles);
+        c.drawBitmap(bitmapControles[1], anchoPantalla / 32, altoPantalla / 16 * 13, pControles);
+        c.drawBitmap(bitmapControles[2], anchoPantalla / 32 * 5, altoPantalla / 16 * 13, pControles);
+        //arriba = new RectF(anchoPantalla / 32 * 28, altoPantalla / 16 * 13, anchoPantalla/32 * 31, altoPantalla);
+        c.drawBitmap(bitmapControles[3], anchoPantalla / 32 * 28, altoPantalla / 16 * 13, pControles);
 
         puntuacionRect = new RectF(anchoPantalla/32*24, 0, anchoPantalla, altoPantalla/16*2.5f);
         c.drawRect(puntuacionRect, pPuntuacion);
 
         //Log.i("vidas", vidas+"");
         for (int i = 0; i < vidas; i++) {
-            c.drawBitmap(imgControles[4], anchoPantalla/32 * (31 - i), altoPantalla / 16 * 0.5f, null);
+            c.drawBitmap(bitmapControles[4], anchoPantalla/32 * (31 - i), altoPantalla / 16 * 0.5f, null);
         }
-
         c.drawText(""+puntos, anchoPantalla/32*27.5f,  altoPantalla / 16 *2.25f, tpaint);
-        c.drawBitmap(imgControles[5], anchoPantalla /32 *30, altoPantalla/16 * 1.5f, null);
+        c.drawBitmap(bitmapControles[5], anchoPantalla /32 *30, altoPantalla/16 * 1.5f, null);
+    }
+
+
+    public void escalaControles(){
+
+        int anchoControles = anchoPantalla/32 * 3;
+        int altoControles = altoPantalla /16 * 3;
+
+        int anchoPuntuacion = anchoPantalla / 32;
+        int altoPuntuacion = altoPantalla / 16 ;
+
+        bitmapControles[0] = Pantalla.escala(context, R.drawable.arrow_down, anchoControles, altoControles);
+        bitmapControles[1] = Pantalla.escala(context, R.drawable.arrow_left, anchoControles, altoControles);
+        bitmapControles[2] = Pantalla.escala(context, R.drawable.arrow_right, anchoControles, altoControles);
+        bitmapControles[3] = Pantalla.escala(context, R.drawable.arrow_up, anchoControles, altoControles);
+
+        bitmapControles[4] = Pantalla.escala(context, R.drawable.heart, anchoPuntuacion, altoPuntuacion);
+        bitmapControles[5] = Pantalla.escala(context, R.drawable.monedas_controles, anchoPuntuacion, altoPuntuacion);
     }
 }

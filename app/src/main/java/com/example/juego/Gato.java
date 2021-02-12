@@ -105,9 +105,9 @@ public class Gato {
     }
 
     public void setRectangulo() {
-        rectangulo = new RectF(posicion.x + anchoImagen*0.3f, posicion.y + altoImagen*0.6f,
-                posicion.x +anchoImagen*0.7f, posicion.y+altoImagen);
-        posicionFutura = getPosicionFutura(Pantalla.mov);
+        rectangulo = new RectF(posicion.x + anchoImagen*0.3f, posicion.y + altoImagen*0.7f,
+                posicion.x +anchoImagen * 0.7f, posicion.y+altoImagen);
+        posicionFutura = getPosicionFutura(Escena.mov);
     }
 
     public void moverAbajo(int altoPantalla) {
@@ -155,7 +155,7 @@ public class Gato {
                     break;
             case 3: posFuturaY -= velocidad;
         }
-        posicionFutura = new RectF(posFuturaX + anchoImagen*0.3f, posFuturaY + altoImagen*0.6f,
+        posicionFutura = new RectF(posFuturaX + anchoImagen*0.3f, posFuturaY + altoImagen*0.7f,
                 posFuturaX+anchoImagen*0.7f, posFuturaY+altoImagen);
         return posicionFutura;
     }
