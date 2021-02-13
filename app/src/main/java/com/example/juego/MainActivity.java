@@ -3,6 +3,7 @@ package com.example.juego;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -35,9 +36,10 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide(); // se oculta la barra de ActionBar
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        Pantalla pantallaJuego=new Pantalla(this);
-        pantallaJuego.setKeepScreenOn(true);
-        setContentView(pantallaJuego);
+
+        JuegoSV juego = new JuegoSV(this);
+        juego.setKeepScreenOn(true);
+        setContentView(juego);
 
 
     }

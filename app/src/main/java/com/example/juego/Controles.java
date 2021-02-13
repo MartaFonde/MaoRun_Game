@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.text.TextPaint;
 
 public class Controles {
@@ -33,7 +34,8 @@ public class Controles {
     int vidas;
 
     Paint pPuntuacion;
-    TextPaint tpaint;
+    TextPaint textPaint;
+    Typeface face;
 
     public Controles(Context context, int anchoPantalla, int altoPantalla) {
         this.context = context;
@@ -46,6 +48,8 @@ public class Controles {
 
         this.puntos = 0;
         this.vidas = 7;
+
+        face=Typeface.createFromAsset(context.getAssets(),"fonts/PolandCannedIntoFuture-OxE3.ttf");
 
         setRectControles();
         setPaintControles();
@@ -91,10 +95,11 @@ public class Controles {
         pPuntuacion.setStyle(Paint.Style.FILL);
         pPuntuacion.setAlpha(150);
 
-        tpaint = new TextPaint();
-        tpaint.setTextSize(anchoPantalla / (32*1.5f)); // tamaño del texto en pixels
-        //tpaint.setTextAlign(Paint.Align.CENTER); // Alineación del texto
-        tpaint.setColor(Color.BLACK); // Color del texto
+        textPaint = new TextPaint();
+        textPaint.setTypeface(face);
+        textPaint.setTextSize(altoPantalla / 20); // tamaño del texto en pixels
+        textPaint.setTextAlign(Paint.Align.CENTER); // Alineación del texto
+        textPaint.setColor(Color.BLACK); // C
     }
 
     public void dibujaControles(Canvas c) {
@@ -111,7 +116,8 @@ public class Controles {
         for (int i = 0; i < vidas; i++) {
             c.drawBitmap(bitmapControles[4], anchoPantalla/32 * (31 - i), altoPantalla / 16 * 0.5f, null);
         }
-        c.drawText(""+puntos, anchoPantalla/32*27.5f,  altoPantalla / 16 *2.25f, tpaint);
+
+        c.drawText(""+puntos, anchoPantalla/32*27.5f,  altoPantalla / 16 *2.25f, textPaint);
         c.drawBitmap(bitmapControles[5], anchoPantalla /32 *30, altoPantalla/16 * 1.5f, null);
     }
 

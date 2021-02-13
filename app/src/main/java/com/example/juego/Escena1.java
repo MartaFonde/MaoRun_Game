@@ -13,10 +13,8 @@ public class Escena1 extends Escena {
     int numEscena;
     float velocidadCoches;
 
-    public Escena1(Context context, int numEscena, int anchoPantalla, int altoPantalla) {
-        super(context, numEscena, anchoPantalla, altoPantalla);
-
-        this.numEscena = numEscena;
+    public Escena1(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
+        super(context, anchoPantalla, altoPantalla, numPantalla);
 
         fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel1);
         super.setFondo(fondo);
@@ -29,6 +27,7 @@ public class Escena1 extends Escena {
         this.velocidadCoches = anchoPantalla /(32 * 10);
         setCoches();
     }
+
 
     @Override
     public void dibuja(Canvas c) {
@@ -50,10 +49,10 @@ public class Escena1 extends Escena {
         if(mov == 3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *14, 0,
                     anchoPantalla/32*17, 0))){
-                int nuevaEscena = this.numEscena+1;
+                int nuevaPantalla = this.numPantalla+1;
                 gato.setX(gato.getX());
                 gato.setY(altoPantalla/16*15);
-                return nuevaEscena;
+                return nuevaPantalla;
             }
         }
 

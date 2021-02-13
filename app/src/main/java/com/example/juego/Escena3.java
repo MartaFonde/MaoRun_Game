@@ -9,13 +9,10 @@ import android.view.MotionEvent;
 
 public class Escena3 extends Escena {
     Bitmap fondo;
-    int numEscena;
     float velocidadCoches;
 
-    public Escena3(Context context, int numEscena, int anchoPantalla, int altoPantalla) {
-        super(context, numEscena, anchoPantalla, altoPantalla);
-
-        this.numEscena = numEscena;
+    public Escena3(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
+        super(context, anchoPantalla, altoPantalla, numPantalla);
 
         fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel3);
         super.setFondo(fondo);
@@ -48,10 +45,10 @@ public class Escena3 extends Escena {
         if(mov == 3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *14, 0,
                     anchoPantalla/32*17, 0))){
-                int nuevaEscena = this.numEscena+1;
+                int nuevaPantalla = this.numPantalla+1;
                 gato.setX(gato.getX());
                 gato.setY(altoPantalla/16*15);
-                return nuevaEscena;
+                return nuevaPantalla;
             }
         }
 

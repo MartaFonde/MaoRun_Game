@@ -7,12 +7,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
-abstract public class Escena {
+abstract public class Escena extends Pantalla{
     Context context;
 
     Bitmap fondo;
@@ -38,6 +39,7 @@ abstract public class Escena {
     Bitmap monedaActual;
 
     Paint p;
+    TextPaint tp;
 
     float propW;
     float propH;
@@ -54,7 +56,8 @@ abstract public class Escena {
     int cocheColision = -1;
     int nuevoCoche;
 
-    public Escena(Context context, int numEscena, int anchoPantalla, int altoPantalla) {
+    public Escena(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
+        super(context, anchoPantalla,altoPantalla, numPantalla);
         this.context = context;
 
         this.anchoPantalla = anchoPantalla;
@@ -82,6 +85,8 @@ abstract public class Escena {
         p.setStrokeWidth(5);
         p.setAlpha(150);
 
+        tp = super.tp;
+
         trafico = new Trafico(context, anchoPantalla, altoPantalla);
 
         controles = new Controles(context, anchoPantalla, altoPantalla);
@@ -107,6 +112,7 @@ abstract public class Escena {
         c.drawBitmap(fondo, 0, 0, null);
     }
 
+    @Override
     public void dibuja(Canvas c){
         try{
             dibujaMonedas(c);
@@ -119,7 +125,8 @@ abstract public class Escena {
         }
     }
 
-    public void actualizarFisica() {        //movimiento automatico del juego
+
+    public void actualizaFisica() {        //movimiento automatico del juego
         if (trafico.coches.length > 0) {
             for (int i = 0; i < trafico.coches.length; i++) {
                 nuevoCoche = i;
@@ -175,10 +182,10 @@ abstract public class Escena {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                Log.i("parado", "");
+                gato.parado();
+                //Log.i("parado", "");
                 break;
         }
-        gato.parado();
         return numEscena;
     }
 
@@ -283,6 +290,8 @@ abstract public class Escena {
             c.drawRect(arbol, p);
         }
     }
+
     abstract  void setArbolesRect();
+
     abstract void setCoches();
 }
