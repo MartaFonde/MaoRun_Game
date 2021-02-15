@@ -13,17 +13,14 @@ public class Escena3 extends Escena {
 
     public Escena3(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
-
         fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel3);
-        super.setFondo(fondo);
-
-        super.arbolesRect = new RectF[20];
+        setFondo(fondo);
+        arbolesRect = new RectF[19];
         setArbolesRect();
-
         super.setPosicionMonedas();
-
         velocidadCoches = (anchoPantalla /(32 * 10))*1.5f;
         setCoches();
+        gato.setVelocidad(anchoPantalla / (32*2));
     }
 
     @Override
@@ -58,29 +55,28 @@ public class Escena3 extends Escena {
     public void setArbolesRect(){      //TODO retocar bordes
         //fila1
         arbolesRect[0] = new RectF(0, propH  * 12 * 1.03f, propW  * 6, altoPantalla);
-        arbolesRect[1] = new RectF(propW  * 6, propH  * 13 * 1.007f, propW * 10 * 1.01f, altoPantalla);
+        arbolesRect[1] = new RectF(propW  * 6, propH  * 13 * 1.02f, propW * 10 * 1.01f, altoPantalla);
         arbolesRect[2] = new RectF(propW  * 12 * 1.03f, propH  * 12 * 1.02f, propW  * 13 , propH * 13);
         arbolesRect[3] = new RectF(propW  * 19 * 1.015f, propH  * 13 * 1.02f, propW  * 20 , propH * 14);
-        arbolesRect[4] = new RectF(propW  * 22 * 1.02f, propH  * 14 * 1.02f, propW * 24 * 1.01f, altoPantalla);
+        arbolesRect[4] = new RectF(propW  * 22 * 1.015f, propH  * 14 * 1.02f, propW * 24 * 1.01f, altoPantalla);
         arbolesRect[5] = new RectF(propW  * 24 *1.005f, propH  * 13 * 1.02f, propW * 27, altoPantalla);
         arbolesRect[6] = new RectF(propW  * 27 *1.005f, propH  * 12 * 1.02f, anchoPantalla, altoPantalla);
 
         //fila2
-        arbolesRect[7] = new RectF(0 , propH  * 6 * 1.07f, propW * 4 / 1.07f, propH * 8 );
-        arbolesRect[8] = new RectF(propW * 6 * 1.07f, propH  * 7 * 1.03f, propW  * 9 , propH  * 8);
-        arbolesRect[9] = new RectF(propW * 27 * 1.07f , propH * 14 * 1.02f, anchoPantalla, altoPantalla );
-        arbolesRect[10] = new RectF(propW  * 11 * 1.015f, propH  * 6 * 1.03f, propW * 14 , propH  * 7);
-        arbolesRect[11] = new RectF(propW * 15 *1.015f, propH * 7 * 1.03f, propW * 20 / 1.015f, propH * 8 );
-        arbolesRect[12] = new RectF(propW * 21 *1.015f, propH  * 6 * 1.03f, propW * 24 / 1.03f , propH * 7);
-        arbolesRect[13] = new RectF(propW * 26 *1.015f, propH  * 7 *1.03f, propW * 28, propH * 8);
-        arbolesRect[14] = new RectF(propW * 28 * 1.015f, propH * 6 * 1.03f, anchoPantalla, propH * 8 / 1.03f);
+        arbolesRect[7] = new RectF(0 , propH  * 6 * 1.02f, propW * 4 / 1.04f, propH * 8 );
+        arbolesRect[8] = new RectF(propW * 6 * 1.025f, propH  * 7 * 1.03f, propW  * 9 , propH  * 8);
+        arbolesRect[9] = new RectF(propW  * 11 * 1.03f, propH  * 6 * 1.03f, propW * 14  , propH  * 7);
+        arbolesRect[10] = new RectF(propW * 15 *1.015f, propH * 7 * 1.03f, propW * 20 / 1.015f, propH * 8 );
+        arbolesRect[11] = new RectF(propW * 21 *1.015f, propH  * 6 * 1.03f, propW * 24 / 1.025f  , propH * 7);
+        arbolesRect[12] = new RectF(propW * 26 *1.015f, propH  * 7 *1.03f, propW * 28, propH * 8 );
+        arbolesRect[13] = new RectF(propW * 28 * 1.015f, propH * 6 * 1.03f, anchoPantalla, propH * 8 / 1.03f);
 
         //fila3
-        arbolesRect[15] = new RectF(0, 0, propW * 6 , propH * 2 / 1.03f );
-        arbolesRect[16] = new RectF(propW  * 6 * 1.03f, 0, propW * 9, propH / 1.03f);
-        arbolesRect[17] = new RectF(propW  * 12 * 1.03f, 0, propW * 17 , propH * 2 / 1.03f);
-        arbolesRect[18] = new RectF(propW * 23 * 1.03f, 0, propW * 25 / 1.015f, propH / 1.07f);
-        arbolesRect[19] = new RectF(propW * 25* 1.01f, 0, anchoPantalla, propH * 2);
+        arbolesRect[14] = new RectF(0, 0, propW * 6 , propH * 2 / 1.03f );
+        arbolesRect[15] = new RectF(propW  * 6 * 1.02f, 0, propW * 9, propH / 1.03f);
+        arbolesRect[16] = new RectF(propW  * 12 * 1.025f, 0, propW * 17 , propH * 2 / 1.03f);
+        arbolesRect[17] = new RectF(propW * 23 * 1.015f, 0, propW * 25 / 1.015f, propH / 1.07f);
+        arbolesRect[18] = new RectF(propW * 25* 1.01f, 0, anchoPantalla, propH * 2);
 
         //rect de victoria /final
         //arbolesRect[20] = new RectF(propW  * 18 , 0, propW * 22, propH * 2 / 1.03f);

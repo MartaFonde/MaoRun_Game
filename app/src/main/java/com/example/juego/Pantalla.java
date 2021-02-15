@@ -41,9 +41,6 @@ public class Pantalla {
     }
 
     int onTouchEvent(MotionEvent event){
-        int x=(int)event.getX();
-        int y=(int)event.getY();
-
         return -1;
     }
 

@@ -30,21 +30,20 @@ public class Gato {
 
     Bitmap[][] imgGato;
     boolean puedeMoverse = true;
-    int velocidad;
+
+    float velocidad;
     Paint p;
     Paint p2;
 
-    public Gato(Bitmap imagenes, float x, float y, int velocidad) {
+    public Gato(Bitmap imagenes, float x, float y, float velocidad) {
         this.imagenes = imagenes;
         this.posicion = new PointF(x, y);
         setX(x);
         setY(y);
-
-        this.velocidad = velocidad;
+        setVelocidad(velocidad);
 
         this.anchoImagenes = imagenes.getWidth();
         this.altoImagenes = imagenes.getHeight();
-
         this.anchoImagen = anchoImagenes/3;     //3 columnas
         this.altoImagen = altoImagenes/4; // 4 filas (movimientos)
 
@@ -91,6 +90,13 @@ public class Gato {
         setRectangulo();
     }
 
+    public float getVelocidad() {
+        return velocidad;
+    }
+
+    public void setVelocidad(float velocidad) {
+        this.velocidad = velocidad;
+    }
 
     public Bitmap[][] getImgGato() {
         return imgGato;
@@ -170,7 +176,8 @@ public class Gato {
     }
 
     public void parado(){
-        this.imagen = imgGato[fila][1];
+        col = 1;
+        this.imagen = imgGato[fila][col];
     }
 
     public void dibujaGato(Canvas c){

@@ -20,10 +20,10 @@ public class Escena2 extends Escena {
 
         super.arbolesRect = new RectF[25];
         setArbolesRect();
-
         super.setPosicionMonedas();
+        gato.setVelocidad(anchoPantalla / (32*2.5f));
 
-        velocidadCoches = (anchoPantalla / (32*10))*1.5f;
+        velocidadCoches = anchoPantalla / (32*10);
         setCoches();
     }
 
@@ -52,38 +52,37 @@ public class Escena2 extends Escena {
                 return nuevaPantalla;
             }
         }
-
-        return -1;
+        return super.onTouchEvent(event);
     }
 
 
     public void setArbolesRect(){
         //fila1
-        arbolesRect[0] = new RectF(0, propH  * 13, propW  * 6 , altoPantalla);
+        arbolesRect[0] = new RectF(0, propH  * 13 * 1.02f, propW  * 6 , altoPantalla);
         arbolesRect[1] = new RectF(propW * 6, propH  * 14 * 1.02f, propW * 7 *0.99f, altoPantalla);
         arbolesRect[2] = new RectF(propW  * 7, propH  * 15 * 1.015f, propW  * 14 * 0.99f, altoPantalla);
         arbolesRect[3] = new RectF(propW  * 9 * 1.015f, propH  * 13 * 1.007f, propW * 11 * 1.01f, propH * 14);
         arbolesRect[4] = new RectF(propW  * 19 * 1.015f, propH  * 13 * 1.02f, propW  * 21 , propH * 14);
-        arbolesRect[5] = new RectF(propW  * 17 * 1.015f, propH  * 15 * 1.02f, propW  * 23 , altoPantalla);
+        arbolesRect[5] = new RectF(propW  * 17 * 1.025f, propH  * 15 * 1.02f, propW  * 23 , altoPantalla);
         arbolesRect[6] = new RectF(propW  * 23 * 1.005f, propH  * 14 * 1.02f, propW * 27 * 1.01f, altoPantalla);
         arbolesRect[7] = new RectF(propW  * 27 *1.005f, propH  * 13 * 1.02f, anchoPantalla, altoPantalla);
         arbolesRect[8] = new RectF(propW  * 30 *1.005f, propH  * 12 * 1.02f, anchoPantalla, propH * 13);
 
         //fila2
         arbolesRect[9] = new RectF(0 , propH * 9 * 1.02f, propW * 2, propH * 10 );
-        arbolesRect[10] = new RectF(propW  * 4 *1.05f , propH  * 9, propW * 5 / 1.04f, propH * 10 );
-        arbolesRect[11] = new RectF(propW * 9 * 1.05f, propH  * 9 * 1.03f, propW  * 10 , propH  * 10 );
-        arbolesRect[12] = new RectF(propW  * 14 * 1.015f, propH  * 9* 1.03f, propW *15 , propH  * 10 );
+        arbolesRect[10] = new RectF(propW  * 4 *1.05f , propH  * 9 * 1.03f, propW * 5 / 1.04f, propH * 10 );
+        arbolesRect[11] = new RectF(propW * 9 * 1.015f, propH  * 9 * 1.03f, propW  * 10 , propH  * 10 );
+        arbolesRect[12] = new RectF(propW  * 14 * 1.015f, propH  * 9 * 1.03f, propW *15 / 1.02f , propH  * 10 );
         arbolesRect[13] = new RectF(propW * 22 *1.015f, propH * 9 * 1.03f, propW * 23, propH * 10 );
         arbolesRect[14] = new RectF(propW * 28 *1.015f, propH  * 9 * 1.03f, propW * 29 , propH * 10 );
         arbolesRect[15] = new RectF(propW * 31 *1.015f, propH  * 9 *1.03f, anchoPantalla, propH * 10 );
 
         //fila3
-        arbolesRect[16] = new RectF(0, propH * 4 * 1.015f, propW * 5 *1.015f, propH * 5 / 1.03f);
-        arbolesRect[17] = new RectF(propW  * 8 *1.02f, propH * 4 * 1.015f, propW * 9 / 1.005f, propH * 5 / 1.03f);
-        arbolesRect[18] = new RectF(propW  * 13 *1.015f * 1.007f, propH * 4 * 1.015f, propW * 14/1.005f , propH * 5 / 1.03f);
-        arbolesRect[19] = new RectF(propW  * 20 * 1.015f, propH * 4 * 1.015f, propW * 21, propH * 5 / 1.03f);
-        arbolesRect[20] = new RectF(propW  * 27 * 1.015f, propH * 4 * 1.015f, anchoPantalla, propH * 5 / 1.03f);
+        arbolesRect[16] = new RectF(0, propH * 4 * 1.035f, propW * 5 *1.015f, propH * 5 / 1.03f);
+        arbolesRect[17] = new RectF(propW  * 8 *1.02f, propH * 4 * 1.035f, propW * 9 / 1.005f, propH * 5 / 1.03f);
+        arbolesRect[18] = new RectF(propW  * 13 *1.015f * 1.007f, propH * 4 * 1.035f, propW * 14/1.005f , propH * 5 / 1.03f);
+        arbolesRect[19] = new RectF(propW  * 20 * 1.015f, propH * 4 * 1.035f, propW * 21, propH * 5 / 1.03f);
+        arbolesRect[20] = new RectF(propW  * 27 * 1.015f, propH * 4 * 1.035f, anchoPantalla, propH * 5 / 1.03f);
         //fila4
         arbolesRect[21] =  new RectF(0, 0, propW * 4 / 1.015f, propH *2 / 1.07f);
         arbolesRect[22] = new RectF(propW * 4 * 1.015f, 0, propW* 9 / 1.015f, propH / 1.07f);

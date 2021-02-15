@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.text.TextPaint;
 import android.view.MotionEvent;
 
@@ -15,6 +16,7 @@ abstract public class Menu extends Pantalla{
     Paint p;
     Rect menu;
     int pantallaMenu;
+    RectF btnAtras;
 
     //TODO fondo, fonte de letra, colores
 
@@ -31,16 +33,25 @@ abstract public class Menu extends Pantalla{
         p.setStyle(Paint.Style.FILL);
 
         super.tp.setTextAlign(Paint.Align.CENTER);
+
+        btnAtras = new RectF(0, altoPantalla/16 * 14, anchoPantalla / 32 * 4, altoPantalla);
     }
 
     @Override
     public void dibuja(Canvas c){
         super.dibuja(c);
+        if(numPantalla != 1){
+            c.drawRect(btnAtras, p);
+        }
     }
 
     int onTouchEvent(MotionEvent event){
         int x=(int)event.getX();
         int y=(int)event.getY();
+
+        if(numPantalla != 1 && btnAtras.contains(x,y)) {
+            return 1;
+        }
 
 //        if (botonDerecha.contains(x,y)){
 //            if (numEscena<6) return numEscena+1;

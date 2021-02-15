@@ -43,6 +43,8 @@ public class MenuPrincipal extends Menu{
                     return 6;
                 }else if(btnCreditos.contains(x,y)){
                     return 3;
+                }else if(btnOpciones.contains(x,y)){
+                    return 5;
                 }
         }
 
