@@ -6,18 +6,20 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 public class Escena3 extends Escena {
     Bitmap fondo;
     float velocidadCoches;
 
-    public Escena3(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
-        super(context, anchoPantalla, altoPantalla, numPantalla);
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel3);
+    public Escena3(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
+        super(context, anchoPantalla, altoPantalla, numPantalla, gato);
+        //fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel3);
+        fondo = Pantalla.getBitmapFromAssets(context, "mapas/mapa_nivel3.png");
         setFondo(fondo);
         arbolesRect = new RectF[19];
         setArbolesRect();
-        super.setPosicionMonedas();
+        setPosicionMonedas();
         velocidadCoches = (anchoPantalla /(32 * 10))*1.5f;
         setCoches();
         gato.setVelocidad(anchoPantalla / (32*2));
@@ -41,11 +43,12 @@ public class Escena3 extends Escena {
         super.onTouchEvent(event);
         if(mov == 3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *14, 0,
-                    anchoPantalla/32*17, 0))){
-                int nuevaPantalla = this.numPantalla+1;
-                gato.setX(gato.getX());
-                gato.setY(altoPantalla/16*15);
-                return nuevaPantalla;
+                    anchoPantalla/32*17, altoPantalla/16))){
+//               fin de partida
+            }else {
+                gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                gato.moverArriba();
+                colisionMonedas();
             }
         }
 
@@ -63,11 +66,11 @@ public class Escena3 extends Escena {
         arbolesRect[6] = new RectF(propW  * 27 *1.005f, propH  * 12 * 1.02f, anchoPantalla, altoPantalla);
 
         //fila2
-        arbolesRect[7] = new RectF(0 , propH  * 6 * 1.02f, propW * 4 / 1.04f, propH * 8 );
+        arbolesRect[7] = new RectF(0 , propH  * 6 * 1.05f, propW * 4 / 1.04f, propH * 8 );
         arbolesRect[8] = new RectF(propW * 6 * 1.025f, propH  * 7 * 1.03f, propW  * 9 , propH  * 8);
         arbolesRect[9] = new RectF(propW  * 11 * 1.03f, propH  * 6 * 1.03f, propW * 14  , propH  * 7);
         arbolesRect[10] = new RectF(propW * 15 *1.015f, propH * 7 * 1.03f, propW * 20 / 1.015f, propH * 8 );
-        arbolesRect[11] = new RectF(propW * 21 *1.015f, propH  * 6 * 1.03f, propW * 24 / 1.025f  , propH * 7);
+        arbolesRect[11] = new RectF(propW * 21 *1.015f, propH  * 6 * 1.03f, propW * 24 / 1.015f  , propH * 7);
         arbolesRect[12] = new RectF(propW * 26 *1.015f, propH  * 7 *1.03f, propW * 28, propH * 8 );
         arbolesRect[13] = new RectF(propW * 28 * 1.015f, propH * 6 * 1.03f, anchoPantalla, propH * 8 / 1.03f);
 

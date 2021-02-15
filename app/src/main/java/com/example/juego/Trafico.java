@@ -60,11 +60,11 @@ public class Trafico {
     }
 
     public void setImgCochesLeft() {
-        imgCochesLeft[0] = Pantalla.escala(context,R.drawable.blue_car_left, anchoCoche, altoCoche);
-        imgCochesLeft[1] = Pantalla.escala(context, R.drawable.green_car_left, anchoCoche, altoCoche);
-        imgCochesLeft[2] = Pantalla.escala(context, R.drawable.red_car_left, anchoCoche, altoCoche);
-        imgCochesLeft[3] = Pantalla.escala(context, R.drawable.white_car_left, anchoCoche, altoCoche);
-        imgCochesLeft[4] = Pantalla.escala(context, R.drawable.orange_car_left, anchoCoche, altoCoche);
+        imgCochesLeft[0] = Pantalla.escala(context,"coches/blue_car_left.png", anchoCoche, altoCoche);
+        imgCochesLeft[1] = Pantalla.escala(context, "coches/green_car_left.png", anchoCoche, altoCoche);
+        imgCochesLeft[2] = Pantalla.escala(context, "coches/red_car_left.png", anchoCoche, altoCoche);
+        imgCochesLeft[3] = Pantalla.escala(context,  "coches/white_car_left.png", anchoCoche, altoCoche);
+        imgCochesLeft[4] = Pantalla.escala(context, "coches/orange_car_left.png", anchoCoche, altoCoche);
 
     }
 
@@ -73,11 +73,11 @@ public class Trafico {
     }
 
     public void setImgCochesRight() {
-        imgCochesRight[0] = Pantalla.escala(context, R.drawable.blue_car_right, anchoCoche, altoCoche);
-        imgCochesRight[1] = Pantalla.escala(context, R.drawable.green_car_right, anchoCoche, altoCoche);
-        imgCochesRight[2] = Pantalla.escala(context, R.drawable.red_car_right, anchoCoche, altoCoche);
-        imgCochesRight[3] = Pantalla.escala(context, R.drawable.white_car_right, anchoCoche, altoCoche);
-        imgCochesRight[4] = Pantalla.escala(context, R.drawable.orange_car_right, anchoCoche, altoCoche);
+        imgCochesRight[0] = Pantalla.escala(context, "coches/blue_car_right.png", anchoCoche, altoCoche);
+        imgCochesRight[1] = Pantalla.escala(context, "coches/green_car_right.png", anchoCoche, altoCoche);
+        imgCochesRight[2] = Pantalla.escala(context, "coches/red_car_right.png", anchoCoche, altoCoche);
+        imgCochesRight[3] = Pantalla.escala(context, "coches/white_car_right.png", anchoCoche, altoCoche);
+        imgCochesRight[4] = Pantalla.escala(context, "coches/orange_car_right.png", anchoCoche, altoCoche);
     }
 
 

@@ -2,13 +2,13 @@ package com.example.juego;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BlendMode;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -17,8 +17,8 @@ import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -56,6 +56,13 @@ abstract public class Escena extends Pantalla{
     int cocheColision = -1;
     int nuevoCoche;
 
+    RectF puntuacionRect;
+    Paint pPuntuacion;
+//    TextPaint textPaint;
+//    Typeface face;
+    Bitmap vidaBitmap;
+    Bitmap monedasPuntuacionBitmap;
+
     AudioManager audioManager;
     SoundPool efectosSonido;
     int sonidoCoche, sonidoGato, sonidoMoneda;
@@ -63,22 +70,21 @@ abstract public class Escena extends Pantalla{
     MediaPlayer mediaPlayer;
 
     Vibrator vibrator;
-    long[] patronVibrator = {0, 200,50, 200};
 
-    public Escena(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
+    public Escena(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
         super(context, anchoPantalla,altoPantalla, numPantalla);
         this.context = context;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
-        //this.numEscena = numEscena;
+
         this.propW = anchoPantalla / 32;
         this.propH = altoPantalla / 16;
-        //arbolesRect = new RectF[numArboles];
+
         monedasRect = new ArrayList<>();
         posicionMonedas = new ArrayList<>();
         this.anchoMoneda = anchoPantalla/32;
         this.altoMoneda = altoPantalla/16;
-        this.conjuntoMonedas = Pantalla.escala(context, R.drawable.moneda, anchoMoneda, altoMoneda);
+        this.conjuntoMonedas = Pantalla.escala(context, "moneda/moneda.png" , anchoMoneda*5, altoMoneda);
         monedas = new Bitmap[5];
         setBitmapMoneda();
 
@@ -91,29 +97,16 @@ abstract public class Escena extends Pantalla{
         //tp = super.tp;
         trafico = new Trafico(context, anchoPantalla, altoPantalla);
         controles = new Controles(context, anchoPantalla, altoPantalla);
-        bitmapGato = Pantalla.escala(context, R.drawable.gato, (anchoPantalla/32)*4, (altoPantalla/16)*6);
-        gato = new Gato(bitmapGato, anchoPantalla/2-1, altoPantalla/16*14, anchoPantalla / (32*3));
+        this.gato = gato;
+//        bitmapGato = Pantalla.escala(context, "gato/gato.png", (anchoPantalla/32)*4, (altoPantalla/16)*6);
+//        gato = new Gato(bitmapGato, anchoPantalla/2-1, altoPantalla/16*14, anchoPantalla / (32*3));
 
-        audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-        if ((android.os.Build.VERSION.SDK_INT) >= 21) {
-            SoundPool.Builder spb=new SoundPool.Builder();
-            spb.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
-            spb.setMaxStreams(maxSonidosSimultaneos);
-            this.efectosSonido=spb.build();
-        } else {
-            this.efectosSonido=new SoundPool(maxSonidosSimultaneos, AudioManager.STREAM_MUSIC, 0);
-        }
+        //face= Typeface.createFromAsset(context.getAssets(),"fonts/PolandCannedIntoFuture-OxE3.ttf");
+        setPaintPuntuacion();
+        vidaBitmap = Pantalla.escala(context, "gato/heart.png",  anchoPantalla / 32, altoPantalla / 16);
+        monedasPuntuacionBitmap = Pantalla.escala(context, "moneda/monedas_controles.png", anchoPantalla / 32, altoPantalla / 16);
 
-        sonidoCoche = efectosSonido.load(context, R.raw.sonido_coche_atropello, 1);
-        sonidoGato = efectosSonido.load(context, R.raw.sonido_gato_atropello, 1);
-        sonidoMoneda = efectosSonido.load(context, R.raw.sonido_monedas, 1);
-
-        mediaPlayer=MediaPlayer.create(context, R.raw.city_ambience);
-        int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setVolume(v/3, v/3);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        setSonidosMusica();
 
         vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
     }
@@ -135,13 +128,16 @@ abstract public class Escena extends Pantalla{
         try{
             if(colision){
                 c.drawColor(Color.RED, PorterDuff.Mode.LIGHTEN);
+                gato.dibujaGato(c);
+                trafico.dibujaCoches(c);
                 colision = false;
+            }else{
+                trafico.dibujaCoches(c);
+                gato.dibujaGato(c);
             }
             dibujaMonedas(c);
-            trafico.dibujaCoches(c);
-            gato.dibujaGato(c);
+            dibujaPuntuacion(c);
             controles.dibujaControles(c);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -162,7 +158,7 @@ abstract public class Escena extends Pantalla{
                     efectosSonido.play(sonidoGato, v, v, 1, 0, 1);
                     efectoVibracion();
                     cocheColision = i;
-                    controles.vidas--;      //FIXME cada cambio de escena restaurase
+                    gato.numVidas--;      //FIXME cada cambio de escena restaurase
                     colision = true;    //para que dibuje pantalla roja
                 }
                 //Cando coche colisión deixe de interset o xogador, xa podería volver colisionar
@@ -175,7 +171,6 @@ abstract public class Escena extends Pantalla{
 
     int onTouchEvent(MotionEvent event){
         int accion = event.getAction(); // Solo gestiona la pulsación de un dedo.
-        //int accion = event.getActionMasked (); // Gestiona el toque con múltiples dedos
         float x = event.getX();
         float y = event.getY();
 
@@ -201,14 +196,13 @@ abstract public class Escena extends Pantalla{
 
                 }else if(controles.arriba.contains(x, y)){
                     mov = 3;
-                    gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                    gato.moverArriba();
-                    colisionMonedas();
+                    //Xestionase en cada escena
+                }else{
+                    gato.parado(); //TODO mirar onde meter isto
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                gato.parado();
-                //Log.i("parado", "");
+                Toast.makeText(context, "gato parado", Toast.LENGTH_SHORT).show();
                 break;
         }
         return numEscena;
@@ -228,7 +222,7 @@ abstract public class Escena extends Pantalla{
             if(monedasRect.get(i).intersect(gato.rectangulo)){
                 int v = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
                 efectosSonido.play(sonidoMoneda, v, v, 1, 0, 1);
-                controles.puntos+=100;      // FIXME cada cambio de escena restaurase
+                gato.puntos+=100;      // FIXME cada cambio de escena restaurase
                 monedasRect.remove(i);
                 posicionMonedas.remove(i);
                 //break;
@@ -315,6 +309,53 @@ abstract public class Escena extends Pantalla{
         }
     }
 
+    public void setPaintPuntuacion(){
+        pPuntuacion = new Paint();
+        pPuntuacion.setColor(Color.GRAY);
+        pPuntuacion.setStyle(Paint.Style.FILL);
+        pPuntuacion.setAlpha(150);
+
+        //textPaint = new TextPaint();
+        //textPaint.setTypeface(face);
+        tp.setTextSize(altoPantalla / 20); // tamaño del texto en pixels
+        //textPaint.setTextAlign(Paint.Align.CENTER); // Alineación del texto
+        tp.setColor(Color.BLACK); // C
+    }
+
+    public void dibujaPuntuacion(Canvas c){
+        puntuacionRect = new RectF(anchoPantalla/32*24, 0, anchoPantalla, altoPantalla/16*2.5f);
+        c.drawRect(puntuacionRect, pPuntuacion);
+        //Log.i("vidas", vidas+"");
+        for (int i = 0; i < gato.numVidas; i++) {
+            c.drawBitmap(vidaBitmap, anchoPantalla/32 * (31 - i), altoPantalla / 16 * 0.5f, null);
+        }
+        c.drawText(""+gato.puntos, anchoPantalla/32*27.5f,  altoPantalla / 16 *2.25f, tp);
+        c.drawBitmap(monedasPuntuacionBitmap, anchoPantalla /32 *30, altoPantalla/16 * 1.5f, null);
+    }
+
+    public void setSonidosMusica(){
+        audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        if ((android.os.Build.VERSION.SDK_INT) >= 21) {
+            SoundPool.Builder spb=new SoundPool.Builder();
+            spb.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
+            spb.setMaxStreams(maxSonidosSimultaneos);
+            this.efectosSonido=spb.build();
+        } else {
+            this.efectosSonido=new SoundPool(maxSonidosSimultaneos, AudioManager.STREAM_MUSIC, 0);
+        }
+
+        sonidoCoche = efectosSonido.load(context, R.raw.sonido_coche_atropello, 1);
+        sonidoGato = efectosSonido.load(context, R.raw.sonido_gato_atropello, 1);
+        sonidoMoneda = efectosSonido.load(context, R.raw.sonido_monedas, 1);
+
+        mediaPlayer=MediaPlayer.create(context, R.raw.city_ambience);
+        int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setVolume(v/3, v/3);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+    }
+
     public void efectoVibracion(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -326,6 +367,7 @@ abstract public class Escena extends Pantalla{
     abstract  void setArbolesRect();
 
     abstract void setCoches();
+
 
 
 }

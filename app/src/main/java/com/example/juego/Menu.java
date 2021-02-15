@@ -1,6 +1,7 @@
 package com.example.juego;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,6 +18,7 @@ abstract public class Menu extends Pantalla{
     Rect menu;
     int pantallaMenu;
     RectF btnAtras;
+    Bitmap atrasBitmap;
 
     //TODO fondo, fonte de letra, colores
 
@@ -34,14 +36,16 @@ abstract public class Menu extends Pantalla{
 
         super.tp.setTextAlign(Paint.Align.CENTER);
 
-        btnAtras = new RectF(0, altoPantalla/16 * 14, anchoPantalla / 32 * 4, altoPantalla);
+        btnAtras = new RectF(0, altoPantalla/16 * 13, anchoPantalla / 32 * 3, altoPantalla);
+        atrasBitmap = Pantalla.escala(context, "menu/menu_atras.png", anchoPantalla / 32 * 3, altoPantalla/16*3);
     }
 
     @Override
     public void dibuja(Canvas c){
         super.dibuja(c);
         if(numPantalla != 1){
-            c.drawRect(btnAtras, p);
+            //c.drawRect(btnAtras, p);
+            c.drawBitmap(atrasBitmap, 0, altoPantalla/16*13, null);
         }
     }
 

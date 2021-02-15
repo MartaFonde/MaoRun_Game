@@ -37,6 +37,8 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     int numPantallaActual;
     int numPantallaNueva;
 
+    Bitmap bitmapGato;
+    Gato gato;
 
     public JuegoSV(Context context) {
         super(context);
@@ -81,24 +83,16 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
                     break;
                 case 5: pantallaActual = new Opciones(context, anchoPantalla, altoPantalla, 5);
                     break;
-                case 6: pantallaActual = new Escena1(context, anchoPantalla, altoPantalla, 6);
+                case 6:
+                    bitmapGato = Pantalla.escala(context, "gato/gato.png", (anchoPantalla/32)*4, (altoPantalla/16)*6);
+                    gato = new Gato(bitmapGato, anchoPantalla/2-1, altoPantalla/16*14, anchoPantalla / (32*3));
+                    pantallaActual = new Escena1(context, anchoPantalla, altoPantalla, 6, gato);
                     break;
-                case 7: pantallaActual = new Escena2(context, anchoPantalla, altoPantalla, 7);
+                case 7: pantallaActual = new Escena2(context, anchoPantalla, altoPantalla, 7, gato);
                     break;
-                case 8: pantallaActual = new Escena3(context, anchoPantalla, altoPantalla, 8);
+                case 8: pantallaActual = new Escena3(context, anchoPantalla, altoPantalla, 8, gato);
                     break;
 
-            }
-        }
-    }
-
-
-    public void cambiaEscena(int nuevaEscena){
-        if (nuevaEscena != -1 && escenaActual.numEscena!=nuevaEscena){
-            switch (nuevaEscena){
-                case 1: escenaActual=new Escena1(context, 1, anchoPantalla, altoPantalla); break;
-                case 2: escenaActual=new Escena2(context, 2, anchoPantalla, altoPantalla); break;
-                case 3: escenaActual=new Escena3(context, 3, anchoPantalla, altoPantalla); break;
             }
         }
     }

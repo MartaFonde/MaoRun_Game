@@ -6,8 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
-
-import java.util.Random;
+import android.graphics.Typeface;
+import android.text.TextPaint;
 
 public class Gato {
     private Bitmap imagenes; // Bitmap con todas las imágenes
@@ -17,23 +17,27 @@ public class Gato {
     float x;
     float y;
 
-    private int anchoImagenes; //Ancho del bitmap
-    private int altoImagenes; //alto del bitmap
+    private int anchoImagenes; //Ancho bitmap todas imagenes
+    private int altoImagenes; //alto del bitmap todas imagenes
     int anchoImagen;
     int altoImagen;
-
     public int fila = 2;
     int col = 1; //Fila y columna de la imagen a representar
-
-    Bitmap imagen;      //imagen actual del gato
-    RectF rectangulo;
-
+    Bitmap imagenActual;      //imagen actual del gato
     Bitmap[][] imgGato;
+
+    RectF rectangulo;
     boolean puedeMoverse = true;
 
     float velocidad;
+
     Paint p;
     Paint p2;
+
+    int numVidas;
+    int puntos;
+
+
 
     public Gato(Bitmap imagenes, float x, float y, float velocidad) {
         this.imagenes = imagenes;
@@ -51,10 +55,7 @@ public class Gato {
         setImgGato(imagenes);
 
         //por defecto estará direccion arriba:
-        this.imagen = Bitmap.createBitmap(imagenes, anchoImagenes/3,(altoImagenes / 4)*3, anchoImagen,altoImagen);
-
-      //  posicionFutura = new RectF(x+anchoImagen*0.3f, y+altoImagen-velocidad*0.6f,  x+anchoImagen*0.7f, y+altoImagen);
-       // this.setRectangulo();
+        this.imagenActual = Bitmap.createBitmap(imagenes, anchoImagenes/3,(altoImagenes / 4)*3, anchoImagen,altoImagen);
 
         p = new Paint();
         p.setColor(Color.RED);
@@ -67,8 +68,10 @@ public class Gato {
         p2.setStyle(Paint.Style.STROKE);
         p2.setStrokeWidth(5);
         p2.setAlpha(150);
-    }
 
+        numVidas = 7;
+        puntos = 0;
+    }
 
     public float getX() {
         return x;
@@ -118,7 +121,7 @@ public class Gato {
 
     public void moverAbajo(int altoPantalla) {
         fila = 0;
-        if (puedeMoverse && posicion.y <= altoPantalla-imagen.getHeight()) {
+        if (puedeMoverse && posicion.y + altoImagen <= altoPantalla) {
             setY(posicion.y + velocidad);
         }
         actualizaImagen();
@@ -134,7 +137,7 @@ public class Gato {
 
     public void moverDerecha(int anchoPantalla) {
         fila = 2;
-        if (puedeMoverse &&  posicion.x <= anchoPantalla-imagen.getWidth()) {
+        if (puedeMoverse &&  posicion.x <= anchoPantalla- imagenActual.getWidth()) {
             setX(posicion.x + velocidad);
         }
         actualizaImagen();
@@ -142,7 +145,7 @@ public class Gato {
 
     public void moverArriba() {
         fila = 3;
-        if (puedeMoverse && posicion.y >= -40) {
+        if (puedeMoverse && posicion.y + velocidad  >= 0) {
             setY(posicion.y - velocidad);
         }
         actualizaImagen();
@@ -168,7 +171,7 @@ public class Gato {
 
     public void actualizaImagen() {
         if(col < imgGato[fila].length){
-            this.imagen = imgGato[fila][col];
+            this.imagenActual = imgGato[fila][col];
             col++;
         }else{
             col = 0;
@@ -177,12 +180,12 @@ public class Gato {
 
     public void parado(){
         col = 1;
-        this.imagen = imgGato[fila][col];
+        this.imagenActual = imgGato[fila][col];
     }
 
     public void dibujaGato(Canvas c){
-        c.drawBitmap(imagen, posicion.x, posicion.y, null);
-        c.drawRect(rectangulo, p);
-        c.drawRect(posicionFutura, p2);
+        c.drawBitmap(imagenActual, posicion.x, posicion.y, null);
+        //c.drawRect(rectangulo, p);
+        //c.drawRect(posicionFutura, p2);
     }
 }

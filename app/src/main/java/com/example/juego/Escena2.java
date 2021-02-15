@@ -6,23 +6,23 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 public class Escena2 extends Escena {
 
     Bitmap fondo;
     float velocidadCoches;
 
-    public Escena2(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
-        super(context, anchoPantalla, altoPantalla, numPantalla);
+    public Escena2(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
+        super(context, anchoPantalla, altoPantalla, numPantalla, gato);
 
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel2);
-        super.setFondo(fondo);
-
-        super.arbolesRect = new RectF[25];
+        fondo = Pantalla.getBitmapFromAssets(context, "mapas/mapa_nivel2.png");
+        //fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel2);
+        setFondo(fondo);
+        arbolesRect = new RectF[25];
         setArbolesRect();
-        super.setPosicionMonedas();
+        setPosicionMonedas();
         gato.setVelocidad(anchoPantalla / (32*2.5f));
-
         velocidadCoches = anchoPantalla / (32*10);
         setCoches();
     }
@@ -45,11 +45,15 @@ public class Escena2 extends Escena {
         super.onTouchEvent(event);
         if(mov == 3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *14, 0,
-                    anchoPantalla/32*17, 0))){
-                int nuevaPantalla = this.numPantalla+1;
-                gato.setX(gato.getX());
+                    anchoPantalla/32*17, altoPantalla/16))){
+                gato.moverArriba();
+                colisionMonedas();
                 gato.setY(altoPantalla/16*15);
-                return nuevaPantalla;
+                return this.numPantalla+1;
+            } else {
+                gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                gato.moverArriba();
+                colisionMonedas();
             }
         }
         return super.onTouchEvent(event);

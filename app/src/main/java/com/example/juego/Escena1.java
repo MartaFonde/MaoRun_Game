@@ -6,16 +6,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 public class Escena1 extends Escena {
     Bitmap fondo;
     int numEscena;
     float velocidadCoches;
 
-    public Escena1(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
-        super(context, anchoPantalla, altoPantalla, numPantalla);
+    public Escena1(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
+        super(context, anchoPantalla, altoPantalla, numPantalla, gato);
 
-        fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel1);
+        fondo = Pantalla.getBitmapFromAssets(context, "mapas/mapa_nivel1.png");
+        //fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel1);
         setFondo(fondo);
         arbolesRect = new RectF[25];
         setArbolesRect();
@@ -43,11 +45,15 @@ public class Escena1 extends Escena {
         super.onTouchEvent(event);
         if(mov == 3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *14, 0,
-                    anchoPantalla/32*17, 0))){
-                int nuevaPantalla = this.numPantalla+1;
-                //gato.setX(gato.getX());
+                    anchoPantalla/32*17, altoPantalla/16))){
+                gato.moverArriba();
+                colisionMonedas();
                 gato.setY(altoPantalla/16*15);
-                return nuevaPantalla;
+                return this.numPantalla+1;
+            } else {
+                gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                gato.moverArriba();
+                colisionMonedas();
             }
         }
         return super.onTouchEvent(event);
@@ -83,7 +89,6 @@ public class Escena1 extends Escena {
         arbolesRect[22] = new RectF(propW * 21 *1.015f, 0, propW  * 22, propH   / 1.06f);
         arbolesRect[23] = new RectF(propW  * 25 * 1.01f, 0, propW  * 26, propH  / 1.06f);
         arbolesRect[24] = new RectF(propW  * 29 * 1.02f, 0, anchoPantalla, propH   / 1.03f);
-
     }
 
     public void setCoches(){
