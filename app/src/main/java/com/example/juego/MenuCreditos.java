@@ -4,10 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-public class Creditos extends Menu{
+public class MenuCreditos extends Menu{
 
 
-    public Creditos(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
+    public MenuCreditos(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
     }
 

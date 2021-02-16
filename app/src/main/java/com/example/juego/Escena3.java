@@ -42,9 +42,9 @@ public class Escena3 extends Escena {
     int onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
         if(mov == 3){
-            if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *14, 0,
-                    anchoPantalla/32*17, altoPantalla/16))){
-//               fin de partida
+            if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *18, 0,
+                    anchoPantalla/32*22, altoPantalla/16 * 0.5f))){
+                JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, false, gato.puntos);
             }else {
                 gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
                 gato.moverArriba();
@@ -80,9 +80,6 @@ public class Escena3 extends Escena {
         arbolesRect[16] = new RectF(propW  * 12 * 1.025f, 0, propW * 17 , propH * 2 / 1.03f);
         arbolesRect[17] = new RectF(propW * 23 * 1.015f, 0, propW * 25 / 1.015f, propH / 1.07f);
         arbolesRect[18] = new RectF(propW * 25* 1.01f, 0, anchoPantalla, propH * 2);
-
-        //rect de victoria /final
-        //arbolesRect[20] = new RectF(propW  * 18 , 0, propW * 22, propH * 2 / 1.03f);
     }
 
     public void setCoches(){

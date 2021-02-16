@@ -25,7 +25,7 @@ import java.util.ArrayList;
 abstract public class Escena extends Pantalla{
     Context context;
     Bitmap fondo;
-    int numEscena=0;
+    int numEscena;
     int anchoPantalla;
     int altoPantalla;
 
@@ -33,7 +33,7 @@ abstract public class Escena extends Pantalla{
 
     ArrayList<RectF> monedasRect;
     ArrayList<PointF> posicionMonedas;
-    int totalMonedas = 10;       //pantalla pequeña no ejecuta con >8 monedas
+    int totalMonedas = 10;
     int anchoMoneda;
     int altoMoneda;
     Bitmap conjuntoMonedas;
@@ -50,7 +50,6 @@ abstract public class Escena extends Pantalla{
     Controles controles;
     Trafico trafico;
     Gato gato;
-    Bitmap bitmapGato;
     boolean colision = false;
     static int mov = 3;
     int cocheColision = -1;
@@ -94,14 +93,10 @@ abstract public class Escena extends Pantalla{
         p.setStrokeWidth(5);
         p.setAlpha(150);
 
-        //tp = super.tp;
         trafico = new Trafico(context, anchoPantalla, altoPantalla);
         controles = new Controles(context, anchoPantalla, altoPantalla);
         this.gato = gato;
-//        bitmapGato = Pantalla.escala(context, "gato/gato.png", (anchoPantalla/32)*4, (altoPantalla/16)*6);
-//        gato = new Gato(bitmapGato, anchoPantalla/2-1, altoPantalla/16*14, anchoPantalla / (32*3));
 
-        //face= Typeface.createFromAsset(context.getAssets(),"fonts/PolandCannedIntoFuture-OxE3.ttf");
         setPaintPuntuacion();
         vidaBitmap = Pantalla.escala(context, "gato/heart.png",  anchoPantalla / 32, altoPantalla / 16);
         monedasPuntuacionBitmap = Pantalla.escala(context, "moneda/monedas_controles.png", anchoPantalla / 32, altoPantalla / 16);
@@ -116,7 +111,7 @@ abstract public class Escena extends Pantalla{
     }
 
     public void setFondo(Bitmap fondo) {
-        if(fondo != null)
+        //if(fondo != null)
         this.fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, true);;
     }
 
@@ -158,8 +153,11 @@ abstract public class Escena extends Pantalla{
                     efectosSonido.play(sonidoGato, v, v, 1, 0, 1);
                     efectoVibracion();
                     cocheColision = i;
-                    gato.numVidas--;      //FIXME cada cambio de escena restaurase
-                    colision = true;    //para que dibuje pantalla roja
+                    gato.numVidas--;
+                    colision = true;    //para que dibuxe pantalla roja
+                    if(gato.numVidas == 0){
+                        JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, true, gato.puntos);
+                    }
                 }
                 //Cando coche colisión deixe de interset o xogador, xa podería volver colisionar
                 if (cocheColision != -1 && !trafico.coches[cocheColision].rectangulo.intersect(gato.rectangulo)) {
@@ -170,7 +168,7 @@ abstract public class Escena extends Pantalla{
     }
 
     int onTouchEvent(MotionEvent event){
-        int accion = event.getAction(); // Solo gestiona la pulsación de un dedo.
+        int accion = event.getAction();
         float x = event.getX();
         float y = event.getY();
 
@@ -181,19 +179,16 @@ abstract public class Escena extends Pantalla{
                     gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
                     gato.moverAbajo(altoPantalla);
                     colisionMonedas();
-
                 }else if(controles.izq.contains(x,y)){
                     mov = 1;
                     gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
                     gato.moverIzquierda();
                     colisionMonedas();
-
                 }else if(controles.der.contains(x, y))  {
                     mov = 2;
                     gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
                     gato.moverDerecha(anchoPantalla);
                     colisionMonedas();
-
                 }else if(controles.arriba.contains(x, y)){
                     mov = 3;
                     //Xestionase en cada escena
@@ -202,6 +197,7 @@ abstract public class Escena extends Pantalla{
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                //gato.parado();
                 Toast.makeText(context, "gato parado", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -367,7 +363,5 @@ abstract public class Escena extends Pantalla{
     abstract  void setArbolesRect();
 
     abstract void setCoches();
-
-
 
 }

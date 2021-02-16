@@ -28,7 +28,6 @@ public class MenuPrincipal extends Menu{
         super.dibuja(c);
         setBotonesRect();
         paintBotones(c);
-
     }
 
     @Override
@@ -45,9 +44,10 @@ public class MenuPrincipal extends Menu{
                     return 3;
                 }else if(btnOpciones.contains(x,y)){
                     return 5;
+                }else if(btnAyuda.contains(x,y)){
+                    return 4;
                 }
         }
-
         return super.onTouchEvent(event);       //-1
     }
 

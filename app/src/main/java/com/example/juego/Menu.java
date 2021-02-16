@@ -31,10 +31,18 @@ abstract public class Menu extends Pantalla{
 
         p = new Paint();
         p.setTextAlign(Paint.Align.CENTER);
-        p.setColor(Color.CYAN);
+        p.setColor(Color.argb(225,129,157,80));
         p.setStyle(Paint.Style.FILL);
 
-        super.tp.setTextAlign(Paint.Align.CENTER);
+        tp.setTextAlign(Paint.Align.CENTER);
+
+        if(numPantalla == 1 || numPantalla == 9) {
+            p.setColor(Color.argb(225,129,157,80));
+            tp.setARGB(250,233,217,168);
+        }else{
+            p.setColor(Color.argb(250,233,217,168));
+            tp.setARGB(225,129,157,80);
+        }
 
         btnAtras = new RectF(0, altoPantalla/16 * 13, anchoPantalla / 32 * 3, altoPantalla);
         atrasBitmap = Pantalla.escala(context, "menu/menu_atras.png", anchoPantalla / 32 * 3, altoPantalla/16*3);
@@ -43,7 +51,7 @@ abstract public class Menu extends Pantalla{
     @Override
     public void dibuja(Canvas c){
         super.dibuja(c);
-        if(numPantalla != 1){
+        if(numPantalla != 1 && numPantalla != 9){
             //c.drawRect(btnAtras, p);
             c.drawBitmap(atrasBitmap, 0, altoPantalla/16*13, null);
         }
@@ -53,19 +61,9 @@ abstract public class Menu extends Pantalla{
         int x=(int)event.getX();
         int y=(int)event.getY();
 
-        if(numPantalla != 1 && btnAtras.contains(x,y)) {
+        if(numPantalla != 1 && numPantalla != 9 && btnAtras.contains(x,y)) {
             return 1;
         }
-
-//        if (botonDerecha.contains(x,y)){
-//            if (numEscena<6) return numEscena+1;
-//        }else if(botonIz.contains(x,y)){
-//            if (numEscena>1)return numEscena-1;
-//        }
-//        if (numEscena!=1)   if (menu.contains(x,y)) return 1;
-
         return -1;
     }
-
-
 }

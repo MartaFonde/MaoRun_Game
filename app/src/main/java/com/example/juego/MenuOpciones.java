@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
-public class Opciones extends Menu{
+public class MenuOpciones extends Menu{
 
     RectF sonAct;
     RectF sonDesact;
@@ -19,14 +19,13 @@ public class Opciones extends Menu{
     Paint pAct;
     Paint pDesact;
 
-    public Opciones(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
+    public MenuOpciones(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
 
         pAct = new Paint();
         pAct.setColor(Color.GREEN);
         pDesact = new Paint();
         pDesact.setColor(Color.RED);
-
         setRect();
     }
 

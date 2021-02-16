@@ -2,13 +2,8 @@ package com.example.juego;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.os.Build;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,13 +12,13 @@ import androidx.annotation.NonNull;
 
 public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder surfaceHolder; // Interfaz abstracta para manejar la superficie de dibujado
-    Context context;
+    static Context context;
 
     private Hilo hilo; // Hilo encargado de dibujar y actualizar la física
     private boolean funcionando = false;
 
-    int anchoPantalla;
-    int altoPantalla;
+    static int anchoPantalla;
+    static int altoPantalla;
 
     Escena escenaActual;
     int nuevaEscena;
@@ -33,24 +28,20 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
 
     Canvas c;
 
-    Pantalla pantallaActual;
+    static Pantalla pantallaActual;
     int numPantallaActual;
     int numPantallaNueva;
 
-    Bitmap bitmapGato;
-    Gato gato;
+    static Bitmap bitmapGato;
+    static Gato gato;
 
     public JuegoSV(Context context) {
         super(context);
-        this.context = context;
-
         this.surfaceHolder = getHolder(); // Se obtiene el holder
         this.surfaceHolder.addCallback(this); // y se indica donde van las funciones callback
-        this.context = context; // Obtenemos el contexto
-
+        this.context = context;
         hilo = new Hilo(); // Inicializamos el hilo
         setFocusable(true); // Aseguramos que reciba eventos de toque
-
     }
 
     @Override
@@ -70,18 +61,18 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         return super.onTouchEvent(event);
     }
 
-    public void cambiaPantalla(int nuevaPantalla){
+    public static void cambiaPantalla(int nuevaPantalla){
         if (pantallaActual.numPantalla != nuevaPantalla){
             switch (nuevaPantalla){
                 case 1: pantallaActual = new MenuPrincipal(context, anchoPantalla, altoPantalla, 1);
                     break;
-                case 2: pantallaActual = new Records(context, anchoPantalla, altoPantalla, 2);
+                case 2: pantallaActual = new MenuRecords(context, anchoPantalla, altoPantalla, 2);
                     break;
-                case 3: pantallaActual = new Creditos(context, anchoPantalla, altoPantalla, 3);
+                case 3: pantallaActual = new MenuCreditos(context, anchoPantalla, altoPantalla, 3);
                     break;
-                case 4: pantallaActual = new Ayuda(context, anchoPantalla, altoPantalla, 4);
+                case 4: pantallaActual = new MenuAyuda(context, anchoPantalla, altoPantalla, 4);
                     break;
-                case 5: pantallaActual = new Opciones(context, anchoPantalla, altoPantalla, 5);
+                case 5: pantallaActual = new MenuOpciones(context, anchoPantalla, altoPantalla, 5);
                     break;
                 case 6:
                     bitmapGato = Pantalla.escala(context, "gato/gato.png", (anchoPantalla/32)*4, (altoPantalla/16)*6);
@@ -92,6 +83,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
                     break;
                 case 8: pantallaActual = new Escena3(context, anchoPantalla, altoPantalla, 8, gato);
                     break;
+                //case 9: pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9);
 
             }
         }
