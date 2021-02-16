@@ -20,20 +20,15 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     static int anchoPantalla;
     static int altoPantalla;
 
-    Escena escenaActual;
-    int nuevaEscena;
-    Menu m;
-    int pantallaMenu = 1;
-    static boolean start = false;
-
-    Canvas c;
-
     static Pantalla pantallaActual;
-    int numPantallaActual;
     int numPantallaNueva;
 
     static Bitmap bitmapGato;
     static Gato gato;
+
+    static boolean sonidoAct;
+    static boolean musicaAct;   //TODO controlar esto
+    static boolean vibracionAct;
 
     public JuegoSV(Context context) {
         super(context);
@@ -42,6 +37,10 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         this.context = context;
         hilo = new Hilo(); // Inicializamos el hilo
         setFocusable(true); // Aseguramos que reciba eventos de toque
+
+        sonidoAct = true;
+        musicaAct = true;
+        vibracionAct = true;
     }
 
     @Override
@@ -83,7 +82,6 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
                     break;
                 case 8: pantallaActual = new Escena3(context, anchoPantalla, altoPantalla, 8, gato);
                     break;
-                //case 9: pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9);
 
             }
         }

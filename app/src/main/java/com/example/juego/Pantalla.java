@@ -15,12 +15,14 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Pantalla {
+abstract class Pantalla {
     int numPantalla;
     int altoPantalla;
     int anchoPantalla;
     Context context;
     TextPaint tp;
+
+    Paint pBotonesVerdes;
 
     public Pantalla( Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         this.altoPantalla = altoPantalla;
@@ -28,11 +30,15 @@ public class Pantalla {
         this.context = context;
         this.numPantalla = numPantalla;
 
+        pBotonesVerdes = new Paint();
+        pBotonesVerdes.setColor(Color.argb(225,129,157,80));
+
         Typeface face=Typeface.createFromAsset(context.getAssets(),"fonts/PolandCannedIntoFuture-OxE3.ttf");
         tp = new TextPaint();
         tp.setTextSize(altoPantalla/10);
         tp.setColor(Color.WHITE);
         tp.setTypeface(face);
+
     }
 
     public void dibuja(Canvas c){

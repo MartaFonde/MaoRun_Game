@@ -2,10 +2,7 @@ package com.example.juego;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.RectF;
-import android.text.TextPaint;
 import android.view.MotionEvent;
 
 public class MenuPrincipal extends Menu{
@@ -27,7 +24,7 @@ public class MenuPrincipal extends Menu{
     public void dibuja(Canvas c) {
         super.dibuja(c);
         setBotonesRect();
-        paintBotones(c);
+        drawBotones(c);
     }
 
     @Override
@@ -66,7 +63,7 @@ public class MenuPrincipal extends Menu{
         btnSalir = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16 * 13.5f, anchoPantalla / 32 * 24, altoPantalla / 16 * 15.5f);
     }
 
-    public void paintBotones(Canvas c){
+    public void drawBotones(Canvas c){
         c.drawRect(btnJugar, p);
         c.drawText("JUGAR", anchoPantalla / 2, altoPantalla / 16 * 2.5f, tp);
         c.drawRect(btnRecords, p);

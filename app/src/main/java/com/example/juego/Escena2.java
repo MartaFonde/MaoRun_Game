@@ -42,8 +42,8 @@ public class Escena2 extends Escena {
 
     @Override
     int onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
-        if(mov == 3){
+        int aux = super.onTouchEvent(event);
+        if(aux == -3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *14, 0,
                     anchoPantalla/32*17, altoPantalla/16 * 0.5f))){
                 gato.moverArriba();

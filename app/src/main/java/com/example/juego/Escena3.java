@@ -40,8 +40,8 @@ public class Escena3 extends Escena {
 
     @Override
     int onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
-        if(mov == 3){
+        int aux = super.onTouchEvent(event);
+        if(aux == -3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *18, 0,
                     anchoPantalla/32*22, altoPantalla/16 * 0.5f))){
                 JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, false, gato.puntos);
@@ -51,7 +51,6 @@ public class Escena3 extends Escena {
                 colisionMonedas();
             }
         }
-
         return -1;
     }
 

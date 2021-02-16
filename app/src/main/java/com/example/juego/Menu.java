@@ -15,8 +15,6 @@ abstract public class Menu extends Pantalla{
     int anchoPantalla;
     Context context;
     Paint p;
-    Rect menu;
-    int pantallaMenu;
     RectF btnAtras;
     Bitmap atrasBitmap;
 
@@ -62,7 +60,7 @@ abstract public class Menu extends Pantalla{
         int y=(int)event.getY();
 
         if(numPantalla != 1 && numPantalla != 9 && btnAtras.contains(x,y)) {
-            return 1;
+            return 1;       //volve a menu principal
         }
         return -1;
     }

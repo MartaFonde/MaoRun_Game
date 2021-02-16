@@ -43,7 +43,6 @@ abstract public class Escena extends Pantalla{
     Bitmap monedaActual;
 
     Paint p;
-    //TextPaint tp;
     float propW;
     float propH;
 
@@ -57,8 +56,6 @@ abstract public class Escena extends Pantalla{
 
     RectF puntuacionRect;
     Paint pPuntuacion;
-//    TextPaint textPaint;
-//    Typeface face;
     Bitmap vidaBitmap;
     Bitmap monedasPuntuacionBitmap;
 
@@ -69,6 +66,11 @@ abstract public class Escena extends Pantalla{
     MediaPlayer mediaPlayer;
 
     Vibrator vibrator;
+
+    RectF rectPausa;
+    Bitmap bitmapPausa;
+    PantallaPause pantallaPause;
+    boolean pause = false;
 
     public Escena(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
         super(context, anchoPantalla,altoPantalla, numPantalla);
@@ -104,6 +106,9 @@ abstract public class Escena extends Pantalla{
         setSonidosMusica();
 
         vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+        
+        rectPausa = new RectF(propW * 0.5f, propH * 0.5f, propW*1.5f, propH*1.5f);
+        bitmapPausa = Pantalla.escala(context, "juego_pause.png", (int)propW*2, (int)propH*2);
     }
 
     public Bitmap getFondo() {
@@ -133,13 +138,21 @@ abstract public class Escena extends Pantalla{
             dibujaMonedas(c);
             dibujaPuntuacion(c);
             controles.dibujaControles(c);
+
+            rectPausa = new RectF(propW * 0.5f, propH * 0.5f, propW*2.5f, propH*2.5f);
+            c.drawBitmap(bitmapPausa, propW * 0.5f, propH*0.5f, null);  //TODO poñer algo de transparencia
+
+            if(pause){
+                pantallaPause.dibuja(c);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void actualizaFisica() {        //movimiento automatico del juego
-        if (trafico.coches.length > 0) {
+        if (trafico.coches.length > 0 && !pause) {
             for (int i = 0; i < trafico.coches.length; i++) {
                 nuevoCoche = i;
                 if (i % 2 == 0) {
@@ -148,10 +161,14 @@ abstract public class Escena extends Pantalla{
                     trafico.coches[i].moverIzquierda(anchoPantalla);
                 }
                 if (trafico.coches[i].rectangulo.intersect(gato.rectangulo) && nuevoCoche != cocheColision) {
-                    int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                    efectosSonido.play(sonidoCoche, v, v, 1, 0, 1);
-                    efectosSonido.play(sonidoGato, v, v, 1, 0, 1);
-                    efectoVibracion();
+                    if(JuegoSV.sonidoAct){
+                        int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                        efectosSonido.play(sonidoCoche, v, v, 1, 0, 1);
+                        efectosSonido.play(sonidoGato, v, v, 1, 0, 1);
+                    }
+                    if(JuegoSV.vibracionAct){
+                        efectoVibracion();
+                    }
                     cocheColision = i;
                     gato.numVidas--;
                     colision = true;    //para que dibuxe pantalla roja
@@ -172,34 +189,45 @@ abstract public class Escena extends Pantalla{
         float x = event.getX();
         float y = event.getY();
 
-        switch (accion) {
-            case MotionEvent.ACTION_DOWN:       //non hai mov cte
-                if(controles.abajo.contains(x, y)){
-                    mov = 0;
-                    gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                    gato.moverAbajo(altoPantalla);
-                    colisionMonedas();
-                }else if(controles.izq.contains(x,y)){
-                    mov = 1;
-                    gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                    gato.moverIzquierda();
-                    colisionMonedas();
-                }else if(controles.der.contains(x, y))  {
-                    mov = 2;
-                    gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                    gato.moverDerecha(anchoPantalla);
-                    colisionMonedas();
-                }else if(controles.arriba.contains(x, y)){
-                    mov = 3;
-                    //Xestionase en cada escena
-                }else{
-                    gato.parado(); //TODO mirar onde meter isto
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                //gato.parado();
-                Toast.makeText(context, "gato parado", Toast.LENGTH_SHORT).show();
-                break;
+        if(!pause){
+            switch (accion) {
+                case MotionEvent.ACTION_DOWN:       //non hai mov cte
+                    if(controles.abajo.contains(x, y)){
+                        mov = 0;
+                        gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                        gato.moverAbajo(altoPantalla);
+                        colisionMonedas();
+                    }else if(controles.izq.contains(x,y)){
+                        mov = 1;
+                        gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                        gato.moverIzquierda();
+                        colisionMonedas();
+                    }else if(controles.der.contains(x, y))  {
+                        mov = 2;
+                        gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                        gato.moverDerecha(anchoPantalla);
+                        colisionMonedas();
+                    }else if(controles.arriba.contains(x, y)){
+                        mov = 3;
+                        return -3;
+                    }else if(rectPausa.contains(x,y)){
+                        pause = true;
+                        pantallaPause = new PantallaPause(context, anchoPantalla, altoPantalla, 10);
+                    } else{
+                        gato.parado(); //TODO mirar onde meter isto
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    //gato.parado();
+                    Toast.makeText(context, "gato parado", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }else{
+            int aux = pantallaPause.onTouchEvent(event);
+            if(aux == 1){
+                pantallaPause = null;
+                pause = false;
+            }
         }
         return numEscena;
     }
@@ -216,8 +244,10 @@ abstract public class Escena extends Pantalla{
     public void colisionMonedas(){
         for (int i = monedasRect.size() -1 ; i >= 0; i--) {
             if(monedasRect.get(i).intersect(gato.rectangulo)){
-                int v = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-                efectosSonido.play(sonidoMoneda, v, v, 1, 0, 1);
+                if(JuegoSV.sonidoAct){
+                    int v = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                    efectosSonido.play(sonidoMoneda, v, v, 1, 0, 1);
+                }
                 gato.puntos+=100;      // FIXME cada cambio de escena restaurase
                 monedasRect.remove(i);
                 posicionMonedas.remove(i);
