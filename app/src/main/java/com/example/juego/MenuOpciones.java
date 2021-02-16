@@ -62,10 +62,10 @@ public class MenuOpciones extends Menu{
         switch (accion){
             case MotionEvent.ACTION_DOWN:
                 int aux=super.onTouchEvent(event);  //se se pulsa btnAtras volve a mnu ppal -- menu return 1
-//                if (aux!=this.numPantalla && aux!=-1){
-//                    return aux;
-//                }else{
-                if(aux!= 1){        //non touch btnAtras
+                if (aux == 1){
+                    return aux;
+                }else{
+                //if(aux!= 1){        //non touch btnAtras
                     if(rectSonAct.contains(x,y)){
                         if(!JuegoSV.sonidoAct) JuegoSV.sonidoAct = true;
                         Toast.makeText(context, "sonidoAct"+JuegoSV.sonidoAct, Toast.LENGTH_SHORT).show();
