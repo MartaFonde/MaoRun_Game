@@ -14,7 +14,6 @@ public class Escena3 extends Escena {
 
     public Escena3(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
         super(context, anchoPantalla, altoPantalla, numPantalla, gato);
-        //fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel3);
         fondo = Pantalla.getBitmapFromAssets(context, "mapas/mapa_nivel3.png");
         setFondo(fondo);
         arbolesRect = new RectF[19];
@@ -27,15 +26,15 @@ public class Escena3 extends Escena {
 
     @Override
     public void dibuja(Canvas c) {
-        super.dibujaFondo(c);
-        dibujaArboles(c);
+        //super.dibujaFondo(c);
+        //dibujaArboles(c);
         super.dibuja(c);
     }
 
     @Override
     public void dibujaArboles(Canvas c) {
-        setArbolesRect();
-        super.dibujaArboles(c);
+       // setArbolesRect();
+        //super.dibujaArboles(c);
     }
 
     @Override

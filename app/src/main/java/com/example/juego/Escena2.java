@@ -29,15 +29,15 @@ public class Escena2 extends Escena {
 
     @Override
     public void dibuja(Canvas c) {
-        super.dibujaFondo(c);
-        dibujaArboles(c);
+        //super.dibujaFondo(c);
+        //dibujaArboles(c);
         super.dibuja(c);
     }
 
     @Override
     public void dibujaArboles(Canvas c) {
-        setArbolesRect();
-        super.dibujaArboles(c);
+        //setArbolesRect();
+        //super.dibujaArboles(c);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.juego;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -38,6 +39,9 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         hilo = new Hilo(); // Inicializamos el hilo
         setFocusable(true); // Aseguramos que reciba eventos de toque
 
+        hilo = new Hilo();
+        hilo.setFuncionando(true);
+
         sonidoAct = true;
         musicaAct = true;
         vibracionAct = true;
@@ -53,11 +57,18 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
             switch (accion){
                 case MotionEvent.ACTION_DOWN:
                     numPantallaNueva = pantallaActual.onTouchEvent(event);
-                    if(numPantallaNueva != -1) cambiaPantalla(numPantallaNueva);
+                    if(numPantallaNueva == -10)  salir();
+                    if(numPantallaNueva != -1 ) cambiaPantalla(numPantallaNueva);
                     return true;
             }
         }
         return super.onTouchEvent(event);
+    }
+
+    private void salir(){
+        funcionando = false;
+        Activity activity = (Activity)context;
+        activity.finish();
     }
 
     public static void cambiaPantalla(int nuevaPantalla){
@@ -98,12 +109,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override           // En cuanto se crea el SurfaceView se lanze el hilo
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
-        hilo.setFuncionando(true);
-        if (hilo.getState() == Thread.State.NEW) hilo.start();
-        if (hilo.getState() == Thread.State.TERMINATED) {
-            hilo = new Hilo();
-            hilo.start();
-        }
+
     }
 
     // Si hay algún cambio en la superficie de dibujo (normalmente su tamaño) obtenemos el nuevo tamaño
@@ -111,9 +117,12 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
         anchoPantalla = width;
         altoPantalla = height;
-
         pantallaActual = new MenuPrincipal(context, anchoPantalla, altoPantalla, 1);
 
+        if (hilo.getState() == Thread.State.NEW) hilo.start();
+        if (hilo.getState() == Thread.State.TERMINATED) {
+            hilo.start();
+        }
         //hilo.setSurfaceSize(width, height);
     }
 
@@ -153,7 +162,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
                     if (c == null) c = surfaceHolder.lockCanvas();
 
                     synchronized (surfaceHolder) {
-                        if(pantallaActual != null)
+                        //if(pantallaActual != null)
                         pantallaActual.dibuja(c);
 
                         if(pantallaActual instanceof Escena1

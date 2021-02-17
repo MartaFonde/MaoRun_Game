@@ -49,6 +49,7 @@ abstract public class Menu extends Pantalla{
     @Override
     public void dibuja(Canvas c){
         super.dibuja(c);
+        c.drawColor(Color.BLACK);
         if(numPantalla != 1 && numPantalla != 9){
             //c.drawRect(btnAtras, p);
             c.drawBitmap(atrasBitmap, 0, altoPantalla/16*13, null);

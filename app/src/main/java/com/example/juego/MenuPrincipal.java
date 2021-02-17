@@ -1,9 +1,11 @@
 package com.example.juego;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 public class MenuPrincipal extends Menu{
 
@@ -17,13 +19,12 @@ public class MenuPrincipal extends Menu{
 
     public MenuPrincipal(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
-
+        setBotonesRect();
     }
 
     @Override
     public void dibuja(Canvas c) {
         super.dibuja(c);
-        setBotonesRect();
         drawBotones(c);
     }
 
@@ -43,16 +44,14 @@ public class MenuPrincipal extends Menu{
                     return 5;
                 }else if(btnAyuda.contains(x,y)){
                     return 4;
+                }else if(btnSalir.contains(x,y)){
+                    return -10;
+                    //MainActivity.finish();
                 }
         }
         return super.onTouchEvent(event);       //-1
     }
 
-    public void cambioPantallaMenu(int nuevaPantallaMenu){
-        switch (nuevaPantallaMenu){
-
-        }
-    }
 
     public void setBotonesRect(){
         btnJugar = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16, anchoPantalla / 32 * 24, altoPantalla / 16 * 3);

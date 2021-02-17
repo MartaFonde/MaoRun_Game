@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.RectF;
-import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -16,7 +15,6 @@ import android.media.SoundPool;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.text.TextPaint;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
@@ -49,7 +47,7 @@ abstract public class Escena extends Pantalla{
     Controles controles;
     Trafico trafico;
     Gato gato;
-    boolean colision = false;
+    boolean colisionCoche = false;
     static int mov = 3;
     int cocheColision = -1;
     int nuevoCoche;
@@ -107,7 +105,6 @@ abstract public class Escena extends Pantalla{
 
         vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
         
-        rectPausa = new RectF(propW * 0.5f, propH * 0.5f, propW*1.5f, propH*1.5f);
         bitmapPausa = Pantalla.escala(context, "juego_pause.png", (int)propW*2, (int)propH*2);
     }
 
@@ -126,21 +123,21 @@ abstract public class Escena extends Pantalla{
     @Override
     public void dibuja(Canvas c){
         try{
-            if(colision){
+            dibujaFondo(c);
+            if(colisionCoche){
                 c.drawColor(Color.RED, PorterDuff.Mode.LIGHTEN);
-                gato.dibujaGato(c);
-                trafico.dibujaCoches(c);
-                colision = false;
-            }else{
-                trafico.dibujaCoches(c);
-                gato.dibujaGato(c);
+                colisionCoche = false;
             }
             dibujaMonedas(c);
+            trafico.dibujaCoches(c);
+            gato.dibujaGato(c);
             dibujaPuntuacion(c);
             controles.dibujaControles(c);
 
             rectPausa = new RectF(propW * 0.5f, propH * 0.5f, propW*2.5f, propH*2.5f);
             c.drawBitmap(bitmapPausa, propW * 0.5f, propH*0.5f, null);  //TODO poñer algo de transparencia
+            c.drawRect(rectPausa, p);
+            dibujaArboles(c);
 
             if(pause){
                 pantallaPause.dibuja(c);
@@ -171,7 +168,7 @@ abstract public class Escena extends Pantalla{
                     }
                     cocheColision = i;
                     gato.numVidas--;
-                    colision = true;    //para que dibuxe pantalla roja
+                    colisionCoche = true;    //para que dibuxe pantalla roja
                     if(gato.numVidas == 0){
                         JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, true, gato.puntos);
                     }
@@ -235,6 +232,7 @@ abstract public class Escena extends Pantalla{
     public boolean colisionArboles(RectF posFutura) {
         for (RectF arbol : arbolesRect) {
             if (arbol.intersect(posFutura)) {
+                setArbolesRect();
                 return true;
             }
         }
@@ -248,7 +246,7 @@ abstract public class Escena extends Pantalla{
                     int v = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
                     efectosSonido.play(sonidoMoneda, v, v, 1, 0, 1);
                 }
-                gato.puntos+=100;      // FIXME cada cambio de escena restaurase
+                gato.puntos+=100;
                 monedasRect.remove(i);
                 posicionMonedas.remove(i);
                 //break;
@@ -266,19 +264,19 @@ abstract public class Escena extends Pantalla{
     public void setPosicionMonedas(){
         float x;
         float y;
-        //RectF pos;
 
         while(monedasRect.size() < totalMonedas) {
             //para que las monedas no se situen muy en los extremos de la pantalla
             //limito la superficie en la que pueden aparecer las monedas
             x = (float)Math.random()*(anchoPantalla-anchoMoneda*4)+anchoMoneda*2;
             y = (float)Math.random()*(altoPantalla-altoMoneda*4)+altoMoneda*2;
-            //pos = new RectF(x, y, x+anchoMoneda, y+altoMoneda);
             boolean posValida = true;
 
             for (int i = 0; i < arbolesRect.length; i++) {
-                if(arbolesRect[i].contains(new RectF(x, y, x+anchoMoneda, y+altoMoneda)) ||
-                        arbolesRect[i].intersect(new RectF(x, y, x+anchoMoneda, y+altoMoneda))){
+                if(new RectF(arbolesRect[i].left, arbolesRect[i].top, arbolesRect[i].right,
+                        arbolesRect[i].bottom).contains(new RectF(x, y, x+anchoMoneda, y+altoMoneda))
+                        || new RectF(arbolesRect[i].left, arbolesRect[i].top, arbolesRect[i].right,
+                        arbolesRect[i].bottom).intersect(new RectF(x, y, x+anchoMoneda, y+altoMoneda))) {
                     posValida = false;
                     break;
                 }
@@ -286,12 +284,10 @@ abstract public class Escena extends Pantalla{
 
             if(posValida){
                 for (int i = 0; i < monedasRect.size(); i++) {
-                    if(monedasRect.get(i).intersect(new RectF(x, y, x+anchoMoneda, y+altoMoneda))
-                            || monedasRect.get(i).contains(new RectF(x, y, x+anchoMoneda, y+altoMoneda))
-                            || Math.abs(monedasRect.get(i).right - x) < anchoMoneda * 2
-                            || Math.abs(monedasRect.get(i).left - x+anchoMoneda) < anchoMoneda *2
-                            || Math.abs(monedasRect.get(i).top - y+altoMoneda) < altoMoneda
-                            || Math.abs(monedasRect.get(i).bottom - y) < altoMoneda){
+                    if(new RectF(monedasRect.get(i).left, monedasRect.get(i).top, monedasRect.get(i).right,
+                            monedasRect.get(i).bottom).intersect(new RectF(x, y, x+anchoMoneda, y+altoMoneda))
+                            || new RectF(monedasRect.get(i).left, monedasRect.get(i).top, monedasRect.get(i).right,
+                            monedasRect.get(i).bottom).contains(new RectF(x, y, x+anchoMoneda, y+altoMoneda))){
                         posValida = false;
                         break;
                     }
