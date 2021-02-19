@@ -15,14 +15,14 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.io.InputStream;
 
-abstract class Pantalla {
-    int numPantalla;
-    int altoPantalla;
-    int anchoPantalla;
-    Context context;
-    TextPaint tp;
+public class Pantalla {
+    public int numPantalla;
+    protected int altoPantalla;
+    protected int anchoPantalla;
+    protected Context context;
+    protected TextPaint tp;
 
-    Paint pBotonesVerdes;
+    public Paint pBotonesVerdes;
 
     public Pantalla( Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         this.altoPantalla = altoPantalla;
@@ -48,7 +48,7 @@ abstract class Pantalla {
     public void actualizaFisica(){
     }
 
-    int onTouchEvent(MotionEvent event){
+    public int onTouchEvent(MotionEvent event){
         return -1;
     }
 
@@ -75,7 +75,7 @@ abstract class Pantalla {
             return bitmapAux;
     }
 
-    static Bitmap getBitmapFromAssets(Context context, String fichero) {
+    public static Bitmap getBitmapFromAssets(Context context, String fichero) {
         try {
             InputStream is=context.getAssets().open(fichero);
             return BitmapFactory.decodeStream(is);

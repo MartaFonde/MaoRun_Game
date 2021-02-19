@@ -1,12 +1,16 @@
-package com.example.juego;
+package com.example.juego.Escenas;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.view.MotionEvent;
-import android.widget.Toast;
+
+import com.example.juego.ElemEscena.Coche;
+import com.example.juego.ElemEscena.Gato;
+import com.example.juego.JuegoSV;
+import com.example.juego.Pantalla;
+import com.example.juego.MenuEscenas.PantallaFinPartida;
 
 public class Escena3 extends Escena {
     Bitmap fondo;
@@ -26,24 +30,17 @@ public class Escena3 extends Escena {
 
     @Override
     public void dibuja(Canvas c) {
-        //super.dibujaFondo(c);
-        //dibujaArboles(c);
         super.dibuja(c);
     }
 
     @Override
-    public void dibujaArboles(Canvas c) {
-       // setArbolesRect();
-        //super.dibujaArboles(c);
-    }
-
-    @Override
-    int onTouchEvent(MotionEvent event) {
+    public int onTouchEvent(MotionEvent event) {
         int aux = super.onTouchEvent(event);
         if(aux == -3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *18, 0,
                     anchoPantalla/32*22, altoPantalla/16 * 0.5f))){
-                JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, false, gato.puntos);
+                JuegoSV.cambiaPantalla(9);
+                //JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, false, gato.puntos);
             }else {
                 gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
                 gato.moverArriba();

@@ -1,4 +1,4 @@
-package com.example.juego;
+package com.example.juego.Escenas;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,9 +18,17 @@ import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import com.example.juego.ElemEscena.Controles;
+import com.example.juego.ElemEscena.Gato;
+import com.example.juego.JuegoSV;
+import com.example.juego.MenuEscenas.PauseEscena;
+import com.example.juego.Pantalla;
+import com.example.juego.R;
+import com.example.juego.ElemEscena.Trafico;
+
 import java.util.ArrayList;
 
-abstract public class Escena extends Pantalla{
+abstract public class Escena extends Pantalla {
     Context context;
     Bitmap fondo;
     int numEscena;
@@ -48,7 +56,7 @@ abstract public class Escena extends Pantalla{
     Trafico trafico;
     Gato gato;
     boolean colisionCoche = false;
-    static int mov = 3;
+    public static int mov = 3;
     int cocheColision = -1;
     int nuevoCoche;
 
@@ -61,14 +69,17 @@ abstract public class Escena extends Pantalla{
     SoundPool efectosSonido;
     int sonidoCoche, sonidoGato, sonidoMoneda;
     final int maxSonidosSimultaneos = 10;
-    MediaPlayer mediaPlayer;
+    static MediaPlayer mediaPlayer;
+    int actualizaVolumen = 0;
+    int volumen;
 
     Vibrator vibrator;
 
     RectF rectPausa;
     Bitmap bitmapPausa;
-    PantallaPause pantallaPause;
+    PauseEscena pantallaPause;
     boolean pause = false;
+    Paint pPausa;
 
     public Escena(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
         super(context, anchoPantalla,altoPantalla, numPantalla);
@@ -102,18 +113,16 @@ abstract public class Escena extends Pantalla{
         monedasPuntuacionBitmap = Pantalla.escala(context, "moneda/monedas_controles.png", anchoPantalla / 32, altoPantalla / 16);
 
         setSonidosMusica();
+        volumen = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
         
         bitmapPausa = Pantalla.escala(context, "juego_pause.png", (int)propW*2, (int)propH*2);
-    }
-
-    public Bitmap getFondo() {
-        return fondo;
+        pPausa = new Paint();
+        pPausa.setAlpha(150);
     }
 
     public void setFondo(Bitmap fondo) {
-        //if(fondo != null)
         this.fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, true);;
     }
 
@@ -135,9 +144,7 @@ abstract public class Escena extends Pantalla{
             controles.dibujaControles(c);
 
             rectPausa = new RectF(propW * 0.5f, propH * 0.5f, propW*2.5f, propH*2.5f);
-            c.drawBitmap(bitmapPausa, propW * 0.5f, propH*0.5f, null);  //TODO poñer algo de transparencia
-            c.drawRect(rectPausa, p);
-            dibujaArboles(c);
+            c.drawBitmap(bitmapPausa, propW * 0.5f, propH*0.5f, pPausa);
 
             if(pause){
                 pantallaPause.dibuja(c);
@@ -158,19 +165,24 @@ abstract public class Escena extends Pantalla{
                     trafico.coches[i].moverIzquierda(anchoPantalla);
                 }
                 if (trafico.coches[i].rectangulo.intersect(gato.rectangulo) && nuevoCoche != cocheColision) {
+                    colisionCoche = true;
                     if(JuegoSV.sonidoAct){
-                        int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                        efectosSonido.play(sonidoCoche, v, v, 1, 0, 1);
-                        efectosSonido.play(sonidoGato, v, v, 1, 0, 1);
+                        if(actualizaVolumen % 3 == 0){
+                            volumen = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                        }
+                        efectosSonido.play(sonidoCoche, volumen, volumen, 1, 0, 1);
+                        efectosSonido.play(sonidoGato, volumen, volumen, 1, 0, 1);
+                        actualizaVolumen++;
                     }
                     if(JuegoSV.vibracionAct){
                         efectoVibracion();
                     }
                     cocheColision = i;
                     gato.numVidas--;
-                    colisionCoche = true;    //para que dibuxe pantalla roja
+                        //para que dibuxe pantalla roja
                     if(gato.numVidas == 0){
-                        JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, true, gato.puntos);
+                       //JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, true, gato.puntos);
+                        JuegoSV.cambiaPantalla(9);
                     }
                 }
                 //Cando coche colisión deixe de interset o xogador, xa podería volver colisionar
@@ -181,7 +193,7 @@ abstract public class Escena extends Pantalla{
         }
     }
 
-    int onTouchEvent(MotionEvent event){
+    public int onTouchEvent(MotionEvent event){
         int accion = event.getAction();
         float x = event.getX();
         float y = event.getY();
@@ -209,7 +221,8 @@ abstract public class Escena extends Pantalla{
                         return -3;
                     }else if(rectPausa.contains(x,y)){
                         pause = true;
-                        pantallaPause = new PantallaPause(context, anchoPantalla, altoPantalla, 10);
+                        pantallaPause = new PauseEscena(context, anchoPantalla, altoPantalla, 13);
+                        //pantallaPause = new PantallaPause(context, anchoPantalla, altoPantalla, 10);
                     } else{
                         gato.parado(); //TODO mirar onde meter isto
                     }
@@ -221,7 +234,7 @@ abstract public class Escena extends Pantalla{
             }
         }else{
             int aux = pantallaPause.onTouchEvent(event);
-            if(aux == 1){
+            if(aux == 0){
                 pantallaPause = null;
                 pause = false;
             }
@@ -302,8 +315,10 @@ abstract public class Escena extends Pantalla{
     }
 
     public void dibujaMonedas(Canvas c){
-        if(++cont % 10 == 0){
-            monedaActual = actualizaImagenMoneda();     //bitmap de la animacion de moneda que se va a mostrar
+        if(!pause){
+            if(++cont % 10 == 0){
+                monedaActual = actualizaImagenMoneda();     //bitmap de la animacion de moneda que se va a mostrar
+            }
         }
         //Repintando os rect de monedasRect algúns cambiaban de dimensions ancho + alto
         //Gardo pos left, top e repinto coas súas medidas. Volvo asignar a monedasRect
@@ -311,7 +326,7 @@ abstract public class Escena extends Pantalla{
             monedasRect.set(i, new RectF(posicionMonedas.get(i).x, posicionMonedas.get(i).y,
                     posicionMonedas.get(i).x+anchoMoneda, posicionMonedas.get(i).y + altoMoneda));
             c.drawBitmap(monedaActual, monedasRect.get(i).left, monedasRect.get(i).top, null);
-            c.drawRect(monedasRect.get(i), p);
+            //c.drawRect(monedasRect.get(i), p);
         }
     }
 
@@ -323,12 +338,6 @@ abstract public class Escena extends Pantalla{
             col = 0;
         }
         return conjuntoMonedas;
-    }
-
-    public void dibujaArboles(Canvas c){
-        for (RectF arbol : arbolesRect) {
-            c.drawRect(arbol, p);
-        }
     }
 
     public void setPaintPuntuacion(){
@@ -347,7 +356,6 @@ abstract public class Escena extends Pantalla{
     public void dibujaPuntuacion(Canvas c){
         puntuacionRect = new RectF(anchoPantalla/32*24, 0, anchoPantalla, altoPantalla/16*2.5f);
         c.drawRect(puntuacionRect, pPuntuacion);
-        //Log.i("vidas", vidas+"");
         for (int i = 0; i < gato.numVidas; i++) {
             c.drawBitmap(vidaBitmap, anchoPantalla/32 * (31 - i), altoPantalla / 16 * 0.5f, null);
         }

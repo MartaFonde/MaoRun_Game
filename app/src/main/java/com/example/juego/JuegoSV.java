@@ -11,6 +11,18 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import com.example.juego.ElemEscena.Gato;
+import com.example.juego.Escenas.Escena;
+import com.example.juego.Escenas.Escena1;
+import com.example.juego.Escenas.Escena2;
+import com.example.juego.Escenas.Escena3;
+import com.example.juego.MenuEscenas.PantallaFinPartida;
+import com.example.juego.MenuPpal.MenuAyuda;
+import com.example.juego.MenuPpal.MenuCreditos;
+import com.example.juego.MenuPpal.MenuOpciones;
+import com.example.juego.MenuPpal.MenuPrincipal;
+import com.example.juego.MenuPpal.MenuRecords;
+
 public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder surfaceHolder; // Interfaz abstracta para manejar la superficie de dibujado
     static Context context;
@@ -27,9 +39,9 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     static Bitmap bitmapGato;
     static Gato gato;
 
-    static boolean sonidoAct;
-    static boolean musicaAct;   //TODO controlar esto
-    static boolean vibracionAct;
+    public static boolean sonidoAct;
+    public static boolean musicaAct;   //TODO controlar esto
+    public static boolean vibracionAct;
 
     public JuegoSV(Context context) {
         super(context);
@@ -66,9 +78,9 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void salir(){
-        funcionando = false;
-        Activity activity = (Activity)context;
-        activity.finish();
+        pantallaActual = null;
+        System.gc();
+        ((Activity)context).finish();
     }
 
     public static void cambiaPantalla(int nuevaPantalla){
@@ -93,7 +105,11 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
                     break;
                 case 8: pantallaActual = new Escena3(context, anchoPantalla, altoPantalla, 8, gato);
                     break;
-
+                case 9:
+                    boolean sinVidas = gato.numVidas==0? true : false;
+                    pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9,
+                           sinVidas , gato.puntos);
+                    break;
             }
         }
     }
@@ -162,10 +178,11 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
                     if (c == null) c = surfaceHolder.lockCanvas();
 
                     synchronized (surfaceHolder) {
-                        //if(pantallaActual != null)
+                        if(pantallaActual != null)
                         pantallaActual.dibuja(c);
 
-                        if(pantallaActual instanceof Escena1
+                        if(pantallaActual != null
+                                && pantallaActual instanceof Escena1
                                 || pantallaActual instanceof Escena2
                                 || pantallaActual instanceof Escena3)
                         {

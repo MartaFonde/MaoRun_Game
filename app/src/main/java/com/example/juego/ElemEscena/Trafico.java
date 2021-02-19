@@ -1,31 +1,26 @@
-package com.example.juego;
+package com.example.juego.ElemEscena;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PointF;
 
-import java.io.IOException;
-import java.io.InputStream;
+import com.example.juego.ElemEscena.Coche;
+import com.example.juego.Pantalla;
 
 public class Trafico {
     Context context;
-    Coche[] coches;
+    public Coche[] coches;
 
-    Bitmap[] imgCochesRight;
-    Bitmap[] imgCochesLeft;
+    public Bitmap[] imgCochesRight;
+    public Bitmap[] imgCochesLeft;
 
-    //PointF[] posicionesCoches;
-
-    //Bitmap bitmapCoche;
     int anchoPantalla;
     int altoPantalla;
 
-    int anchoCoche;
-    int altoCoche;
+    public int anchoCoche;
+    public int altoCoche;
 
     Paint p;
 
@@ -44,8 +39,6 @@ public class Trafico {
 
         setImgCochesRight();
         setImgCochesLeft();
-
-        //posicionesCoches = new PointF[16];
 
         p = new Paint();
         p.setColor(Color.RED);
@@ -84,7 +77,7 @@ public class Trafico {
     public void dibujaCoches(Canvas c){
         for (Coche coche : coches) {
             c.drawBitmap(coche.imagen, coche.posicion.x, coche.posicion.y, null);
-            c.drawRect(coche.rectangulo,p);
+            //c.drawRect(coche.rectangulo,p);
         }
     }
 }

@@ -1,9 +1,11 @@
-package com.example.juego;
+package com.example.juego.MenuPpal;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
+import com.example.juego.Menu;
 
 public class MenuAyuda extends Menu {
     public MenuAyuda(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {

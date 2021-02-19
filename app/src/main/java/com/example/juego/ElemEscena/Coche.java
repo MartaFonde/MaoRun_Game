@@ -1,4 +1,4 @@
-package com.example.juego;
+package com.example.juego.ElemEscena;
 
 import android.graphics.Bitmap;
 import android.graphics.PointF;

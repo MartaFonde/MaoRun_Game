@@ -1,10 +1,12 @@
-package com.example.juego;
+package com.example.juego.MenuPpal;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-public class MenuCreditos extends Menu{
+import com.example.juego.Menu;
+
+public class MenuCreditos extends Menu {
 
 
     public MenuCreditos(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {

@@ -11,21 +11,16 @@ import android.text.TextPaint;
 import android.view.MotionEvent;
 
 abstract public class Menu extends Pantalla{
-    int altoPantalla;
-    int anchoPantalla;
-    Context context;
-    Paint p;
-    RectF btnAtras;
-    Bitmap atrasBitmap;
+    protected Context context;
+    protected Paint p;
+    protected RectF btnAtras;
+    protected Bitmap atrasBitmap;
 
     //TODO fondo, fonte de letra, colores
 
     public Menu(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
         this.context = context;
-
-        this.altoPantalla = altoPantalla;
-        this.anchoPantalla = anchoPantalla;
 
         p = new Paint();
         p.setTextAlign(Paint.Align.CENTER);
@@ -56,7 +51,7 @@ abstract public class Menu extends Pantalla{
         }
     }
 
-    int onTouchEvent(MotionEvent event){
+    public int onTouchEvent(MotionEvent event){
         int x=(int)event.getX();
         int y=(int)event.getY();
 

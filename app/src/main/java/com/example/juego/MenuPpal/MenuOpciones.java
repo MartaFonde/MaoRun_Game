@@ -1,4 +1,4 @@
-package com.example.juego;
+package com.example.juego.MenuPpal;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,17 +8,20 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-public class MenuOpciones extends Menu{
+import com.example.juego.JuegoSV;
+import com.example.juego.Menu;
 
-    RectF rectSonAct;
-    RectF rectSonDesact;
-    RectF rectMusicaAct;
-    RectF rectMusicaDesact;
-    RectF rectVibracionAct;
-    RectF rectVibracionDesact;
+public class MenuOpciones extends Menu {
 
-    Paint pAct;
-    Paint pDesact;
+    public RectF rectSonAct;
+    public RectF rectSonDesact;
+    public RectF rectMusicaAct;
+    public RectF rectMusicaDesact;
+    public RectF rectVibracionAct;
+    public RectF rectVibracionDesact;
+
+    public Paint pAct;
+    public Paint pDesact;
 
     public MenuOpciones(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
@@ -53,7 +56,7 @@ public class MenuOpciones extends Menu{
     }
 
     @Override
-    int onTouchEvent(MotionEvent event) {
+    public int onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
 
         float x = event.getX();
@@ -69,27 +72,27 @@ public class MenuOpciones extends Menu{
                     if(rectSonAct.contains(x,y)){
                         if(!JuegoSV.sonidoAct) JuegoSV.sonidoAct = true;
                         Toast.makeText(context, "sonidoAct"+JuegoSV.sonidoAct, Toast.LENGTH_SHORT).show();
-                            return 0;
+                            //return 0;
                     } else if(rectSonDesact.contains(x,y)) {
                         if(JuegoSV.sonidoAct) JuegoSV.sonidoAct = false;
                         Toast.makeText(context, "sonidoAct"+JuegoSV.sonidoAct, Toast.LENGTH_SHORT).show();
-                        return 0;
+                       // return 0;
                     } else if(rectMusicaAct.contains(x,y)) {    //TODO
                         if(!JuegoSV.musicaAct) JuegoSV.musicaAct = true;
                         Toast.makeText(context, "musicaAct"+JuegoSV.musicaAct, Toast.LENGTH_SHORT).show();
-                        return 0;
+                        //return 0;
                     } else if(rectMusicaDesact.contains(x,y)) {     //TODO
                         if(JuegoSV.musicaAct) JuegoSV.musicaAct = false;
                         Toast.makeText(context, "musicaAct"+JuegoSV.musicaAct, Toast.LENGTH_SHORT).show();
-                        return 0;
+                        //return 0;
                     } else if(rectVibracionAct.contains(x,y)) {
                         if(!JuegoSV.vibracionAct) JuegoSV.vibracionAct = true;
                         Toast.makeText(context, "vibracionAct"+JuegoSV.vibracionAct, Toast.LENGTH_SHORT).show();
-                        return 0;
+                        //return 0;
                     } else if(rectVibracionDesact.contains(x,y)) {
                         if(JuegoSV.vibracionAct) JuegoSV.vibracionAct = false;
                         Toast.makeText(context, "vibracionAct"+JuegoSV.vibracionAct, Toast.LENGTH_SHORT).show();
-                        return 0;
+                       // return 0;
                     }
                 }
             break;

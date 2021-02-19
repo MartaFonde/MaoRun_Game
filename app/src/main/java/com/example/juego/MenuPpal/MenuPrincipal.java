@@ -1,4 +1,4 @@
-package com.example.juego;
+package com.example.juego.MenuPpal;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,9 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-public class MenuPrincipal extends Menu{
+import com.example.juego.Menu;
+
+public class MenuPrincipal extends Menu {
 
     RectF btnJugar;
     RectF btnRecords;
@@ -15,7 +17,6 @@ public class MenuPrincipal extends Menu{
     RectF btnAyuda;
     RectF btnOpciones;
     RectF btnSalir;
-
 
     public MenuPrincipal(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
@@ -29,7 +30,7 @@ public class MenuPrincipal extends Menu{
     }
 
     @Override
-    int onTouchEvent(MotionEvent event) {
+    public int onTouchEvent(MotionEvent event) {
         float x= event.getX();
         float y= event.getY();
 

@@ -1,4 +1,4 @@
-package com.example.juego;
+package com.example.juego.MenuEscenas;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,7 +7,10 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
-public class PantallaPause extends Pantalla{
+import com.example.juego.JuegoSV;
+import com.example.juego.Pantalla;
+
+public class MenuPause extends Pantalla {
 
     RectF rectFondo;
     RectF btnVolver;
@@ -15,18 +18,8 @@ public class PantallaPause extends Pantalla{
     RectF btnAyuda;
     RectF btnMenuPpal;
 
-    Paint pFondo;
-
-    static boolean opciones = false;
-    static boolean ayuda = false;
-    Pantalla pauseOpciones;
-    Pantalla pauseAyuda;
-
-    public PantallaPause(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
+    public MenuPause(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
-
-        pFondo = new Paint();
-        pFondo.setColor(Color.argb(210, 50,50,50));
 
         setRectBotones();
         tp.setARGB(250,233,217,168);
@@ -36,17 +29,7 @@ public class PantallaPause extends Pantalla{
 
     @Override
     public void dibuja(Canvas c) {
-        super.dibuja(c);
-        c.drawColor(Color.TRANSPARENT); //fondo transparente
-        c.drawRect(rectFondo, pFondo);
-        if(opciones){
-            pauseOpciones.dibuja(c);
-        }else if(ayuda){
-            pauseAyuda.dibuja(c);
-        }else{
-            setRectBotones();
-            drawBotones(c);
-        }
+        drawBotones(c);
     }
 
     public void setRectBotones(){
@@ -58,7 +41,6 @@ public class PantallaPause extends Pantalla{
     }
 
     public void drawBotones(Canvas c){
-
         c.drawRect(btnVolver, pBotonesVerdes);
         c.drawText("Volver", anchoPantalla/2, altoPantalla/16*4, tp);
         c.drawRect(btnOpciones, pBotonesVerdes);
@@ -70,37 +52,24 @@ public class PantallaPause extends Pantalla{
     }
 
     @Override
-    int onTouchEvent(MotionEvent event) {
+    public int onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
+        int accion = event.getAction();
 
-        if(!opciones && !ayuda){
+        if(accion == MotionEvent.ACTION_DOWN){
             if(btnVolver.contains(x,y)){
-                return 1;
+                return 0;
             }else if(btnOpciones.contains(x,y)){
-                opciones = true;
-                pauseOpciones = new PantallaPauseOpciones(context, anchoPantalla, altoPantalla, 11);
+                return 11;
+
             }else if(btnAyuda.contains(x,y)){
-                ayuda = true;
-                pauseAyuda = new PantallaPauseAyuda(context, anchoPantalla, altoPantalla, 12);
+                return 12;
+
             }else if(btnMenuPpal.contains(x,y)){
                 JuegoSV.cambiaPantalla(1);
             }
-        }else if(opciones && !ayuda) {
-            int aux = pauseOpciones.onTouchEvent(event);
-            if(aux == 1){
-                pauseOpciones = null;
-                opciones = false;
-                //Toast.makeText(context, "opcFALSE", Toast.LENGTH_SHORT).show();
-            }
-        }else {
-            int aux = pauseAyuda.onTouchEvent(event);
-            if(aux == 1){
-                pauseAyuda = null;
-                ayuda = false;
-            }
         }
-
-        return super.onTouchEvent(event);
+        return -1;
     }
 }

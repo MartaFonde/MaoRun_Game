@@ -1,4 +1,4 @@
-package com.example.juego;
+package com.example.juego.ElemEscena;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -6,8 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.graphics.Typeface;
-import android.text.TextPaint;
+
+import com.example.juego.Escenas.Escena;
 
 public class Gato {
     private Bitmap imagenes; // Bitmap con todas las imágenes
@@ -26,18 +26,16 @@ public class Gato {
     Bitmap imagenActual;      //imagen actual del gato
     Bitmap[][] imgGato;
 
-    RectF rectangulo;
-    boolean puedeMoverse = true;
+    public RectF rectangulo;
+    public boolean puedeMoverse = true;
 
     float velocidad;
 
     Paint p;
     Paint p2;
 
-    int numVidas;
-    int puntos;
-
-
+    public int numVidas;
+    public int puntos;
 
     public Gato(Bitmap imagenes, float x, float y, float velocidad) {
         this.imagenes = imagenes;
@@ -185,7 +183,5 @@ public class Gato {
 
     public void dibujaGato(Canvas c){
         c.drawBitmap(imagenActual, posicion.x, posicion.y, null);
-        //c.drawRect(rectangulo, p);
-        //c.drawRect(posicionFutura, p2);
     }
 }

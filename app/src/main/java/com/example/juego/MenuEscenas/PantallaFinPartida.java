@@ -1,4 +1,4 @@
-package com.example.juego;
+package com.example.juego.MenuEscenas;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,7 +7,10 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
-public class PantallaFinPartida extends Menu{
+import com.example.juego.Menu;
+import com.example.juego.Pantalla;
+
+public class PantallaFinPartida extends Menu {
     RectF btnRepetir;
     RectF btnMenuPpal;
     boolean sinVidas;
@@ -47,7 +50,7 @@ public class PantallaFinPartida extends Menu{
     }
 
     @Override
-    int onTouchEvent(MotionEvent event) {
+    public int onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
 

@@ -1,12 +1,14 @@
-package com.example.juego;
+package com.example.juego.Escenas;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.view.MotionEvent;
-import android.widget.Toast;
+
+import com.example.juego.ElemEscena.Coche;
+import com.example.juego.ElemEscena.Gato;
+import com.example.juego.Pantalla;
 
 public class Escena2 extends Escena {
 
@@ -29,19 +31,11 @@ public class Escena2 extends Escena {
 
     @Override
     public void dibuja(Canvas c) {
-        //super.dibujaFondo(c);
-        //dibujaArboles(c);
         super.dibuja(c);
     }
 
     @Override
-    public void dibujaArboles(Canvas c) {
-        //setArbolesRect();
-        //super.dibujaArboles(c);
-    }
-
-    @Override
-    int onTouchEvent(MotionEvent event) {
+    public int onTouchEvent(MotionEvent event) {
         int aux = super.onTouchEvent(event);
         if(aux == -3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *14, 0,
