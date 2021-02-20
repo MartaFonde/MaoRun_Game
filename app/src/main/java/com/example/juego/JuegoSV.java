@@ -59,6 +59,14 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         vibracionAct = true;
     }
 
+    /**
+     * Obtiene las coordenadas x,y y la acción de la pulsación. Al pulsar con un único dedo,
+     * se obtiene el valor que devuelve el mismo evento de la pantallaActual.
+     * Si este valor es -10 se ejecuta salir.
+     * Si el valor es distinto a -1 ejecuta cambiaPantalla pasándole ese valor.
+     * @param event
+     * @return true si el evento es capturado por la acción
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         synchronized(surfaceHolder) {
@@ -70,19 +78,30 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
                 case MotionEvent.ACTION_DOWN:
                     numPantallaNueva = pantallaActual.onTouchEvent(event);
                     if(numPantallaNueva == -10)  salir();
-                    if(numPantallaNueva != -1 ) cambiaPantalla(numPantallaNueva);
+                    if(numPantallaNueva != -1 ) cambiaPantalla(numPantallaNueva);   //por defecto
                     return true;
             }
         }
-        return super.onTouchEvent(event);
+        return super.onTouchEvent(event);       //TODO como se doc esto??
     }
 
+    /**
+     * Llama al recolector de basura para liberar memoria y finaliza la activity que contiene
+     * esta clase
+     */
     private void salir(){
+        funcionando = false;
         pantallaActual = null;
         System.gc();
         ((Activity)context).finish();
     }
 
+    /**
+     * Gestiona el control de pantallas a partir de un número de Pantalla. Si el parámetro es distinto
+     * al número de pantalla de pantallaActual asigna a pantalla actual la correspondiente clase.
+     * @param nuevaPantalla número de pantalla que representa una posible nueva asignación de
+     *                      pantallaActual
+     */
     public static void cambiaPantalla(int nuevaPantalla){
         if (pantallaActual.numPantalla != nuevaPantalla){
             switch (nuevaPantalla){
@@ -114,7 +133,13 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-
+    /**
+     * Se ejecuta cuendo cambia el tamaño de la pantalla
+     * @param w nuevo ancho de pantalla
+     * @param h nuevo alto de pantalla
+     * @param oldw  antiguo ancho de pantalla
+     * @param oldh antiguo alto de pantalla
+     */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -123,12 +148,20 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         //hilo.setSurfaceSize(w, h);
     }
 
-    @Override           // En cuanto se crea el SurfaceView se lanze el hilo
+
+    @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
 
     }
 
-    // Si hay algún cambio en la superficie de dibujo (normalmente su tamaño) obtenemos el nuevo tamaño
+    /**
+     * Se ejecuta si hay algún cambio en la superficie de dibujo. Obtenemos su nuevo tamaño.
+     * Si hay cambios, la pantalla MenuPrincipal es asignada a pantallaActual
+     * @param holder
+     * @param format
+     * @param width ancho de pantalla
+     * @param height alto de pantalla
+     */
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
         anchoPantalla = width;
@@ -142,7 +175,10 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         //hilo.setSurfaceSize(width, height);
     }
 
-    // Al finalizar el surface, se para el hilo
+    /**
+     * Al finalizar el surface, se para el hilo
+     * @param holder
+     */
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         hilo.setFuncionando(false);
@@ -153,12 +189,14 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    // Clase Hilo en la cual se ejecuta el método de dibujo y de física para que se haga en paralelo con la
-// gestión de la interfaz de usuario
     class Hilo extends Thread {
         public Hilo() {
         }
 
+        /**
+         * Ejecuta las acciones del hilo. Ejecuta el método de dibujo y de física para que se haga
+         * en paralelo con la gestión de la interfaz de usuario.
+         */
         @Override
         public void run() {
             long tiempoDormido = 0; //Tiempo que va a dormir el hilo
@@ -212,7 +250,10 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        // Activa o desactiva el funcionamiento del hilo
+        /**
+         * Activa o desactiva el funcionamiento del hilo
+         * @param flag asigna valor a funcionando, variable que activa o desactiva el hilo
+         */
         void setFuncionando(boolean flag) {
             funcionando = flag;
         }

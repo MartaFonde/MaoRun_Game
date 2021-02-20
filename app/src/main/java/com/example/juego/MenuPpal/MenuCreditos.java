@@ -11,13 +11,18 @@ public class MenuCreditos extends Menu {
 
     public MenuCreditos(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
+        tp.setARGB(225,129,157,80);
     }
 
-
+    /**
+     * Dibuja sobre el lienzo texto que indica los autores de las imágenes, la fuente de letra y
+     * la música que se utilizaron para realizar el juego. Todos los recursosutilizados son de
+     * libre distribución.
+     * @param c lienzo
+     */
     @Override
     public void dibuja(Canvas c) {
-        super.dibuja(c);
-
+        super.dibuja(c); //fondo + btnAtras
         tp.setTextAlign(Paint.Align.CENTER);
         tp.setTextSize(altoPantalla/10);
         c.drawText("AGRADECIMIENTOS", anchoPantalla/2, altoPantalla/16 * 2, tp);

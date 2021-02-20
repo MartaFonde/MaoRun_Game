@@ -11,6 +11,10 @@ public class PauseAyuda extends PauseEscena {
         super(context, anchoPantalla, altoPantalla, numPantalla);
     }
 
+    /**
+     * Dibuja el texto indicativo de cómo se juega al juego
+     * @param c lienzo
+     */
     @Override
     public void dibuja(Canvas c) {
         tp.setTextAlign(Paint.Align.CENTER);
@@ -26,6 +30,13 @@ public class PauseAyuda extends PauseEscena {
         c.drawText("gato hacia el camino de tierra.", anchoPantalla/2, altoPantalla / 16 * 10, tp);
     }
 
+    /**
+     * Obtiene las coordenadas de pulsación y si el rect de retroceso las contiene se vuelve a
+     * pantalla PauseMenu
+     * @param event
+     * @return devuelve 10 (número de pantalla de PauseMenu) o -1 en caso contrario (no se hace
+     * cambio de pantalla)
+     */
     @Override
     public int onTouchEvent(MotionEvent event) {
         float x = event.getX();

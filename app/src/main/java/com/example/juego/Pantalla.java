@@ -15,7 +15,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Pantalla {
+abstract public class Pantalla {
     public int numPantalla;
     protected int altoPantalla;
     protected int anchoPantalla;
@@ -38,12 +38,10 @@ public class Pantalla {
         tp.setTextSize(altoPantalla/10);
         tp.setColor(Color.WHITE);
         tp.setTypeface(face);
-
     }
 
     public void dibuja(Canvas c){
     }
-
 
     public void actualizaFisica(){
     }
@@ -53,6 +51,14 @@ public class Pantalla {
     }
 
 
+    /**
+     * Crea un bitmap con un ancho y un alto determinados a partir de una imagen
+     * @param context contexto
+     * @param fichero ruta de la imagen
+     * @param nuevoAncho nuevo ancho del bitmap
+     * @param nuevoAlto nuevo alto del bitmap
+     * @return bitmap con las nuevas dimensiones
+     */
     public static Bitmap escala(Context context, String fichero, int nuevoAncho, int nuevoAlto) {
         //Bitmap bitmapAux = BitmapFactory.decodeResource(context.getResources(), res);
         Bitmap bitmapAux = getBitmapFromAssets(context, fichero);
@@ -75,6 +81,12 @@ public class Pantalla {
             return bitmapAux;
     }
 
+    /**
+     * Obtiene bitmap de una imagen ubicada en el directorio assets
+     * @param context contexto
+     * @param fichero ruta de la imagen
+     * @return bitmap de la imagen
+     */
     public static Bitmap getBitmapFromAssets(Context context, String fichero) {
         try {
             InputStream is=context.getAssets().open(fichero);

@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import com.example.juego.JuegoSV;
 import com.example.juego.Pantalla;
 
-public class MenuPause extends Pantalla {
+public class PauseMenu extends Pantalla {
 
     RectF rectFondo;
     RectF btnVolver;
@@ -18,7 +18,7 @@ public class MenuPause extends Pantalla {
     RectF btnAyuda;
     RectF btnMenuPpal;
 
-    public MenuPause(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
+    public PauseMenu(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
 
         setRectBotones();
@@ -27,20 +27,12 @@ public class MenuPause extends Pantalla {
         tp.setTextAlign(Paint.Align.CENTER);
     }
 
+    /**
+     * Dibuja sobre lienzo los rect (botones)
+     * @param c
+     */
     @Override
     public void dibuja(Canvas c) {
-        drawBotones(c);
-    }
-
-    public void setRectBotones(){
-        rectFondo = new RectF(anchoPantalla/32 * 8, altoPantalla/16 * 2, anchoPantalla/32*24, altoPantalla/16 * 14);
-        btnVolver = new RectF(anchoPantalla/32 * 11, altoPantalla/16 * 2.5f, anchoPantalla/32*21, altoPantalla/16 * 4.5f);
-        btnOpciones = new RectF(anchoPantalla/32 * 11, altoPantalla/16 * 5.5f, anchoPantalla/32*21, altoPantalla/16 * 7.5f);
-        btnAyuda = new RectF(anchoPantalla/32 * 11, altoPantalla/16 * 8.5f, anchoPantalla/32*21, altoPantalla/16 * 10.5f);
-        btnMenuPpal = new RectF(anchoPantalla/32 * 11, altoPantalla/16 * 11.5f, anchoPantalla/32*21, altoPantalla/16 * 13.5f);
-    }
-
-    public void drawBotones(Canvas c){
         c.drawRect(btnVolver, pBotonesVerdes);
         c.drawText("Volver", anchoPantalla/2, altoPantalla/16*4, tp);
         c.drawRect(btnOpciones, pBotonesVerdes);
@@ -51,6 +43,26 @@ public class MenuPause extends Pantalla {
         c.drawText("Menú principal", anchoPantalla/2, altoPantalla/16*13, tp);
     }
 
+    /**
+     * Inicializa los rect (botones) de las opciones del menú y del fondo
+     */
+    public void setRectBotones(){
+        rectFondo = new RectF(anchoPantalla/32 * 8, altoPantalla/16 * 2, anchoPantalla/32*24, altoPantalla/16 * 14);
+        btnVolver = new RectF(anchoPantalla/32 * 11, altoPantalla/16 * 2.5f, anchoPantalla/32*21, altoPantalla/16 * 4.5f);
+        btnOpciones = new RectF(anchoPantalla/32 * 11, altoPantalla/16 * 5.5f, anchoPantalla/32*21, altoPantalla/16 * 7.5f);
+        btnAyuda = new RectF(anchoPantalla/32 * 11, altoPantalla/16 * 8.5f, anchoPantalla/32*21, altoPantalla/16 * 10.5f);
+        btnMenuPpal = new RectF(anchoPantalla/32 * 11, altoPantalla/16 * 11.5f, anchoPantalla/32*21, altoPantalla/16 * 13.5f);
+    }
+
+    /**
+     * Obtiene las coordenadas de pulsación y si algún rect contiene la coordenadas devuelve el
+     * número de pantalla correspondiente a la opción seleccionada. Se gestiona en la clase
+     * PauseEscena
+     * @param event
+     * @return 0 para retomar el juego, 11 para cambiar pantalla a PauseOpciones,
+     * 12 para cambiar pantalla a PauseAyuda o 1 para cambiar pantalla a MenuPrincipal.
+     * Devuelve -1 si ningún rect contiene las coordenadas de pulsación
+     */
     @Override
     public int onTouchEvent(MotionEvent event) {
         float x = event.getX();
@@ -62,12 +74,10 @@ public class MenuPause extends Pantalla {
                 return 0;
             }else if(btnOpciones.contains(x,y)){
                 return 11;
-
             }else if(btnAyuda.contains(x,y)){
                 return 12;
-
             }else if(btnMenuPpal.contains(x,y)){
-                JuegoSV.cambiaPantalla(1);
+                return 1;
             }
         }
         return -1;

@@ -31,9 +31,6 @@ public class Gato {
 
     float velocidad;
 
-    Paint p;
-    Paint p2;
-
     public int numVidas;
     public int puntos;
 
@@ -55,54 +52,76 @@ public class Gato {
         //por defecto estará direccion arriba:
         this.imagenActual = Bitmap.createBitmap(imagenes, anchoImagenes/3,(altoImagenes / 4)*3, anchoImagen,altoImagen);
 
-        p = new Paint();
-        p.setColor(Color.RED);
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(5);
-        p.setAlpha(150);
-
-        p2 = new Paint();
-        p2.setColor(Color.BLUE);
-        p2.setStyle(Paint.Style.STROKE);
-        p2.setStrokeWidth(5);
-        p2.setAlpha(150);
-
         numVidas = 7;
         puntos = 0;
     }
 
+    /**
+     * Devuelve la propiedad x que representa la coordenada x de gato
+     * @return coordenada x
+     */
     public float getX() {
         return x;
     }
 
+    /**
+     * Establece la propiedad x de gato, que representa su coordenada x,
+     * y actualiza el rect, que utiliza este valor en su definición
+     * @param x x
+     */
     public void setX(float x) {
         this.x = x;
         posicion.x = x;
         setRectangulo();
     }
 
+    /**
+     * Devuelve la propiedad y que representa la coordenada y de gato
+     * @return coordenada y
+     */
     public float getY() {
         return y;
     }
 
+    /**
+     * Establece la propiedad y de gato, que representa su coordenada y,
+     * y actualiza el rect, que utiliza este valor en su definición
+     * @param y y
+     */
     public void setY(float y) {
         this.y = y;
         posicion.y = y;
         setRectangulo();
     }
 
+    /**
+     * Devuelve la propiedad velocidad de gato
+     * @return velocidad
+     */
     public float getVelocidad() {
         return velocidad;
     }
 
+    /**
+     * Establece la propiedad velocidad de gato
+     * @param velocidad
+     */
     public void setVelocidad(float velocidad) {
         this.velocidad = velocidad;
     }
 
+    /**
+     * Devuelve el array bidimensional que contiene los sprites animados de gato
+     * @return sprites de gato
+     */
     public Bitmap[][] getImgGato() {
         return imgGato;
     }
 
+    /**
+     * Establece el array bidimensional que contiene los sprites animados de gato
+     * @param img imagen que contiene los sprites animados de gato
+     */
     public void setImgGato(Bitmap img) {
         for (int i = 0; i < imgGato.length; i++) {
             for (int j = 0; j < imgGato[i].length; j++) {
@@ -111,12 +130,22 @@ public class Gato {
         }
     }
 
+    /**
+     * Establece el rect de gato a partir de su posición, y el rect de su posición futura tomando
+     * como referencia su su último movimiento
+     */
     public void setRectangulo() {
         rectangulo = new RectF(posicion.x + anchoImagen*0.3f, posicion.y + altoImagen*0.7f,
                 posicion.x +anchoImagen * 0.7f, posicion.y+altoImagen);
         posicionFutura = getPosicionFutura(Escena.mov);
     }
 
+    /**
+     * Incrementa la propiedad y en velocidad si el gato se puede mover (el rect no colisiona con
+     * obstáculos) y si su imagen no supera el alto de pantalla. Actualiza la imagen
+     * a partir de los sprites animados
+     * @param altoPantalla alto de la pantalla
+     */
     public void moverAbajo(int altoPantalla) {
         fila = 0;
         if (puedeMoverse && posicion.y + altoImagen <= altoPantalla) {
@@ -125,6 +154,11 @@ public class Gato {
         actualizaImagen();
     }
 
+    /**
+     * Decrementa la propiedad x en velocidad si el gato puede moverse (el rect no colisiona con
+     * obstáculos) y si su imagen no se va fuera de la pantalla por el lado izquierdo.
+     * Actualiza la imagen a partir de los sprites animados
+     */
     public void moverIzquierda() {
         fila = 1;
         if (puedeMoverse && posicion.x >= 0) {
@@ -133,6 +167,12 @@ public class Gato {
         actualizaImagen();
     }
 
+    /**
+     * Incrementa la propiedad x en velocidad si el gato puede moverse (el rect no colisiona con
+     * obstáculos) y si su imagen no se va fuera de la pantalla por el lado derecho.
+     * Actualiza la imagen a partir de los sprites animados
+     * @param anchoPantalla ancho de pantalla
+     */
     public void moverDerecha(int anchoPantalla) {
         fila = 2;
         if (puedeMoverse &&  posicion.x <= anchoPantalla- imagenActual.getWidth()) {
@@ -141,6 +181,11 @@ public class Gato {
         actualizaImagen();
     }
 
+    /**
+     * Decrementa la propiedad y en velocidad si el gato puede moverse (el rect no colisiona con
+     * obstáculos) y si su imagen completa no se va fuera de la pantalla por la parte superior.
+     * Actualiza la imagen a partir de los sprites animados
+     */
     public void moverArriba() {
         fila = 3;
         if (puedeMoverse && posicion.y + velocidad  >= 0) {
@@ -149,6 +194,13 @@ public class Gato {
         actualizaImagen();
     }
 
+    /**
+     * Establece y devuelve el rect de posición futura de gato en base al movimiento pasado como
+     * parámetro (dirección), su posición actual y la velocidad. Su cálculo es útil para determinar
+     * si, dadas estas variables, el gato se puede mover o no (detectar colisiones)
+     * @param mov movimiento futuro de gato
+     * @return rect de la posición futura de gato
+     */
     public RectF getPosicionFutura(int mov){
         float posFuturaX = posicion.x;
         float posFuturaY= posicion.y;
@@ -167,6 +219,9 @@ public class Gato {
         return posicionFutura;
     }
 
+    /**
+     * Actualiza la propiedad imagenActual dependiendo de la dirección, con sprites animados.
+     */
     public void actualizaImagen() {
         if(col < imgGato[fila].length){
             this.imagenActual = imgGato[fila][col];
@@ -176,11 +231,18 @@ public class Gato {
         }
     }
 
+    /**
+     * Actualiza la propiedad imagenActual dependiendo del movimiento anterior si el gato se para
+     */
     public void parado(){
         col = 1;
         this.imagenActual = imgGato[fila][col];
     }
 
+    /**
+     * Dibuja la propiedad imagenActual en la posición x,y de gato
+     * @param c lienzo
+     */
     public void dibujaGato(Canvas c){
         c.drawBitmap(imagenActual, posicion.x, posicion.y, null);
     }

@@ -20,7 +20,7 @@ public class Escena3 extends Escena {
         super(context, anchoPantalla, altoPantalla, numPantalla, gato);
         fondo = Pantalla.getBitmapFromAssets(context, "mapas/mapa_nivel3.png");
         setFondo(fondo);
-        arbolesRect = new RectF[19];
+
         setArbolesRect();
         setPosicionMonedas();
         velocidadCoches = (anchoPantalla /(32 * 10))*1.5f;
@@ -28,29 +28,47 @@ public class Escena3 extends Escena {
         gato.setVelocidad(anchoPantalla / (32*2));
     }
 
+    /**
+     * Dibuja en lienzo función dibuja de clase padre Escena
+     * @param c lienzo
+     */
     @Override
     public void dibuja(Canvas c) {
         super.dibuja(c);
     }
 
+
+    /**
+     * Gestiona el movimiento hacia arriba (decremento de posición y) de gato.
+     * Si el rect de gato interseca el rect marcado para el cambio de escena, se finaliza el juego.
+     * Se caambia pantalla Pantalla FinPartida.
+     * @param event
+     * @return numPantalla (8) si no finaliza el juego y no se hace cambio de pantalla, 9 si llega
+     * al rect de fin de nivel y supera el nivel. El número de pantalla FinPartida es 9
+     */
     @Override
     public int onTouchEvent(MotionEvent event) {
         int aux = super.onTouchEvent(event);
         if(aux == -3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *18, 0,
                     anchoPantalla/32*22, altoPantalla/16 * 0.5f))){
-                JuegoSV.cambiaPantalla(9);
+                //JuegoSV.cambiaPantalla(9);
                 //JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, false, gato.puntos);
+                return 9;
             }else {
                 gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
                 gato.moverArriba();
                 colisionMonedas();
             }
         }
-        return -1;
+        return super.onTouchEvent(event);
     }
 
-    public void setArbolesRect(){      //TODO retocar bordes
+    /**
+     * Inicializa los rect de arboles según las posiciones determinadas por el fondo y los ajusta
+     */
+    public void setArbolesRect(){
+        arbolesRect = new RectF[19];
         //fila1
         arbolesRect[0] = new RectF(0, propH  * 12 * 1.03f, propW  * 6, altoPantalla);
         arbolesRect[1] = new RectF(propW  * 6, propH  * 13 * 1.02f, propW * 10 * 1.01f, altoPantalla);
@@ -77,6 +95,14 @@ public class Escena3 extends Escena {
         arbolesRect[18] = new RectF(propW * 25* 1.01f, 0, anchoPantalla, propH * 2);
     }
 
+    /**
+     * Inicializa el array de coches según la posición y determinada por las carreteras del fondo.
+     * La imagen del coche será una imagen aleatoria del array de imágenes de la dirección del
+     * coche.
+     * Los índices pares son coches que circulan hacia la derecha, y los impares coches que circulan
+     * hacia la izquierda. Esto facilita la ejecución del movimiento en la función actualiza física
+     * de Escena.
+     */
     public void setCoches(){
         trafico.coches[0] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], anchoPantalla / 2, altoPantalla / 16 * 11, velocidadCoches);
         trafico.coches[1] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)], anchoPantalla / 5, altoPantalla / 16 * 10, velocidadCoches);

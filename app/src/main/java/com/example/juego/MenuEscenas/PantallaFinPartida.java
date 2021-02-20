@@ -24,8 +24,14 @@ public class PantallaFinPartida extends Menu {
         this.monedas = Pantalla.escala(context, "moneda/monedas_controles.png", anchoPantalla/32*2, altoPantalla/16*2);
     }
 
+    /**
+     * Dibuja el texto correspondiente al final de la partida, el motivo de finalización.
+     * Dibuja dos botones (rect) como opciones a realizar y el texto indicativo
+     * @param c lienzo
+     */
     @Override
     public void dibuja(Canvas c) {
+        super.dibuja(c);
         tp.setTextSize(altoPantalla/10);
         tp.setTextAlign(Paint.Align.CENTER);
         c.drawText("FIN DE LA PARTIDA", anchoPantalla/2, altoPantalla/16*3, tp);
@@ -42,13 +48,22 @@ public class PantallaFinPartida extends Menu {
 
         tp.setTextSize(altoPantalla/10);
         btnRepetir = new RectF(anchoPantalla / 32 *  9.5f, altoPantalla/16*8, anchoPantalla / 32 *22.5f, altoPantalla/16*10);
-        c.drawRect(btnRepetir, p);
+        c.drawRect(btnRepetir, pBotonMenu);
         c.drawText("Volver a jugar", anchoPantalla / 2, altoPantalla/16 * 9.5f, tp);
         btnMenuPpal = new RectF(anchoPantalla / 32 *  9.5f, altoPantalla/16*12, anchoPantalla / 32 *22.5f, altoPantalla/16*14);
-        c.drawRect(btnMenuPpal, p);
+        c.drawRect(btnMenuPpal, pBotonMenu);
         c.drawText("Menú principal", anchoPantalla / 2, altoPantalla/16 * 13.5f, tp);
     }
 
+    /**
+     * Obtiene las coordenadas de pulsación. Si los rect de los botones de opciones los contienen:
+     * si los contiene btnRepetir se hace un cambio de pantalla a Escena1; si los contiene btnMenuPpal
+     * se hace un cambio de pantalla a pantalla MenuPrincipal
+     * @param event
+     * @return 6 número de pantalla de Escena1, 1 número de pantalla de MenuPrincipal. Si los rect
+     * no contienen las coordenadas de la pulsación devuelve número de la pantalla actual (9) y no
+     * se hace cambio de pantalla
+     */
     @Override
     public int onTouchEvent(MotionEvent event) {
         float x = event.getX();

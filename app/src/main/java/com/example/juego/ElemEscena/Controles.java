@@ -39,6 +39,9 @@ public class Controles {
         setRectControles();
     }
 
+    /**
+     * Instancia los rect que representan los botones de los controles
+     */
     public void setRectControles(){
         abajo = new RectF(anchoPantalla / 32 * 24 , altoPantalla / 16 * 13, anchoPantalla / 32 * 27 , altoPantalla);
         izq = new RectF(anchoPantalla / 32 , altoPantalla / 16 * 13, anchoPantalla / 32 * 4, altoPantalla);
@@ -46,7 +49,10 @@ public class Controles {
         arriba = new RectF(anchoPantalla / 32 * 28, altoPantalla / 16 * 13, anchoPantalla/32 * 31, altoPantalla);
     }
 
-
+    /**
+     * Dibuja los bitmap asociados a cada botón
+     * @param c lienzo
+     */
     public void dibujaControles(Canvas c) {
         c.drawBitmap(bitmapControles[0], anchoPantalla/32 * 24, altoPantalla / 16 * 13,pControles);
         c.drawBitmap(bitmapControles[1], anchoPantalla / 32, altoPantalla / 16 * 13, pControles);
@@ -54,7 +60,9 @@ public class Controles {
         c.drawBitmap(bitmapControles[3], anchoPantalla / 32 * 28, altoPantalla / 16 * 13, pControles);
     }
 
-
+    /**
+     * Escala los bitmap correspondientes a cada botón
+     */
     public void escalaControles(){
         int anchoControles = anchoPantalla/32 * 3;
         int altoControles = altoPantalla /16 * 3;

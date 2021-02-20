@@ -10,11 +10,16 @@ import com.example.juego.Menu;
 public class MenuAyuda extends Menu {
     public MenuAyuda(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
+        tp.setARGB(225,129,157,80);
     }
 
+    /**
+     * Dibuja sobre el lienzo texto que indica como se juega al juego
+     * @param c lienzo
+     */
     @Override
     public void dibuja(Canvas c) {
-        super.dibuja(c);
+        super.dibuja(c);        //fondo + btnAtras
         tp.setTextAlign(Paint.Align.CENTER);
         tp.setTextSize(altoPantalla/10);
         c.drawText("CÓMO JUGAR", anchoPantalla/2, altoPantalla/16 * 2, tp);

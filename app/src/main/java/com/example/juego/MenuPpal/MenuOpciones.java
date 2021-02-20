@@ -31,11 +31,17 @@ public class MenuOpciones extends Menu {
         pDesact = new Paint();
         pDesact.setColor(Color.RED);
         setRect();
+        tp.setARGB(225,129,157,80);
     }
 
+    /**
+     * Dibuja sobre lienzo texto que representa las opciones de sonido, música y vibración,
+     * y los botones para su activación y desactivación.
+     * @param c lienzo
+     */
     @Override
     public void dibuja(Canvas c) {
-        super.dibuja(c);
+        super.dibuja(c);    //fondo+btnAtras
         tp.setTextAlign(Paint.Align.CENTER);
         tp.setTextSize(altoPantalla/10);
         c.drawText("OPCIONES", anchoPantalla/2, altoPantalla/16 * 2, tp);
@@ -55,6 +61,15 @@ public class MenuOpciones extends Menu {
         c.drawRect(rectVibracionDesact, pDesact);
     }
 
+    /**
+     * Gestiona la pulsación de un dedo sobre pantalla. Si se pulsa sobre botón de retroceso vuelve
+     * a la pantalla Menú principal. Si las coordenadas de la pulsación están contenidas en algún
+     * botón (rect) creado para activar o desactivar las diferentes opciones, cambia el valor de la
+     * opción correspondiente, si tiene lugar, contenida en su respectiva variable en la clase JuegoSV
+     * @param event
+     * @return devuelve 1 si se pulsa el botón de retroceso, que hace retornar a Menú Principal.
+     * Si se pulsa en cualquier otro punto, devuelve -1
+     */
     @Override
     public int onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
@@ -71,27 +86,27 @@ public class MenuOpciones extends Menu {
                 //if(aux!= 1){        //non touch btnAtras
                     if(rectSonAct.contains(x,y)){
                         if(!JuegoSV.sonidoAct) JuegoSV.sonidoAct = true;
-                        Toast.makeText(context, "sonidoAct"+JuegoSV.sonidoAct, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "sonidoAct"+JuegoSV.sonidoAct, Toast.LENGTH_SHORT).show();
                             //return 0;
                     } else if(rectSonDesact.contains(x,y)) {
                         if(JuegoSV.sonidoAct) JuegoSV.sonidoAct = false;
-                        Toast.makeText(context, "sonidoAct"+JuegoSV.sonidoAct, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "sonidoAct"+JuegoSV.sonidoAct, Toast.LENGTH_SHORT).show();
                        // return 0;
                     } else if(rectMusicaAct.contains(x,y)) {    //TODO
                         if(!JuegoSV.musicaAct) JuegoSV.musicaAct = true;
-                        Toast.makeText(context, "musicaAct"+JuegoSV.musicaAct, Toast.LENGTH_SHORT).show();
+                        ///Toast.makeText(context, "musicaAct"+JuegoSV.musicaAct, Toast.LENGTH_SHORT).show();
                         //return 0;
                     } else if(rectMusicaDesact.contains(x,y)) {     //TODO
                         if(JuegoSV.musicaAct) JuegoSV.musicaAct = false;
-                        Toast.makeText(context, "musicaAct"+JuegoSV.musicaAct, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "musicaAct"+JuegoSV.musicaAct, Toast.LENGTH_SHORT).show();
                         //return 0;
                     } else if(rectVibracionAct.contains(x,y)) {
                         if(!JuegoSV.vibracionAct) JuegoSV.vibracionAct = true;
-                        Toast.makeText(context, "vibracionAct"+JuegoSV.vibracionAct, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "vibracionAct"+JuegoSV.vibracionAct, Toast.LENGTH_SHORT).show();
                         //return 0;
                     } else if(rectVibracionDesact.contains(x,y)) {
                         if(JuegoSV.vibracionAct) JuegoSV.vibracionAct = false;
-                        Toast.makeText(context, "vibracionAct"+JuegoSV.vibracionAct, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "vibracionAct"+JuegoSV.vibracionAct, Toast.LENGTH_SHORT).show();
                        // return 0;
                     }
                 }
@@ -100,6 +115,9 @@ public class MenuOpciones extends Menu {
         return -1;
     }
 
+    /**
+     * Asigna los rect que se corresponden con la activación y desactivación de las diferentes opciones
+     */
     public void setRect(){
         rectSonAct = new RectF(anchoPantalla/32 * 18, altoPantalla / 16 * 4.5f, anchoPantalla/32 * 20, altoPantalla/16 * 6.5f);
         rectSonDesact = new RectF(anchoPantalla/32 * 22, altoPantalla / 16 * 4.5f, anchoPantalla/32 * 24, altoPantalla/16 * 6.5f);
