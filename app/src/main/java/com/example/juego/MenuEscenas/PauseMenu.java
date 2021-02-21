@@ -17,9 +17,13 @@ public class PauseMenu extends Pantalla {
     RectF btnOpciones;
     RectF btnAyuda;
     RectF btnMenuPpal;
+    Paint pFondo;
 
     public PauseMenu(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
+
+        pFondo = new Paint();
+        pFondo.setColor(Color.argb(210, 50,50,50));
 
         setRectBotones();
         tp.setARGB(250,233,217,168);
@@ -33,6 +37,7 @@ public class PauseMenu extends Pantalla {
      */
     @Override
     public void dibuja(Canvas c) {
+        c.drawRect(rectFondo, pFondo);
         c.drawRect(btnVolver, pBotonesVerdes);
         c.drawText("Volver", anchoPantalla/2, altoPantalla/16*4, tp);
         c.drawRect(btnOpciones, pBotonesVerdes);
@@ -73,10 +78,12 @@ public class PauseMenu extends Pantalla {
             if(btnVolver.contains(x,y)){
                 return 0;
             }else if(btnOpciones.contains(x,y)){
-                return 11;
+                return 10;
             }else if(btnAyuda.contains(x,y)){
-                return 12;
+                return 11;
             }else if(btnMenuPpal.contains(x,y)){
+                JuegoSV.mediaPlayer.pause();
+                JuegoSV.restartMusica = true;
                 return 1;
             }
         }

@@ -26,6 +26,7 @@ import com.example.juego.Pantalla;
 import com.example.juego.R;
 import com.example.juego.ElemEscena.Trafico;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 abstract public class Escena extends Pantalla {
@@ -65,11 +66,11 @@ abstract public class Escena extends Pantalla {
     Bitmap vidaBitmap;
     Bitmap monedasPuntuacionBitmap;
 
-    AudioManager audioManager;
+    //AudioManager audioManager;
     SoundPool efectosSonido;
     int sonidoCoche, sonidoGato, sonidoMoneda;
     final int maxSonidosSimultaneos = 10;
-    static MediaPlayer mediaPlayer;
+    //static MediaPlayer mediaPlayer;
     int actualizaVolumen = 0;
     int volumen;
 
@@ -113,7 +114,7 @@ abstract public class Escena extends Pantalla {
         monedasPuntuacionBitmap = Pantalla.escala(context, "moneda/monedas_controles.png", anchoPantalla / 32, altoPantalla / 16);
 
         setSonidosMusica();
-        volumen = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
         
@@ -193,15 +194,15 @@ abstract public class Escena extends Pantalla {
                 }
                 if (trafico.coches[i].rectangulo.intersect(gato.rectangulo) && nuevoCoche != cocheColision) {
                     colisionCoche = true;
-                    if(JuegoSV.sonidoAct){
+                    if(JuegoSV.sonido){
                         if(actualizaVolumen % 3 == 0){
-                            volumen = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                            volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                         }
                         efectosSonido.play(sonidoCoche, volumen, volumen, 1, 0, 1);
                         efectosSonido.play(sonidoGato, volumen, volumen, 1, 0, 1);
                         actualizaVolumen++;
                     }
-                    if(JuegoSV.vibracionAct){
+                    if(JuegoSV.vibracion){
                         efectoVibracion();
                     }
                     cocheColision = i;
@@ -209,7 +210,7 @@ abstract public class Escena extends Pantalla {
                         //para que dibuxe pantalla roja
                     if(gato.numVidas == 0){
                        //JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, true, gato.puntos);
-                        JuegoSV.cambiaPantalla(9);
+                        JuegoSV.cambiaPantalla(8);
                     }
                 }
                 //Cando coche colisión deixe de interset o xogador, xa podería volver colisionar
@@ -313,8 +314,8 @@ abstract public class Escena extends Pantalla {
     public void colisionMonedas(){
         for (int i = monedasRect.size() -1 ; i >= 0; i--) {
             if(monedasRect.get(i).intersect(gato.rectangulo)){
-                if(JuegoSV.sonidoAct){
-                    int v = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                if(JuegoSV.sonido){
+                    int v = JuegoSV.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
                     efectosSonido.play(sonidoMoneda, v, v, 1, 0, 1);
                 }
                 gato.puntos+=100;
@@ -460,7 +461,7 @@ abstract public class Escena extends Pantalla {
      * Inicializa los sonidos y la música
      */
     public void setSonidosMusica(){
-        audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        JuegoSV.audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         if ((android.os.Build.VERSION.SDK_INT) >= 21) {
             SoundPool.Builder spb=new SoundPool.Builder();
             spb.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
@@ -475,11 +476,18 @@ abstract public class Escena extends Pantalla {
         sonidoGato = efectosSonido.load(context, R.raw.sonido_gato_atropello, 1);
         sonidoMoneda = efectosSonido.load(context, R.raw.sonido_monedas, 1);
 
-        mediaPlayer=MediaPlayer.create(context, R.raw.city_ambience);
-        int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setVolume(v/3, v/3);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        if(JuegoSV.musica && JuegoSV.mediaPlayer.isPlaying()){
+            JuegoSV.mediaPlayer.pause();
+        }
+        JuegoSV.audioManager=(AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        JuegoSV.mediaPlayer= MediaPlayer.create(context,R.raw.city_ambience);
+        int v = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        JuegoSV.mediaPlayer.setVolume(v/3, v/3);
+        JuegoSV.mediaPlayer.setLooping(true);
+
+        if(JuegoSV.musica){
+            JuegoSV.mediaPlayer.start();
+        }
     }
 
     /**

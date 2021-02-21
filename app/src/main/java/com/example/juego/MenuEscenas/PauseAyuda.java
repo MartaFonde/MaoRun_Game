@@ -21,7 +21,7 @@ public class PauseAyuda extends PauseEscena {
         tp.setTextSize(altoPantalla/15);
         c.drawText("CÓMO JUGAR", anchoPantalla/2, altoPantalla/16 * 3.5f, tp);
 
-        tp.setTextSize(altoPantalla/18);
+        tp.setTextSize(altoPantalla/20);
         c.drawText("Consigue el mayor número de monedas", anchoPantalla/2, altoPantalla / 16 * 5, tp);
         c.drawText("posible. Tendrás que esquivar a los", anchoPantalla/2, altoPantalla / 16 * 6, tp);
         c.drawText("coches para no perder vidas. ", anchoPantalla/2, altoPantalla / 16 * 7, tp);
@@ -34,7 +34,7 @@ public class PauseAyuda extends PauseEscena {
      * Obtiene las coordenadas de pulsación y si el rect de retroceso las contiene se vuelve a
      * pantalla PauseMenu
      * @param event
-     * @return devuelve 10 (número de pantalla de PauseMenu) o -1 en caso contrario (no se hace
+     * @return devuelve 9 (número de pantalla de PauseMenu) o -1 en caso contrario (no se hace
      * cambio de pantalla)
      */
     @Override
@@ -43,7 +43,7 @@ public class PauseAyuda extends PauseEscena {
         float y = event.getY();
 
         if(rectAtras.contains(x,y)){
-            return 10;
+            return 9;
         }
         return -1;
     }

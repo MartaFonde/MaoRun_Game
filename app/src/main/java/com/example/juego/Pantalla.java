@@ -8,7 +8,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.TextPaint;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.inputmethod.BaseInputConnection;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 import org.w3c.dom.Text;
 
@@ -21,6 +26,7 @@ abstract public class Pantalla {
     protected int anchoPantalla;
     protected Context context;
     protected TextPaint tp;
+    protected Typeface face;
 
     public Paint pBotonesVerdes;
 
@@ -33,7 +39,7 @@ abstract public class Pantalla {
         pBotonesVerdes = new Paint();
         pBotonesVerdes.setColor(Color.argb(225,129,157,80));
 
-        Typeface face=Typeface.createFromAsset(context.getAssets(),"fonts/PolandCannedIntoFuture-OxE3.ttf");
+        face=Typeface.createFromAsset(context.getAssets(),"fonts/PolandCannedIntoFuture-OxE3.ttf");
         tp = new TextPaint();
         tp.setTextSize(altoPantalla/10);
         tp.setColor(Color.WHITE);
@@ -48,6 +54,10 @@ abstract public class Pantalla {
 
     public int onTouchEvent(MotionEvent event){
         return -1;
+    }
+
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return true;
     }
 
 

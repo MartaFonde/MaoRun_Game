@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
+import com.example.juego.JuegoSV;
 import com.example.juego.Menu;
 import com.example.juego.Pantalla;
 
@@ -60,8 +61,8 @@ public class PantallaFinPartida extends Menu {
      * si los contiene btnRepetir se hace un cambio de pantalla a Escena1; si los contiene btnMenuPpal
      * se hace un cambio de pantalla a pantalla MenuPrincipal
      * @param event
-     * @return 6 número de pantalla de Escena1, 1 número de pantalla de MenuPrincipal. Si los rect
-     * no contienen las coordenadas de la pulsación devuelve número de la pantalla actual (9) y no
+     * @return 5 número de pantalla de Escena1, 1 número de pantalla de MenuPrincipal. Si los rect
+     * no contienen las coordenadas de la pulsación devuelve número de la pantalla actual (8) y no
      * se hace cambio de pantalla
      */
     @Override
@@ -70,8 +71,9 @@ public class PantallaFinPartida extends Menu {
         float y = event.getY();
 
         if(btnRepetir.contains(x, y)){
-            return 6;
+            return 5;
         }else if(btnMenuPpal.contains(x,y)){
+            JuegoSV.restartMusica = true;
             return 1;
         }
         return super.onTouchEvent(event);

@@ -1,15 +1,16 @@
 package com.example.juego.MenuPpal;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
 import com.example.juego.JuegoSV;
 import com.example.juego.Menu;
+import com.example.juego.Pantalla;
 
 public class MenuOpciones extends Menu {
 
@@ -20,18 +21,30 @@ public class MenuOpciones extends Menu {
     public RectF rectVibracionAct;
     public RectF rectVibracionDesact;
 
-    public Paint pAct;
-    public Paint pDesact;
+    Bitmap sonidoActBitmap;
+    Bitmap sonidoDesactBitmap;
+    Bitmap vibracionActBitmap;
+    Bitmap vibracionDesactBitmap;
+
+    public Paint p;
+
 
     public MenuOpciones(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
-
-        pAct = new Paint();
-        pAct.setColor(Color.GREEN);
-        pDesact = new Paint();
-        pDesact.setColor(Color.RED);
+        p = new Paint();
+        p.setAlpha(180);
+        p.setColor(Color.argb(250,233,217,168));    //beige
         setRect();
-        tp.setARGB(225,129,157,80);
+        tp.setARGB(225,129,157,80); //verde
+
+        sonidoActBitmap = Pantalla.escala(context, "opciones/sonido_activado.png",
+                anchoPantalla/32*2, altoPantalla/16*2);
+        sonidoDesactBitmap = Pantalla.escala(context, "opciones/sonido_desactivado.png",
+                anchoPantalla/32*2, altoPantalla/16*2);
+        vibracionActBitmap = Pantalla.escala(context, "opciones/vibracion_activada.png",
+                anchoPantalla/32*2, altoPantalla/16*2);
+        vibracionDesactBitmap = Pantalla.escala(context, "opciones/vibracion_desactivada.png",
+                anchoPantalla/32*2, altoPantalla/16*2);
     }
 
     /**
@@ -49,16 +62,16 @@ public class MenuOpciones extends Menu {
         tp.setTextAlign(Paint.Align.LEFT);
         tp.setTextSize(altoPantalla/12);
         c.drawText("SONIDO", anchoPantalla/32 * 10, altoPantalla / 16 * 6, tp);
-        c.drawRect(rectSonAct, pAct);
-        c.drawRect(rectSonDesact, pDesact);
+        c.drawBitmap(sonidoActBitmap, rectSonAct.left, rectSonAct.top, p);
+        c.drawBitmap(sonidoDesactBitmap, rectSonDesact.left, rectSonDesact.top, p);
 
         c.drawText("MÚSICA", anchoPantalla/32 * 10, altoPantalla / 16 * 10, tp);
-        c.drawRect(rectMusicaAct, pAct);
-        c.drawRect(rectMusicaDesact, pDesact);
+        c.drawBitmap(sonidoActBitmap, rectMusicaAct.left, rectMusicaAct.top, p);
+        c.drawBitmap(sonidoDesactBitmap, rectMusicaDesact.left, rectMusicaDesact.top, p);
 
         c.drawText("VIBRACIÓN", anchoPantalla/32 * 10, altoPantalla / 16 * 14, tp);
-        c.drawRect(rectVibracionAct, pAct);
-        c.drawRect(rectVibracionDesact, pDesact);
+        c.drawBitmap(vibracionActBitmap, rectVibracionAct.left, rectVibracionAct.top, p);
+        c.drawBitmap(vibracionDesactBitmap, rectVibracionDesact.left, rectVibracionDesact.top, p);
     }
 
     /**
@@ -85,29 +98,29 @@ public class MenuOpciones extends Menu {
                 }else{
                 //if(aux!= 1){        //non touch btnAtras
                     if(rectSonAct.contains(x,y)){
-                        if(!JuegoSV.sonidoAct) JuegoSV.sonidoAct = true;
+                        if(!JuegoSV.sonido) JuegoSV.sonido = true;
                         //Toast.makeText(context, "sonidoAct"+JuegoSV.sonidoAct, Toast.LENGTH_SHORT).show();
-                            //return 0;
                     } else if(rectSonDesact.contains(x,y)) {
-                        if(JuegoSV.sonidoAct) JuegoSV.sonidoAct = false;
+                        if(JuegoSV.sonido) JuegoSV.sonido = false;
                         //Toast.makeText(context, "sonidoAct"+JuegoSV.sonidoAct, Toast.LENGTH_SHORT).show();
-                       // return 0;
                     } else if(rectMusicaAct.contains(x,y)) {    //TODO
-                        if(!JuegoSV.musicaAct) JuegoSV.musicaAct = true;
+                        if(!JuegoSV.musica){
+                            JuegoSV.musica = true;
+                            JuegoSV.mediaPlayer.start();
+                        }
                         ///Toast.makeText(context, "musicaAct"+JuegoSV.musicaAct, Toast.LENGTH_SHORT).show();
-                        //return 0;
                     } else if(rectMusicaDesact.contains(x,y)) {     //TODO
-                        if(JuegoSV.musicaAct) JuegoSV.musicaAct = false;
+                        if(JuegoSV.musica){
+                            JuegoSV.musica = false;
+                            JuegoSV.mediaPlayer.pause();
+                        }
                         //Toast.makeText(context, "musicaAct"+JuegoSV.musicaAct, Toast.LENGTH_SHORT).show();
-                        //return 0;
                     } else if(rectVibracionAct.contains(x,y)) {
-                        if(!JuegoSV.vibracionAct) JuegoSV.vibracionAct = true;
+                        if(!JuegoSV.vibracion) JuegoSV.vibracion = true;
                         //Toast.makeText(context, "vibracionAct"+JuegoSV.vibracionAct, Toast.LENGTH_SHORT).show();
-                        //return 0;
                     } else if(rectVibracionDesact.contains(x,y)) {
-                        if(JuegoSV.vibracionAct) JuegoSV.vibracionAct = false;
+                        if(JuegoSV.vibracion) JuegoSV.vibracion = false;
                         //Toast.makeText(context, "vibracionAct"+JuegoSV.vibracionAct, Toast.LENGTH_SHORT).show();
-                       // return 0;
                     }
                 }
             break;

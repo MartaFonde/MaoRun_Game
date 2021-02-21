@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    JuegoSV juego;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +46,23 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide(); // se oculta la barra de ActionBar
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-
-        JuegoSV juego = new JuegoSV(this);
+        juego = new JuegoSV(this);
         juego.setKeepScreenOn(true);
         setContentView(juego);
+    }
+    // Con pausa evitamos que se ejecute con la activity principal.
+    private boolean pausa=false;
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pausa=true;
+        juego.mediaPlayer.pause();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (pausa)
+            juego.mediaPlayer.start();
     }
 
 }

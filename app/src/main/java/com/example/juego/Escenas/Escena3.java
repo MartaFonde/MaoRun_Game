@@ -54,7 +54,7 @@ public class Escena3 extends Escena {
                     anchoPantalla/32*22, altoPantalla/16 * 0.5f))){
                 //JuegoSV.cambiaPantalla(9);
                 //JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, false, gato.puntos);
-                return 9;
+                return 8;
             }else {
                 gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
                 gato.moverArriba();

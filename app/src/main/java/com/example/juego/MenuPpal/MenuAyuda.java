@@ -24,7 +24,7 @@ public class MenuAyuda extends Menu {
         tp.setTextSize(altoPantalla/10);
         c.drawText("CÓMO JUGAR", anchoPantalla/2, altoPantalla/16 * 2, tp);
 
-        tp.setTextSize(altoPantalla/12);
+        tp.setTextSize(altoPantalla/14);
         c.drawText("El objetivo del juego es guiar el gato para ", anchoPantalla/2, altoPantalla / 16 * 4, tp);
         c.drawText("conseguir el mayor número de monedas posible. ", anchoPantalla/2, altoPantalla / 16 * 5, tp);
         c.drawText("El juego consta de tres niveles, con sus respectivos ", anchoPantalla/2, altoPantalla / 16 * 6, tp);

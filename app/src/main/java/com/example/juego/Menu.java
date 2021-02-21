@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 abstract public class Menu extends Pantalla{
@@ -28,7 +30,7 @@ abstract public class Menu extends Pantalla{
         tp.setTextAlign(Paint.Align.CENTER);
         tp.setARGB(250,233,217,168);    //beige
 
-        if(numPantalla != 1 || numPantalla != 9){
+        if(numPantalla != 1 || numPantalla != 8){
             btnAtras = new RectF(0, altoPantalla/16 * 13, anchoPantalla / 32 * 3,
                     altoPantalla);
             atrasBitmap = Pantalla.escala(context, "menu/menu_atras.png",
@@ -44,7 +46,7 @@ abstract public class Menu extends Pantalla{
     @Override
     public void dibuja(Canvas c){
         c.drawColor(Color.BLACK);
-        if(numPantalla != 1 && numPantalla != 9){       //1 menú ppal 9 fin partida
+        if(numPantalla != 1 && numPantalla != 8){       //1 menú ppal 9 fin partida
             //c.drawRect(btnAtras, p);
             c.drawBitmap(atrasBitmap, 0, altoPantalla/16*13, null);
         }
@@ -61,7 +63,8 @@ abstract public class Menu extends Pantalla{
         int x=(int)event.getX();
         int y=(int)event.getY();
 
-        if(numPantalla != 1 && numPantalla != 9 && btnAtras.contains(x,y)) {
+        if(numPantalla != 1 && numPantalla != 8 && btnAtras.contains(x,y)) {
+            JuegoSV.restartMusica = false;
             return 1;       //vuelve a menu principal
         }
         return -1;
