@@ -6,11 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 import com.example.juego.JuegoSV;
 import com.example.juego.MenuPpal.MenuOpciones;
 import com.example.juego.Pantalla;
+import com.example.juego.R;
 
 public class PauseOpciones extends PauseEscena {
 

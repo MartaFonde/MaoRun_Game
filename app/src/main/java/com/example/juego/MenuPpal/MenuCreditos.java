@@ -8,7 +8,6 @@ import com.example.juego.Menu;
 
 public class MenuCreditos extends Menu {
 
-
     public MenuCreditos(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
         tp.setARGB(225,129,157,80);

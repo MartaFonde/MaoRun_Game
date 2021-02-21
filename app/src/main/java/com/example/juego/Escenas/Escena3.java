@@ -103,7 +103,7 @@ public class Escena3 extends Escena {
      * hacia la izquierda. Esto facilita la ejecución del movimiento en la función actualiza física
      * de Escena.
      */
-    public void setCoches(){
+    public void setCoches() {
         trafico.coches[0] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], anchoPantalla / 2, altoPantalla / 16 * 11, velocidadCoches);
         trafico.coches[1] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)], anchoPantalla / 5, altoPantalla / 16 * 10, velocidadCoches);
         trafico.coches[2] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], -trafico.anchoCoche, altoPantalla / 16 * 11, velocidadCoches);

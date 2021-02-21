@@ -5,10 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 
+import com.example.juego.JuegoSV;
+
 public class PauseAyuda extends PauseEscena {
 
     public PauseAyuda(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
+
     }
 
     /**

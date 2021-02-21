@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.MotionEvent;
 
 abstract public class Menu extends Pantalla{
@@ -36,6 +37,13 @@ abstract public class Menu extends Pantalla{
             atrasBitmap = Pantalla.escala(context, "menu/menu_atras.png",
                     anchoPantalla / 32 * 3, altoPantalla/16*3);
         }
+
+        JuegoSV.mediaPlayer = MediaPlayer.create(context, R.raw.bensound_highoctane);
+        JuegoSV.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        JuegoSV.mediaPlayer.setLooping(true);
+        int v = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        JuegoSV.mediaPlayer.setVolume(v / 3, v / 3);
+
     }
 
     /**
@@ -64,6 +72,7 @@ abstract public class Menu extends Pantalla{
         int y=(int)event.getY();
 
         if(numPantalla != 1 && numPantalla != 8 && btnAtras.contains(x,y)) {
+            Log.i("play", JuegoSV.mediaPlayer.isPlaying()+"");
             JuegoSV.restartMusica = false;
             return 1;       //vuelve a menu principal
         }

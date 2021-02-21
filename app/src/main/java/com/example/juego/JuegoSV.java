@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -61,6 +62,9 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         sonido = true;
         musica = true;
         vibracion = true;
+
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
     }
 
     /**
@@ -172,6 +176,8 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         anchoPantalla = width;
         altoPantalla = height;
         pantallaActual = new MenuPrincipal(context, anchoPantalla, altoPantalla, 1);
+
+        Log.i("aa",context.getApplicationInfo().dataDir );
 
         if (hilo.getState() == Thread.State.NEW) hilo.start();
         if (hilo.getState() == Thread.State.TERMINATED) {

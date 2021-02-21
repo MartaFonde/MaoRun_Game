@@ -82,7 +82,7 @@ public class PauseMenu extends Pantalla {
             }else if(btnAyuda.contains(x,y)){
                 return 11;
             }else if(btnMenuPpal.contains(x,y)){
-                JuegoSV.mediaPlayer.pause();
+                JuegoSV.mediaPlayer.stop();
                 JuegoSV.restartMusica = true;
                 return 1;
             }

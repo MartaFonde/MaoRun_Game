@@ -24,15 +24,10 @@ public class MenuPrincipal extends Menu {
         super(context, anchoPantalla, altoPantalla, numPantalla);
         setBotonesRect();
 
-        JuegoSV.audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        JuegoSV.mediaPlayer = MediaPlayer.create(context, R.raw.bensound_highoctane);
-        int v = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        JuegoSV.mediaPlayer.setVolume(v / 3, v / 3);
-        JuegoSV.mediaPlayer.setLooping(true);
-
-        if(JuegoSV.musica && !JuegoSV.mediaPlayer.isPlaying() && JuegoSV.restartMusica) {
+        if(JuegoSV.musica  && JuegoSV.restartMusica) {
             JuegoSV.mediaPlayer.start();
         }
+        Log.i("play", JuegoSV.mediaPlayer.isPlaying()+"");
     }
 
     /**
@@ -64,6 +59,8 @@ public class MenuPrincipal extends Menu {
         switch (accion){
             case MotionEvent.ACTION_DOWN:
                 if(btnJugar.contains(x,y)){
+                    JuegoSV.mediaPlayer.stop();
+                    JuegoSV.mediaPlayer.release();
                     return 5;
                 }else if(btnCreditos.contains(x,y)){
                     return 2;

@@ -1,12 +1,15 @@
 package com.example.juego;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -56,11 +59,6 @@ abstract public class Pantalla {
         return -1;
     }
 
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        return true;
-    }
-
-
     /**
      * Crea un bitmap con un ancho y un alto determinados a partir de una imagen
      * @param context contexto
@@ -105,4 +103,7 @@ abstract public class Pantalla {
             return null;
         }
     }
+
+
 }
+

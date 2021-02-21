@@ -84,6 +84,7 @@ abstract public class Escena extends Pantalla {
 
     public Escena(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
         super(context, anchoPantalla,altoPantalla, numPantalla);
+
         this.context = context;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
@@ -195,12 +196,12 @@ abstract public class Escena extends Pantalla {
                 if (trafico.coches[i].rectangulo.intersect(gato.rectangulo) && nuevoCoche != cocheColision) {
                     colisionCoche = true;
                     if(JuegoSV.sonido){
-                        if(actualizaVolumen % 3 == 0){
+                        if(actualizaVolumen % 5 == 0){
                             volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                         }
+                        actualizaVolumen++;
                         efectosSonido.play(sonidoCoche, volumen, volumen, 1, 0, 1);
                         efectosSonido.play(sonidoGato, volumen, volumen, 1, 0, 1);
-                        actualizaVolumen++;
                     }
                     if(JuegoSV.vibracion){
                         efectoVibracion();
@@ -315,8 +316,11 @@ abstract public class Escena extends Pantalla {
         for (int i = monedasRect.size() -1 ; i >= 0; i--) {
             if(monedasRect.get(i).intersect(gato.rectangulo)){
                 if(JuegoSV.sonido){
-                    int v = JuegoSV.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-                    efectosSonido.play(sonidoMoneda, v, v, 1, 0, 1);
+                    if(actualizaVolumen % 5 == 0){
+                        volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                    }
+                    efectosSonido.play(sonidoMoneda, volumen, volumen, 1, 0, 1);
+                    actualizaVolumen++;
                 }
                 gato.puntos+=100;
                 monedasRect.remove(i);
@@ -407,7 +411,7 @@ abstract public class Escena extends Pantalla {
             monedasRect.set(i, new RectF(monedasRect.get(i).left, monedasRect.get(i).top,
                     monedasRect.get(i).left+anchoMoneda, monedasRect.get(i).top + altoMoneda));
             c.drawBitmap(monedaActual, monedasRect.get(i).left, monedasRect.get(i).top, null);
-            c.drawRect(monedasRect.get(i), p);
+            //c.drawRect(monedasRect.get(i), p);
         }
     }
 
@@ -476,16 +480,12 @@ abstract public class Escena extends Pantalla {
         sonidoGato = efectosSonido.load(context, R.raw.sonido_gato_atropello, 1);
         sonidoMoneda = efectosSonido.load(context, R.raw.sonido_monedas, 1);
 
-        if(JuegoSV.musica && JuegoSV.mediaPlayer.isPlaying()){
-            JuegoSV.mediaPlayer.pause();
-        }
-        JuegoSV.audioManager=(AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         JuegoSV.mediaPlayer= MediaPlayer.create(context,R.raw.city_ambience);
-        int v = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        JuegoSV.mediaPlayer.setVolume(v/3, v/3);
+        volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        JuegoSV.mediaPlayer.setVolume(volumen/3, volumen/3);
         JuegoSV.mediaPlayer.setLooping(true);
 
-        if(JuegoSV.musica){
+        if(JuegoSV.musica && numPantalla == 5){
             JuegoSV.mediaPlayer.start();
         }
     }

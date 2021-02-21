@@ -74,6 +74,7 @@ public class PantallaFinPartida extends Menu {
             return 5;
         }else if(btnMenuPpal.contains(x,y)){
             JuegoSV.restartMusica = true;
+            JuegoSV.mediaPlayer.stop();
             return 1;
         }
         return super.onTouchEvent(event);

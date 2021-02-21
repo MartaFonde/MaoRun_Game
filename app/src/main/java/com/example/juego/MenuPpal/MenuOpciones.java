@@ -1,16 +1,25 @@
 package com.example.juego.MenuPpal;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.juego.JuegoSV;
 import com.example.juego.Menu;
 import com.example.juego.Pantalla;
+import com.example.juego.R;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MenuOpciones extends Menu {
 
@@ -27,7 +36,6 @@ public class MenuOpciones extends Menu {
     Bitmap vibracionDesactBitmap;
 
     public Paint p;
-
 
     public MenuOpciones(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
@@ -104,14 +112,31 @@ public class MenuOpciones extends Menu {
                         if(JuegoSV.sonido) JuegoSV.sonido = false;
                         //Toast.makeText(context, "sonidoAct"+JuegoSV.sonidoAct, Toast.LENGTH_SHORT).show();
                     } else if(rectMusicaAct.contains(x,y)) {    //TODO
-                        if(!JuegoSV.musica){
+                        if(!JuegoSV.musica) {
                             JuegoSV.musica = true;
+                            int v = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                            JuegoSV.mediaPlayer.setVolume(v / 3, v / 3);
                             JuegoSV.mediaPlayer.start();
                         }
+//                            JuegoSV.mediaPlayerMenu = new MediaPlayer();
+//                            AssetFileDescriptor af;
+//                            try{
+//                                af = context.getAssets().openFd("musica/bensound_highoctane.mp3");
+//                                JuegoSV.mediaPlayerMenu.setDataSource(af.getFileDescriptor());
+//                                //vol
+//                                JuegoSV.mediaPlayer.setLooping(true);
+//                                JuegoSV.mediaPlayer.prepare();
+//                                //start
+//                                JuegoSV.musica = true;
+//                            }catch (IOException e){
+//                                e.printStackTrace();
+//                            }
+//                        }
                         ///Toast.makeText(context, "musicaAct"+JuegoSV.musicaAct, Toast.LENGTH_SHORT).show();
                     } else if(rectMusicaDesact.contains(x,y)) {     //TODO
                         if(JuegoSV.musica){
                             JuegoSV.musica = false;
+                            // prepare - restart
                             JuegoSV.mediaPlayer.pause();
                         }
                         //Toast.makeText(context, "musicaAct"+JuegoSV.musicaAct, Toast.LENGTH_SHORT).show();
