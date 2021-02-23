@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 
-import com.example.juego.JuegoSV;
-
 public class PauseAyuda extends PauseEscena {
 
     public PauseAyuda(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
@@ -20,17 +18,17 @@ public class PauseAyuda extends PauseEscena {
      */
     @Override
     public void dibuja(Canvas c) {
-        tp.setTextAlign(Paint.Align.CENTER);
-        tp.setTextSize(altoPantalla/15);
-        c.drawText("CÓMO JUGAR", anchoPantalla/2, altoPantalla/16 * 3.5f, tp);
+        tpBeige.setTextAlign(Paint.Align.CENTER);
+        tpBeige.setTextSize(altoPantalla/15);
+        c.drawText("CÓMO JUGAR", anchoPantalla/2, altoPantalla/16 * 3.5f, tpBeige);
 
-        tp.setTextSize(altoPantalla/20);
-        c.drawText("Consigue el mayor número de monedas", anchoPantalla/2, altoPantalla / 16 * 5, tp);
-        c.drawText("posible. Tendrás que esquivar a los", anchoPantalla/2, altoPantalla / 16 * 6, tp);
-        c.drawText("coches para no perder vidas. ", anchoPantalla/2, altoPantalla / 16 * 7, tp);
-        c.drawText("Los árboles son obstáculos.  ", anchoPantalla/2, altoPantalla / 16 * 8, tp);
-        c.drawText("Para superar cada nivel, dirige el ", anchoPantalla/2, altoPantalla / 16 * 9, tp);
-        c.drawText("gato hacia el camino de tierra.", anchoPantalla/2, altoPantalla / 16 * 10, tp);
+        tpBeige.setTextSize(altoPantalla/20);
+        c.drawText("Consigue el mayor número de monedas", anchoPantalla/2, altoPantalla / 16 * 5, tpBeige);
+        c.drawText("posible. Tendrás que esquivar a los", anchoPantalla/2, altoPantalla / 16 * 6, tpBeige);
+        c.drawText("coches para no perder vidas. ", anchoPantalla/2, altoPantalla / 16 * 7, tpBeige);
+        c.drawText("Los árboles son obstáculos.  ", anchoPantalla/2, altoPantalla / 16 * 8, tpBeige);
+        c.drawText("Para superar cada nivel, dirige el ", anchoPantalla/2, altoPantalla / 16 * 9, tpBeige);
+        c.drawText("gato hacia el camino de tierra.", anchoPantalla/2, altoPantalla / 16 * 10, tpBeige);
     }
 
     /**
@@ -46,7 +44,7 @@ public class PauseAyuda extends PauseEscena {
         float y = event.getY();
 
         if(rectAtras.contains(x,y)){
-            return 9;
+            return 10;
         }
         return -1;
     }

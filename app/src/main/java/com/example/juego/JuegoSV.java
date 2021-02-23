@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -18,11 +17,18 @@ import com.example.juego.ElemEscena.Gato;
 import com.example.juego.Escenas.Escena1;
 import com.example.juego.Escenas.Escena2;
 import com.example.juego.Escenas.Escena3;
+import com.example.juego.MenuEscenas.GuardarRecord;
+import com.example.juego.MenuEscenas.MenuFinPartida;
 import com.example.juego.MenuEscenas.PantallaFinPartida;
 import com.example.juego.MenuPpal.MenuAyuda;
 import com.example.juego.MenuPpal.MenuCreditos;
 import com.example.juego.MenuPpal.MenuOpciones;
 import com.example.juego.MenuPpal.MenuPrincipal;
+import com.example.juego.MenuPpal.PantallaRecords;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder surfaceHolder; // Interfaz abstracta para manejar la superficie de dibujado
@@ -47,6 +53,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     public static MediaPlayer mediaPlayer;
     public static AudioManager audioManager;
     public static boolean restartMusica = true;
+    public static int volumen;
 
     public JuegoSV(Context context) {
         super(context);
@@ -59,12 +66,9 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         hilo = new Hilo();
         hilo.setFuncionando(true);
 
-        sonido = true;
-        musica = true;
-        vibracion = true;
+        leerConfig();
 
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-
     }
 
     /**
@@ -107,6 +111,21 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         ((Activity)context).finish();
     }
 
+    private void leerConfig(){
+        try (FileInputStream fis = context.openFileInput("config.txt");
+             InputStreamReader reader = new InputStreamReader(fis);
+             BufferedReader buffer = new BufferedReader(reader)) {
+             sonido = Boolean.parseBoolean(buffer.readLine());
+             musica = Boolean.parseBoolean(buffer.readLine());
+             vibracion = Boolean.parseBoolean(buffer.readLine());
+        } catch (Exception e) {
+            sonido = true;
+            musica = true;
+            vibracion = true;
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Gestiona el control de pantallas a partir de un número de Pantalla. Si el parámetro es distinto
      * al número de pantalla de pantallaActual asigna a pantalla actual la correspondiente clase.
@@ -118,25 +137,33 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
             switch (nuevaPantalla){
                 case 1: pantallaActual = new MenuPrincipal(context, anchoPantalla, altoPantalla, 1);
                     break;
-                case 2: pantallaActual = new MenuCreditos(context, anchoPantalla, altoPantalla, 2);
+                case 2: pantallaActual = new PantallaRecords(context, anchoPantalla, altoPantalla, 2);
                     break;
-                case 3: pantallaActual = new MenuAyuda(context, anchoPantalla, altoPantalla, 3);
+                case 3: pantallaActual = new MenuCreditos(context, anchoPantalla, altoPantalla, 3);
                     break;
-                case 4: pantallaActual = new MenuOpciones(context, anchoPantalla, altoPantalla, 4);
+                case 4: pantallaActual = new MenuAyuda(context, anchoPantalla, altoPantalla, 4);
                     break;
-                case 5:
+                case 5: pantallaActual = new MenuOpciones(context, anchoPantalla, altoPantalla, 5);
+                    break;
+                case 6:
                     bitmapGato = Pantalla.escala(context, "gato/gato.png", (anchoPantalla/32)*4, (altoPantalla/16)*6);
                     gato = new Gato(bitmapGato, anchoPantalla/2-1, altoPantalla/16*14, anchoPantalla / (32*3));
-                    pantallaActual = new Escena1(context, anchoPantalla, altoPantalla, 5, gato);
+                    pantallaActual = new Escena1(context, anchoPantalla, altoPantalla, 6, gato);
                     break;
-                case 6: pantallaActual = new Escena2(context, anchoPantalla, altoPantalla, 6, gato);
+                case 7: pantallaActual = new Escena2(context, anchoPantalla, altoPantalla, 7, gato);
                     break;
-                case 7: pantallaActual = new Escena3(context, anchoPantalla, altoPantalla, 7, gato);
+                case 8: pantallaActual = new Escena3(context, anchoPantalla, altoPantalla, 8, gato);
                     break;
-                case 8:
+                case 9:
                     boolean sinVidas = gato.numVidas==0? true : false;
-                    pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 8,
+                    pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9,
                            sinVidas , gato.puntos);
+                    break;
+                case 13: pantallaActual = new GuardarRecord(context, anchoPantalla, altoPantalla, 13, gato.puntos);
+                break;
+                case 14: pantallaActual = new PantallaRecords(context, anchoPantalla, altoPantalla, 14);
+                    break;
+                case 15: pantallaActual = new MenuFinPartida(context, anchoPantalla, altoPantalla, 15);
                     break;
             }
         }
@@ -175,9 +202,12 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
         anchoPantalla = width;
         altoPantalla = height;
+
+        //pantallaActual = new GuardarRecord(context, anchoPantalla, altoPantalla, 1, 3000);
+        //pantallaActual = new MenuRecords(context, anchoPantalla, altoPantalla, 1, true);
+
         pantallaActual = new MenuPrincipal(context, anchoPantalla, altoPantalla, 1);
 
-        Log.i("aa",context.getApplicationInfo().dataDir );
 
         if (hilo.getState() == Thread.State.NEW) hilo.start();
         if (hilo.getState() == Thread.State.TERMINATED) {

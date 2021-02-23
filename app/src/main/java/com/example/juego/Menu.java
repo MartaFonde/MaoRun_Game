@@ -28,22 +28,23 @@ abstract public class Menu extends Pantalla{
         pBotonMenu.setColor(Color.argb(225,129,157,80)); //verde
         pBotonMenu.setStyle(Paint.Style.FILL);
 
-        tp.setTextAlign(Paint.Align.CENTER);
-        tp.setARGB(250,233,217,168);    //beige
+        tpBeige.setTextAlign(Paint.Align.CENTER);
+        tpBeige.setARGB(250,233,217,168);    //beige
 
-        if(numPantalla != 1 || numPantalla != 8){
+        if(numPantalla != 1 || numPantalla != 9){
             btnAtras = new RectF(0, altoPantalla/16 * 13, anchoPantalla / 32 * 3,
                     altoPantalla);
             atrasBitmap = Pantalla.escala(context, "menu/menu_atras.png",
                     anchoPantalla / 32 * 3, altoPantalla/16*3);
         }
 
-        JuegoSV.mediaPlayer = MediaPlayer.create(context, R.raw.bensound_highoctane);
-        JuegoSV.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        JuegoSV.mediaPlayer.setLooping(true);
-        int v = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        JuegoSV.mediaPlayer.setVolume(v / 3, v / 3);
-
+        if(numPantalla == 1 || numPantalla == 9){
+            JuegoSV.mediaPlayer = MediaPlayer.create(context, R.raw.bensound_highoctane);
+            JuegoSV.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            JuegoSV.mediaPlayer.setLooping(true);
+            JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen / 3, JuegoSV.volumen / 3);
+        }
     }
 
     /**
@@ -54,8 +55,7 @@ abstract public class Menu extends Pantalla{
     @Override
     public void dibuja(Canvas c){
         c.drawColor(Color.BLACK);
-        if(numPantalla != 1 && numPantalla != 8){       //1 menú ppal 9 fin partida
-            //c.drawRect(btnAtras, p);
+        if(numPantalla != 1 && numPantalla != 9){       //1 menú ppal 9 fin partida
             c.drawBitmap(atrasBitmap, 0, altoPantalla/16*13, null);
         }
     }
@@ -71,8 +71,7 @@ abstract public class Menu extends Pantalla{
         int x=(int)event.getX();
         int y=(int)event.getY();
 
-        if(numPantalla != 1 && numPantalla != 8 && btnAtras.contains(x,y)) {
-            Log.i("play", JuegoSV.mediaPlayer.isPlaying()+"");
+        if(numPantalla != 1 && numPantalla != 9 && btnAtras.contains(x,y)) {
             JuegoSV.restartMusica = false;
             return 1;       //vuelve a menu principal
         }

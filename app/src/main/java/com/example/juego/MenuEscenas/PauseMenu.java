@@ -26,9 +26,9 @@ public class PauseMenu extends Pantalla {
         pFondo.setColor(Color.argb(210, 50,50,50));
 
         setRectBotones();
-        tp.setARGB(250,233,217,168);
-        tp.setTextSize(altoPantalla/12);
-        tp.setTextAlign(Paint.Align.CENTER);
+        tpBeige.setARGB(250,233,217,168);
+        tpBeige.setTextSize(altoPantalla/12);
+        tpBeige.setTextAlign(Paint.Align.CENTER);
     }
 
     /**
@@ -38,14 +38,14 @@ public class PauseMenu extends Pantalla {
     @Override
     public void dibuja(Canvas c) {
         c.drawRect(rectFondo, pFondo);
-        c.drawRect(btnVolver, pBotonesVerdes);
-        c.drawText("Volver", anchoPantalla/2, altoPantalla/16*4, tp);
-        c.drawRect(btnOpciones, pBotonesVerdes);
-        c.drawText("Opciones", anchoPantalla/2, altoPantalla/16*7, tp);
-        c.drawRect(btnAyuda, pBotonesVerdes);
-        c.drawText("Ayuda", anchoPantalla/2, altoPantalla/16*10, tp);
-        c.drawRect(btnMenuPpal, pBotonesVerdes);
-        c.drawText("Menú principal", anchoPantalla/2, altoPantalla/16*13, tp);
+        c.drawRect(btnVolver, pBotonVerde);
+        c.drawText("Volver", anchoPantalla/2, altoPantalla/16*4, tpBeige);
+        c.drawRect(btnOpciones, pBotonVerde);
+        c.drawText("Opciones", anchoPantalla/2, altoPantalla/16*7, tpBeige);
+        c.drawRect(btnAyuda, pBotonVerde);
+        c.drawText("Ayuda", anchoPantalla/2, altoPantalla/16*10, tpBeige);
+        c.drawRect(btnMenuPpal, pBotonVerde);
+        c.drawText("Menú principal", anchoPantalla/2, altoPantalla/16*13, tpBeige);
     }
 
     /**
@@ -78,9 +78,9 @@ public class PauseMenu extends Pantalla {
             if(btnVolver.contains(x,y)){
                 return 0;
             }else if(btnOpciones.contains(x,y)){
-                return 10;
-            }else if(btnAyuda.contains(x,y)){
                 return 11;
+            }else if(btnAyuda.contains(x,y)){
+                return 12;
             }else if(btnMenuPpal.contains(x,y)){
                 JuegoSV.mediaPlayer.stop();
                 JuegoSV.restartMusica = true;

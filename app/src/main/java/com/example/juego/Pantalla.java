@@ -1,24 +1,14 @@
 package com.example.juego;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.text.TextPaint;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.inputmethod.BaseInputConnection;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,10 +18,12 @@ abstract public class Pantalla {
     protected int altoPantalla;
     protected int anchoPantalla;
     protected Context context;
-    protected TextPaint tp;
+    protected TextPaint tpBeige;
+    protected TextPaint tpVerde;
     protected Typeface face;
 
-    public Paint pBotonesVerdes;
+    public Paint pBotonVerde;
+    public Paint pBotonBeige;
 
     public Pantalla( Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         this.altoPantalla = altoPantalla;
@@ -39,14 +31,23 @@ abstract public class Pantalla {
         this.context = context;
         this.numPantalla = numPantalla;
 
-        pBotonesVerdes = new Paint();
-        pBotonesVerdes.setColor(Color.argb(225,129,157,80));
+        pBotonVerde = new Paint();
+        pBotonVerde.setColor(Color.argb(225,129,157,80));
+
+        pBotonBeige = new Paint();
+        pBotonBeige.setColor(Color.argb(250,233,217,168));
+
 
         face=Typeface.createFromAsset(context.getAssets(),"fonts/PolandCannedIntoFuture-OxE3.ttf");
-        tp = new TextPaint();
-        tp.setTextSize(altoPantalla/10);
-        tp.setColor(Color.WHITE);
-        tp.setTypeface(face);
+        tpBeige = new TextPaint();
+        tpBeige.setTextSize(altoPantalla/10);
+        tpBeige.setColor(Color.argb(250,233,217,168));
+        tpBeige.setTypeface(face);
+
+        tpVerde = new TextPaint();
+        tpVerde.setTextSize(altoPantalla/10);
+        tpVerde.setColor(Color.argb(225,129,157,80));
+        tpVerde.setTypeface(face);
     }
 
     public void dibuja(Canvas c){

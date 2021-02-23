@@ -26,7 +26,6 @@ import com.example.juego.Pantalla;
 import com.example.juego.R;
 import com.example.juego.ElemEscena.Trafico;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 abstract public class Escena extends Pantalla {
@@ -72,7 +71,7 @@ abstract public class Escena extends Pantalla {
     final int maxSonidosSimultaneos = 10;
     //static MediaPlayer mediaPlayer;
     int actualizaVolumen = 0;
-    int volumen;
+    //int volumen;
 
     Vibrator vibrator;
 
@@ -115,7 +114,6 @@ abstract public class Escena extends Pantalla {
         monedasPuntuacionBitmap = Pantalla.escala(context, "moneda/monedas_controles.png", anchoPantalla / 32, altoPantalla / 16);
 
         setSonidosMusica();
-        volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
         
@@ -196,12 +194,12 @@ abstract public class Escena extends Pantalla {
                 if (trafico.coches[i].rectangulo.intersect(gato.rectangulo) && nuevoCoche != cocheColision) {
                     colisionCoche = true;
                     if(JuegoSV.sonido){
-                        if(actualizaVolumen % 5 == 0){
-                            volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                        if(actualizaVolumen % 10 == 0){
+                            JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                         }
                         actualizaVolumen++;
-                        efectosSonido.play(sonidoCoche, volumen, volumen, 1, 0, 1);
-                        efectosSonido.play(sonidoGato, volumen, volumen, 1, 0, 1);
+                        efectosSonido.play(sonidoCoche, JuegoSV.volumen, JuegoSV.volumen, 1, 0, 1);
+                        efectosSonido.play(sonidoGato, JuegoSV.volumen, JuegoSV.volumen, 1, 0, 1);
                     }
                     if(JuegoSV.vibracion){
                         efectoVibracion();
@@ -211,7 +209,8 @@ abstract public class Escena extends Pantalla {
                         //para que dibuxe pantalla roja
                     if(gato.numVidas == 0){
                        //JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, true, gato.puntos);
-                        JuegoSV.cambiaPantalla(8);
+                        JuegoSV.mediaPlayer.stop();
+                        JuegoSV.cambiaPantalla(9);
                     }
                 }
                 //Cando coche colisión deixe de interset o xogador, xa podería volver colisionar
@@ -238,43 +237,36 @@ abstract public class Escena extends Pantalla {
      * @return número de Escena
      */
     public int onTouchEvent(MotionEvent event){
-        int accion = event.getAction();
         float x = event.getX();
         float y = event.getY();
 
         if(!pause){
-            switch (accion) {
-                case MotionEvent.ACTION_DOWN:       //non hai mov cte
-                    if(controles.abajo.contains(x, y)){
-                        mov = 0;
-                        gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverAbajo(altoPantalla);
-                        if(gato.puedeMoverse) colisionMonedas();
-                    }else if(controles.izq.contains(x,y)){
-                        mov = 1;
-                        gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverIzquierda();
-                        if(gato.puedeMoverse) colisionMonedas();
-                    }else if(controles.der.contains(x, y))  {
-                        mov = 2;
-                        gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
-                        gato.moverDerecha(anchoPantalla);
-                        if(gato.puedeMoverse) colisionMonedas();
-                    }else if(controles.arriba.contains(x, y)){
-                        mov = 3;
-                        return -3;
-                    }else if(rectPausa.contains(x,y)){
-                        pause = true;
-                        pantallaPause = new PauseEscena(context, anchoPantalla, altoPantalla, 10);
-                        //pantallaPause = new PantallaPause(context, anchoPantalla, altoPantalla, 10);
-                    } else{
-                        gato.parado(); //TODO mirar onde meter isto
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    //gato.parado();
-                    Toast.makeText(context, "gato parado", Toast.LENGTH_SHORT).show();
-                    break;
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if(controles.abajo.contains(x, y)){
+                    mov = 0;
+                    gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                    gato.moverAbajo(altoPantalla);
+                    if(gato.puedeMoverse) colisionMonedas();
+                }else if(controles.izq.contains(x,y)){
+                    mov = 1;
+                    gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                    gato.moverIzquierda();
+                    if(gato.puedeMoverse) colisionMonedas();
+                }else if(controles.der.contains(x, y))  {
+                    mov = 2;
+                    gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
+                    gato.moverDerecha(anchoPantalla);
+                    if(gato.puedeMoverse) colisionMonedas();
+                }else if(controles.arriba.contains(x, y)){
+                    mov = 3;
+                    return -3;
+                }else if(rectPausa.contains(x,y)){
+                    pause = true;
+                    pantallaPause = new PauseEscena(context, anchoPantalla, altoPantalla, 10);
+                } else{
+                    gato.parado(); //TODO mirar onde meter isto
+                }
+
             }
         }else{
             int aux = pantallaPause.onTouchEvent(event);
@@ -316,10 +308,10 @@ abstract public class Escena extends Pantalla {
         for (int i = monedasRect.size() -1 ; i >= 0; i--) {
             if(monedasRect.get(i).intersect(gato.rectangulo)){
                 if(JuegoSV.sonido){
-                    if(actualizaVolumen % 5 == 0){
-                        volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                    if(actualizaVolumen % 10 == 0){
+                        JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                     }
-                    efectosSonido.play(sonidoMoneda, volumen, volumen, 1, 0, 1);
+                    efectosSonido.play(sonidoMoneda, JuegoSV.volumen, JuegoSV.volumen, 1, 0, 1);
                     actualizaVolumen++;
                 }
                 gato.puntos+=100;
@@ -441,9 +433,9 @@ abstract public class Escena extends Pantalla {
 
         //textPaint = new TextPaint();
         //textPaint.setTypeface(face);
-        tp.setTextSize(altoPantalla / 20); // tamaño del texto en pixels
+        tpBeige.setTextSize(altoPantalla / 20); // tamaño del texto en pixels
         //textPaint.setTextAlign(Paint.Align.CENTER); // Alineación del texto
-        tp.setColor(Color.BLACK); // C
+        tpBeige.setColor(Color.BLACK); // C
     }
 
     /**
@@ -457,7 +449,7 @@ abstract public class Escena extends Pantalla {
         for (int i = 0; i < gato.numVidas; i++) {
             c.drawBitmap(vidaBitmap, anchoPantalla/32 * (31 - i), altoPantalla / 16 * 0.5f, null);
         }
-        c.drawText(""+gato.puntos, anchoPantalla/32*27.5f,  altoPantalla / 16 *2.25f, tp);
+        c.drawText(""+gato.puntos, anchoPantalla/32*27.5f,  altoPantalla / 16 *2.25f, tpBeige);
         c.drawBitmap(monedasPuntuacionBitmap, anchoPantalla /32 *30, altoPantalla/16 * 1.5f, null);
     }
 
@@ -465,7 +457,7 @@ abstract public class Escena extends Pantalla {
      * Inicializa los sonidos y la música
      */
     public void setSonidosMusica(){
-        JuegoSV.audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        //JuegoSV.audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         if ((android.os.Build.VERSION.SDK_INT) >= 21) {
             SoundPool.Builder spb=new SoundPool.Builder();
             spb.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
@@ -480,12 +472,14 @@ abstract public class Escena extends Pantalla {
         sonidoGato = efectosSonido.load(context, R.raw.sonido_gato_atropello, 1);
         sonidoMoneda = efectosSonido.load(context, R.raw.sonido_monedas, 1);
 
-        JuegoSV.mediaPlayer= MediaPlayer.create(context,R.raw.city_ambience);
-        volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        JuegoSV.mediaPlayer.setVolume(volumen/3, volumen/3);
-        JuegoSV.mediaPlayer.setLooping(true);
+        if(numPantalla == 6){
+            JuegoSV.mediaPlayer= MediaPlayer.create(context,R.raw.city_ambience);
+            JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen/3, JuegoSV.volumen/3);
+            JuegoSV.mediaPlayer.setLooping(true);
+        }
 
-        if(JuegoSV.musica && numPantalla == 5){
+        if(JuegoSV.musica && numPantalla == 6){
             JuegoSV.mediaPlayer.start();
         }
     }

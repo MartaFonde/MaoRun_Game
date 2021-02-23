@@ -25,15 +25,15 @@ public class PauseEscena extends Pantalla {
         pFondo = new Paint();
         pFondo.setColor(Color.argb(210, 50,50,50));
 
-        tp.setARGB(250,233,217,168);
-        tp.setTextSize(altoPantalla/12);
-        tp.setTextAlign(Paint.Align.CENTER);
+        tpBeige.setARGB(250,233,217,168);
+        tpBeige.setTextSize(altoPantalla/12);
+        tpBeige.setTextAlign(Paint.Align.CENTER);
 
         rectFondo = new RectF(anchoPantalla/32 * 8, altoPantalla/16 * 2, anchoPantalla/32*24, altoPantalla/16 * 14);
         rectAtras = new RectF(anchoPantalla / 32 *8, altoPantalla/16*2, anchoPantalla/32*10, altoPantalla/16*4);
         atrasbtmp = Pantalla.escala(context, "menu/menu_atras.png", anchoPantalla/32*2, altoPantalla/16 *2);
 
-        pantallaPauseActual = new PauseMenu(context, anchoPantalla, altoPantalla, 9);
+        pantallaPauseActual = new PauseMenu(context, anchoPantalla, altoPantalla, 10);
     }
 
     /**
@@ -46,7 +46,7 @@ public class PauseEscena extends Pantalla {
     public void dibuja(Canvas c) {
         c.drawColor(Color.TRANSPARENT); //fondo transparente
         c.drawRect(rectFondo, pFondo);
-        if(pantallaPauseActual.numPantalla != 9){
+        if(pantallaPauseActual.numPantalla != 10){
             c.drawBitmap(atrasbtmp, anchoPantalla/32*8, altoPantalla/16*2, null);
         }
         pantallaPauseActual.dibuja(c);
@@ -84,11 +84,11 @@ public class PauseEscena extends Pantalla {
      */
     private void cambiaPantalla(int num){
         switch (num){
-            case 9 : pantallaPauseActual = new PauseMenu(context, anchoPantalla, altoPantalla, 10);
+            case 10 : pantallaPauseActual = new PauseMenu(context, anchoPantalla, altoPantalla, 10);
                 break;
-            case 10 : pantallaPauseActual = new PauseOpciones(context, anchoPantalla, altoPantalla, 11);
+            case 11 : pantallaPauseActual = new PauseOpciones(context, anchoPantalla, altoPantalla, 11);
                 break;
-            case 11: pantallaPauseActual = new PauseAyuda(context, anchoPantalla, altoPantalla, 12);
+            case 12: pantallaPauseActual = new PauseAyuda(context, anchoPantalla, altoPantalla, 12);
                 break;
         }
     }

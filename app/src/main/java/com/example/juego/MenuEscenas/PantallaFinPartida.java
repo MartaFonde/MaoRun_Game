@@ -11,9 +11,14 @@ import com.example.juego.JuegoSV;
 import com.example.juego.Menu;
 import com.example.juego.Pantalla;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
 public class PantallaFinPartida extends Menu {
-    RectF btnRepetir;
-    RectF btnMenuPpal;
+    RectF btnAvanzar;
+    Bitmap avanzaBitmap;
     boolean sinVidas;
     int puntos;
     Bitmap monedas;
@@ -23,6 +28,14 @@ public class PantallaFinPartida extends Menu {
         this.sinVidas = sinVidas;
         this.puntos = puntos;
         this.monedas = Pantalla.escala(context, "moneda/monedas_controles.png", anchoPantalla/32*2, altoPantalla/16*2);
+        btnAvanzar = new RectF(anchoPantalla/32 * 29, altoPantalla/16 * 13, anchoPantalla, altoPantalla);
+        avanzaBitmap = Pantalla.escala(context, "menu/menu_avance.png",
+                anchoPantalla / 32 * 3, altoPantalla/16*3);
+
+        if(JuegoSV.musica){
+            JuegoSV.mediaPlayer.start();
+        }
+
     }
 
     /**
@@ -33,27 +46,20 @@ public class PantallaFinPartida extends Menu {
     @Override
     public void dibuja(Canvas c) {
         super.dibuja(c);
-        tp.setTextSize(altoPantalla/10);
-        tp.setTextAlign(Paint.Align.CENTER);
-        c.drawText("FIN DE LA PARTIDA", anchoPantalla/2, altoPantalla/16*3, tp);
-        tp.setTextSize(altoPantalla/12);
+        tpBeige.setTextSize(altoPantalla/8);
+        tpBeige.setTextAlign(Paint.Align.CENTER);
+        c.drawText("FIN DE LA PARTIDA", anchoPantalla/2, altoPantalla/16*5, tpBeige);
+        tpBeige.setTextSize(altoPantalla/12);
         if(sinVidas){
-            tp.setTextSize(altoPantalla/14);
-            c.drawText("Has perdido todas las vidas", anchoPantalla/2, altoPantalla/16*5, tp);
+            tpBeige.setTextSize(altoPantalla/10);
+            c.drawText("Has perdido todas las vidas", anchoPantalla/2, altoPantalla/16*8, tpBeige);
         }else{
-            tp.setTextSize(altoPantalla/14);
-            c.drawText("Has superado todos los niveles", anchoPantalla/2, altoPantalla/16*5, tp);
+            tpBeige.setTextSize(altoPantalla/14);
+            c.drawText("Has superado todos los niveles", anchoPantalla/2, altoPantalla/16*8, tpBeige);
         }
-        c.drawBitmap(monedas, anchoPantalla/32 * 13, altoPantalla/16*5.5f, null);
-        c.drawText(puntos+"", anchoPantalla/32*17.5f, altoPantalla/16*7, tp);
-
-        tp.setTextSize(altoPantalla/10);
-        btnRepetir = new RectF(anchoPantalla / 32 *  9.5f, altoPantalla/16*8, anchoPantalla / 32 *22.5f, altoPantalla/16*10);
-        c.drawRect(btnRepetir, pBotonMenu);
-        c.drawText("Volver a jugar", anchoPantalla / 2, altoPantalla/16 * 9.5f, tp);
-        btnMenuPpal = new RectF(anchoPantalla / 32 *  9.5f, altoPantalla/16*12, anchoPantalla / 32 *22.5f, altoPantalla/16*14);
-        c.drawRect(btnMenuPpal, pBotonMenu);
-        c.drawText("Menú principal", anchoPantalla / 2, altoPantalla/16 * 13.5f, tp);
+        c.drawBitmap(monedas, anchoPantalla/32 * 13, altoPantalla/16*10.5f, null);
+        c.drawText(puntos+"", anchoPantalla/32*17.5f, altoPantalla/16*12, tpBeige);
+        c.drawBitmap(avanzaBitmap,anchoPantalla/32 * 29, altoPantalla/16 * 13, null );
     }
 
     /**
@@ -70,13 +76,35 @@ public class PantallaFinPartida extends Menu {
         float x = event.getX();
         float y = event.getY();
 
-        if(btnRepetir.contains(x, y)){
-            return 5;
-        }else if(btnMenuPpal.contains(x,y)){
-            JuegoSV.restartMusica = true;
-            JuegoSV.mediaPlayer.stop();
-            return 1;
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            if(btnAvanzar.contains(x, y)){
+                if(guardaRecord()){
+                    return 13;
+                }else{
+                    return 14;
+                }
+            }
         }
         return super.onTouchEvent(event);
+    }
+
+    public boolean guardaRecord(){
+        ArrayList<String> rec = new ArrayList<>();
+        try (FileInputStream fis = context.openFileInput("records.txt");
+             InputStreamReader reader = new InputStreamReader(fis);
+             BufferedReader buffer = new BufferedReader(reader)) {
+            String linea = "";
+            while((linea = buffer.readLine()) != null){
+                rec.add(linea+("\n"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(rec.size() < 5){
+            return true;
+        }else if(Integer.parseInt(rec.get(rec.size()-1).split(" ")[0]) <= puntos){
+            return true;
+        }
+        return false;
     }
 }

@@ -52,9 +52,9 @@ public class Escena3 extends Escena {
         if(aux == -3){
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *18, 0,
                     anchoPantalla/32*22, altoPantalla/16 * 0.5f))){
-                //JuegoSV.cambiaPantalla(9);
-                //JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, false, gato.puntos);
-                return 8;
+                JuegoSV.mediaPlayer.stop();
+                JuegoSV.restartMusica = true;
+                return 9;
             }else {
                 gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
                 gato.moverArriba();

@@ -3,18 +3,16 @@ package com.example.juego.MenuPpal;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.juego.JuegoSV;
 import com.example.juego.Menu;
-import com.example.juego.R;
 
 public class MenuPrincipal extends Menu {
 
     RectF btnJugar;
+    RectF btnRecords;
     RectF btnCreditos;
     RectF btnAyuda;
     RectF btnOpciones;
@@ -27,7 +25,6 @@ public class MenuPrincipal extends Menu {
         if(JuegoSV.musica  && JuegoSV.restartMusica) {
             JuegoSV.mediaPlayer.start();
         }
-        Log.i("play", JuegoSV.mediaPlayer.isPlaying()+"");
     }
 
     /**
@@ -61,16 +58,18 @@ public class MenuPrincipal extends Menu {
                 if(btnJugar.contains(x,y)){
                     JuegoSV.mediaPlayer.stop();
                     JuegoSV.mediaPlayer.release();
-                    return 5;
+                    return 6;
                 }else if(btnCreditos.contains(x,y)){
-                    return 2;
-                }else if(btnOpciones.contains(x,y)){
-                    return 4;
-                }else if(btnAyuda.contains(x,y)){
                     return 3;
+                }else if(btnOpciones.contains(x,y)){
+                    return 5;
+                }else if(btnAyuda.contains(x,y)){
+                    return 4;
                 }else if(btnSalir.contains(x,y)){
                     JuegoSV.mediaPlayer.stop();
                     return 0;
+                }else if(btnRecords.contains(x,y)){
+                    return 2;
                 }
         }
         return super.onTouchEvent(event);       //-1
@@ -81,10 +80,11 @@ public class MenuPrincipal extends Menu {
      */
     public void setBotonesRect(){
         btnJugar = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16, anchoPantalla / 32 * 24, altoPantalla / 16 * 3);
-        btnCreditos = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16 * 4, anchoPantalla / 32 * 24, altoPantalla / 16 * 6);
-        btnAyuda = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16 * 7, anchoPantalla / 32 * 24, altoPantalla / 16 * 9);
-        btnOpciones = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16 *10, anchoPantalla / 32 * 24, altoPantalla / 16 * 12);
-        btnSalir = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16 * 13, anchoPantalla / 32 * 24, altoPantalla / 16 * 15);
+        btnRecords = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16 * 3.5f, anchoPantalla / 32 * 24, altoPantalla / 16 * 5.5f);
+        btnCreditos = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16 * 6, anchoPantalla / 32 * 24, altoPantalla / 16 * 8);
+        btnAyuda = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16 * 8.5f, anchoPantalla / 32 * 24, altoPantalla / 16 * 10.5f);
+        btnOpciones = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16 *11, anchoPantalla / 32 * 24, altoPantalla / 16 * 13);
+        btnSalir = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16 * 13.5f, anchoPantalla / 32 * 24, altoPantalla / 16 * 15.5f);
     }
 
     /**
@@ -93,14 +93,16 @@ public class MenuPrincipal extends Menu {
      */
     public void dibujaBotones(Canvas c){
         c.drawRect(btnJugar, pBotonMenu);
-        c.drawText("JUGAR", anchoPantalla / 2, altoPantalla / 16 * 2.5f, tp);
+        c.drawText("JUGAR", anchoPantalla / 2, altoPantalla / 16 * 2.5f, tpBeige);
+        c.drawRect(btnRecords, pBotonMenu);
+        c.drawText("RECORDS", anchoPantalla/2, altoPantalla / 16 * 5, tpBeige);
         c.drawRect(btnCreditos, pBotonMenu);
-        c.drawText("CRÉDITOS", anchoPantalla/2, altoPantalla /16 * 5.5f , tp);
+        c.drawText("CRÉDITOS", anchoPantalla/2, altoPantalla /16 * 7.5f , tpBeige);
         c.drawRect(btnAyuda, pBotonMenu);
-        c.drawText("AYUDA", anchoPantalla/2, altoPantalla /16 * 8.5f, tp);
+        c.drawText("AYUDA", anchoPantalla/2, altoPantalla /16 * 10, tpBeige);
         c.drawRect(btnOpciones, pBotonMenu);
-        c.drawText("OPCIONES", anchoPantalla/2, altoPantalla /16 * 11.5f, tp);
+        c.drawText("OPCIONES", anchoPantalla/2, altoPantalla /16 * 12.5f, tpBeige);
         c.drawRect(btnSalir, pBotonMenu);
-        c.drawText("SALIR", anchoPantalla/2, altoPantalla /16 * 14.5f , tp);
+        c.drawText("SALIR", anchoPantalla/2, altoPantalla /16 * 15 , tpBeige);
     }
 }
