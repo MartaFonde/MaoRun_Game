@@ -10,7 +10,6 @@ import com.example.juego.ElemEscena.Coche;
 import com.example.juego.ElemEscena.Gato;
 import com.example.juego.JuegoSV;
 import com.example.juego.Pantalla;
-import com.example.juego.MenuEscenas.PantallaFinPartida;
 
 public class Escena3 extends Escena {
     Bitmap fondo;
@@ -20,7 +19,6 @@ public class Escena3 extends Escena {
         super(context, anchoPantalla, altoPantalla, numPantalla, gato);
         fondo = Pantalla.getBitmapFromAssets(context, "mapas/mapa_nivel3.png");
         setFondo(fondo);
-
         setArbolesRect();
         setPosicionMonedas();
         velocidadCoches = (anchoPantalla /(32 * 10))*1.5f;
@@ -29,7 +27,7 @@ public class Escena3 extends Escena {
     }
 
     /**
-     * Dibuja en lienzo función dibuja de clase padre Escena
+     * Dibuja en lienzo dibuja de clase Escena.
      * @param c lienzo
      */
     @Override
@@ -42,9 +40,9 @@ public class Escena3 extends Escena {
      * Gestiona el movimiento hacia arriba (decremento de posición y) de gato.
      * Si el rect de gato interseca el rect marcado para el cambio de escena, se finaliza el juego.
      * Se caambia pantalla Pantalla FinPartida.
-     * @param event
-     * @return numPantalla (8) si no finaliza el juego y no se hace cambio de pantalla, 9 si llega
-     * al rect de fin de nivel y supera el nivel. El número de pantalla FinPartida es 9
+     * @param event evento
+     * @return 9 si supera el nivel, que lleva a pantalla FinPartida. En caso contrario, devuelve
+     * el numPantalla de esta escena (8) y no se hace cambio de pantalla.
      */
     @Override
     public int onTouchEvent(MotionEvent event) {
@@ -53,7 +51,6 @@ public class Escena3 extends Escena {
             if(gato.getPosicionFutura(mov).intersect(new RectF(anchoPantalla/32 *18, 0,
                     anchoPantalla/32*22, altoPantalla/16 * 0.5f))){
                 JuegoSV.mediaPlayer.stop();
-                JuegoSV.restartMusica = true;
                 return 9;
             }else {
                 gato.puedeMoverse = !colisionArboles(gato.getPosicionFutura(mov));
@@ -65,7 +62,7 @@ public class Escena3 extends Escena {
     }
 
     /**
-     * Inicializa los rect de arboles según las posiciones determinadas por el fondo y los ajusta
+     * Inicializa los rect de arboles según las posiciones determinadas por el fondo y los ajusta.
      */
     public void setArbolesRect(){
         arbolesRect = new RectF[19];

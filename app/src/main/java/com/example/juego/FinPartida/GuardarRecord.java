@@ -1,4 +1,4 @@
-package com.example.juego.MenuEscenas;
+package com.example.juego.FinPartida;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -28,7 +28,6 @@ public class GuardarRecord extends Pantalla {
     RectF btnOK;
 
     RectF[] letras;
-
     int puntos;
 
     Paint pOk;
@@ -52,19 +51,21 @@ public class GuardarRecord extends Pantalla {
         propH = altoPantalla / 16;
         this.puntos = puntos;
 
-        tpBeige.setTextAlign(Paint.Align.CENTER);
-        tpBeige.setARGB(250,233,217,168);
-
         avanzaBitmap = Pantalla.escala(context, "menu/menu_avance.png", (int)propW * 2, (int)propH * 2);
 
-        teclas = new Hashtable<RectF, String>();
+        teclas = new Hashtable<>();
         letras = new RectF[3];
         setTeclas();
     }
 
+    /**
+     * Dibuja fondo negro, el botón de avanza, los botones de borrar letra y OK, las letras del nombre
+     * y las teclas para escribir el nombre.
+     * @param c lienzo
+     */
     @Override
     public void dibuja(Canvas c) {
-        c.drawColor(Color.BLACK);
+        super.dibuja(c);
         c.drawBitmap(avanzaBitmap, btnAvanza.left, btnAvanza.top, null);
         c.drawText("GUARDAR RÉCORD", anchoPantalla/2, altoPantalla/16 * 2, tpBeige);
 
@@ -85,6 +86,16 @@ public class GuardarRecord extends Pantalla {
         }
     }
 
+    /**
+     * Si las coordenadas de pulsación están contenidas en el botón de borrar elimina la última letra
+     * del nombre. Si están contenidas en alguna tecla añade la letra asociada al nombre con un límite
+     * máximo de tres letras. Si lo están en en el botón OK y el nombre tiene más de una letra llama
+     * a la función que guarda el récord, y si lo están en el botón de avanzar no guarda el récord.
+     * En los dos últimos casos, avanza a la pantalla que muestra los récords.
+     * @param event evento
+     * @return 14 número de pantalla que muestra los récords, -1 en caso de que las coordenadas no estean
+     * contenidas en ningún rect de los botones.
+     */
     @Override
     public int onTouchEvent(MotionEvent event) {
         float x = event.getX();
@@ -109,6 +120,11 @@ public class GuardarRecord extends Pantalla {
         return -1;
     }
 
+    /**
+     * Lee el fichero que guarda los récords y los añade por líneas al arrayList records. Después
+     * sobreescribe el fichero con el récord nuevo y los anteriores, ordenados de mayor a menor.
+     * Como máximo almacena 5 récords (puntuación + nombre).
+     */
     public void escribirFichero(){
         String nom = "";
         for (String n : nombre) {
@@ -129,25 +145,31 @@ public class GuardarRecord extends Pantalla {
         }
 
         boolean escrito = false;
-        int l = 0;
+        int ind = 0;
+        int lineas = 0;
         String record = puntos + " "+nom +"\n";
 
         try(FileOutputStream fos = context.openFileOutput("records.txt", Context.MODE_PRIVATE)){
             if(records.size() == 0){
                 fos.write(record.getBytes());
             }else {
-                while (l < records.size() && l < 5) {
-                    if (Integer.parseInt(records.get(l).split(" ")[0]) <= puntos && !escrito) {
+                while (ind < records.size() && lineas < 5) {
+                    if (Integer.parseInt(records.get(ind).split(" ")[0]) <= puntos && !escrito) {
                         fos.write(record.getBytes());
-                        l++;
+                        lineas++;
                         escrito = true;
-                        if(l < 5) fos.write(records.get(l-1).getBytes());
+                        if(lineas < 5) {
+                            fos.write(records.get(ind).getBytes());
+                            lineas ++;
+                            ind++;
+                        }
                     } else {
-                        fos.write(records.get(l).getBytes());
-                        l++;
+                        fos.write(records.get(ind).getBytes());
+                        lineas++;
+                        ind++;
                     }
                 }
-                if(!escrito && l <= 5) fos.write(record.getBytes());
+                if(!escrito && lineas < 5) fos.write(record.getBytes());
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -155,6 +177,10 @@ public class GuardarRecord extends Pantalla {
     }
 
 
+    /**
+     * Inicializa los rect de los botones y añade a la hashtable letras el rect y la letra
+     * asociada.
+     */
     public void setTeclas(){
         btnAvanza = new RectF(propW * 29, propH*14, anchoPantalla, altoPantalla);
 

@@ -7,16 +7,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 import com.example.juego.JuegoSV;
-import com.example.juego.Menu;
 import com.example.juego.Pantalla;
+import com.example.juego.R;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 
 public class MenuOpciones extends Menu {
 
@@ -40,16 +38,16 @@ public class MenuOpciones extends Menu {
 
     public MenuOpciones(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
+        //paint iconos de act y desact
         p = new Paint();
         p.setAlpha(180);
-        p.setColor(Color.argb(250,233,217,168));    //beige
-
+        p.setColor(Color.argb(200,233,217,168));    //beige
+        //base de act o desact
         pCircle = new Paint();
         pCircle.setColor(Color.argb(150, 255, 128, 128));
 
-        cambios = false;
+        cambios = false;    //si no hay cambios no se reescribe archivo config
 
-        tpBeige.setTextAlign(Paint.Align.CENTER);
         tpBeige.setTextSize(altoPantalla/12);
         setRect();
 
@@ -66,7 +64,7 @@ public class MenuOpciones extends Menu {
 
     /**
      * Dibuja sobre lienzo texto que representa las opciones de sonido, música y vibración,
-     * y los botones para su activación y desactivación.
+     * y los botones para su activación y desactivación, el fondo y el botón de retroceso.
      * @param c lienzo
      */
     @Override
@@ -110,19 +108,20 @@ public class MenuOpciones extends Menu {
 
     /**
      * Gestiona la pulsación de un dedo sobre pantalla. Si se pulsa sobre botón de retroceso vuelve
-     * a la pantalla Menú principal. Si las coordenadas de la pulsación están contenidas en algún
-     * botón (rect) creado para activar o desactivar las diferentes opciones, cambia el valor de la
-     * opción correspondiente, si tiene lugar, contenida en su respectiva variable en la clase JuegoSV
+     * a la pantalla Menú principal. Si hay cambios, llama a la función para guardar la config.
+     * Si las coordenadas de la pulsación están contenidas en algún botón (rect) creado para activar
+     * o desactivar las diferentes opciones, cambia el valor de la opción correspondiente, si tiene
+     * lugar, contenida en su respectiva variable en la clase JuegoSV.
+     * Si hay cambios asigna la variable cambios a true.
      * @param event
      * @return devuelve 1 si se pulsa el botón de retroceso, que hace retornar a Menú Principal.
-     * Si se pulsa en cualquier otro punto, devuelve -1
+     * Si se pulsa en cualquier otro punto, devuelve -1.
      */
     @Override
     public int onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
-
         float x = event.getX();
         float y = event.getY();
+
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             int aux=super.onTouchEvent(event);  //se se pulsa btnAtras volve a mnu ppal -- menu return 1
             if (aux == 1){
@@ -131,40 +130,32 @@ public class MenuOpciones extends Menu {
                 }
                 return aux;
             }else{
-                if(rectSonAct.contains(x,y)){
-                    if(!JuegoSV.sonido){
-                        JuegoSV.sonido = true;
-                        cambios = true;
-                    }
-                } else if(rectSonDesact.contains(x,y)) {
-                    if(JuegoSV.sonido){
-                        JuegoSV.sonido = false;
-                        cambios = true;
-                    }
-                } else if(rectMusicaAct.contains(x,y)) {    //TODO
-                    if(!JuegoSV.musica) {
-                        JuegoSV.musica = true;
-                        cambios = true;
-                        int v = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                        JuegoSV.mediaPlayer.setVolume(v / 3, v / 3);
-                        JuegoSV.mediaPlayer.start();
-                    }
-                } else if(rectMusicaDesact.contains(x,y)) {     //TODO
-                    if(JuegoSV.musica){
-                        JuegoSV.musica = false;
-                        cambios = true;
-                        JuegoSV.mediaPlayer.pause();
-                    }
-                } else if(rectVibracionAct.contains(x,y)) {
-                    if(!JuegoSV.vibracion){
-                        JuegoSV.vibracion = true;
-                        cambios = true;
-                    }
-                } else if(rectVibracionDesact.contains(x,y)) {
-                    if(JuegoSV.vibracion){
-                        JuegoSV.vibracion = false;
-                        cambios = true;
-                    }
+                if(rectSonAct.contains(x,y) && !JuegoSV.sonido ){
+                    JuegoSV.sonido = true;
+                    cambios = true;
+                } else if(rectSonDesact.contains(x,y) && JuegoSV.sonido) {
+                    JuegoSV.sonido = false;
+                    cambios = true;
+                } else if(rectMusicaAct.contains(x,y) && !JuegoSV.musica) {
+                    JuegoSV.musica = true;
+                    cambios = true;
+                    JuegoSV.mediaPlayer = MediaPlayer.create(context, R.raw.bensound_highoctane);
+                    JuegoSV.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    JuegoSV.mediaPlayer.setLooping(true);
+                    JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                    JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen / 3, JuegoSV.volumen / 3);
+                    //JuegoSV.mediaPlayer.prepareAsync();
+                    JuegoSV.mediaPlayer.start();
+                } else if(rectMusicaDesact.contains(x,y) && JuegoSV.musica) {
+                    JuegoSV.musica = false;
+                    cambios = true;
+                    JuegoSV.mediaPlayer.stop();
+                } else if(rectVibracionAct.contains(x,y) && !JuegoSV.vibracion) {
+                    JuegoSV.vibracion = true;
+                    cambios = true;
+                } else if(rectVibracionDesact.contains(x,y) && JuegoSV.vibracion) {
+                    JuegoSV.vibracion = false;
+                    cambios = true;
                 }else if(rectReiniciarRecords.contains(x,y)){
                     reiniciarRecords();
                 }
@@ -173,6 +164,9 @@ public class MenuOpciones extends Menu {
         return -1;
     }
 
+    /**
+     * Reescribe el archivo que guarda los récords para que quede vacío.
+     */
     private void reiniciarRecords(){
         try(FileOutputStream fos = context.openFileOutput("records.txt", Context.MODE_PRIVATE)){
            fos.write("".getBytes());
@@ -181,6 +175,9 @@ public class MenuOpciones extends Menu {
         }
     }
 
+    /**
+     * Escribe la configuración sobre sonido, música y vibración en el archivo config.
+     */
     private void guardarConfig(){
         try(FileOutputStream fos = context.openFileOutput("config.txt", Context.MODE_PRIVATE)){
             fos.write((JuegoSV.sonido+"\n").getBytes());
@@ -193,15 +190,23 @@ public class MenuOpciones extends Menu {
 
     /**
      * Asigna los rect que se corresponden con la activación y desactivación de las diferentes opciones
+     * y el de reinicio de récords.
      */
     public void setRect(){
-        rectSonAct = new RectF(anchoPantalla/32 * 18, altoPantalla / 16 * 3.5f, anchoPantalla/32 * 20, altoPantalla/16 * 5.5f);
-        rectSonDesact = new RectF(anchoPantalla/32 * 22, altoPantalla / 16 * 3.5f, anchoPantalla/32 * 24, altoPantalla/16 * 5.5f);
-        rectMusicaAct = new RectF(anchoPantalla/32 * 18, altoPantalla / 16 * 6.5f, anchoPantalla/32 * 20, altoPantalla/16 * 8.5f);
-        rectMusicaDesact = new RectF(anchoPantalla/32 * 22, altoPantalla / 16 * 6.5f, anchoPantalla/32 * 24, altoPantalla/16 * 8.5f);
-        rectVibracionAct = new RectF(anchoPantalla/32 * 18, altoPantalla / 16 * 9.5f, anchoPantalla/32 * 20, altoPantalla/16 * 11.5f);
-        rectVibracionDesact = new RectF(anchoPantalla/32 * 22, altoPantalla / 16 * 9.5f, anchoPantalla/32 * 24, altoPantalla/16 * 11.5f);
+        rectSonAct = new RectF(anchoPantalla/32 * 18, altoPantalla / 16 * 3.5f,
+                anchoPantalla/32 * 20, altoPantalla/16 * 5.5f);
+        rectSonDesact = new RectF(anchoPantalla/32 * 22, altoPantalla / 16 * 3.5f,
+                anchoPantalla/32 * 24, altoPantalla/16 * 5.5f);
+        rectMusicaAct = new RectF(anchoPantalla/32 * 18, altoPantalla / 16 * 6.5f,
+                anchoPantalla/32 * 20, altoPantalla/16 * 8.5f);
+        rectMusicaDesact = new RectF(anchoPantalla/32 * 22, altoPantalla / 16 * 6.5f,
+                anchoPantalla/32 * 24, altoPantalla/16 * 8.5f);
+        rectVibracionAct = new RectF(anchoPantalla/32 * 18, altoPantalla / 16 * 9.5f,
+                anchoPantalla/32 * 20, altoPantalla/16 * 11.5f);
+        rectVibracionDesact = new RectF(anchoPantalla/32 * 22, altoPantalla / 16 * 9.5f,
+                anchoPantalla/32 * 24, altoPantalla/16 * 11.5f);
 
-        rectReiniciarRecords = new RectF(anchoPantalla/32 * 10, altoPantalla / 16 * 13, anchoPantalla/32 * 24, altoPantalla/16 *15);
+        rectReiniciarRecords = new RectF(anchoPantalla/32 * 10, altoPantalla / 16 * 13,
+                anchoPantalla/32 * 24, altoPantalla/16 *15);
     }
 }

@@ -19,7 +19,9 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     JuegoSV juego;
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    private boolean pausa=false;
+
+    //@RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,19 +52,23 @@ public class MainActivity extends AppCompatActivity {
         juego.setKeepScreenOn(true);
         setContentView(juego);
     }
-    // Con pausa evitamos que se ejecute con la activity principal.
-    private boolean pausa=false;
+
+    /**
+     * Pausa la música cuando la activity está en segundo plano.
+     */
     @Override
     protected void onPause() {
         super.onPause();
         pausa=true;
-        juego.mediaPlayer.pause();
+        if(juego.mediaPlayer != null)juego.mediaPlayer.pause();
     }
+
+    /**
+     * Reanuda la música cuando lo hace la activity.
+     */
     @Override
     protected void onResume() {
         super.onResume();
-        if (pausa)
-            juego.mediaPlayer.start();
+        if (pausa && juego.mediaPlayer != null) juego.mediaPlayer.start();
     }
-
 }

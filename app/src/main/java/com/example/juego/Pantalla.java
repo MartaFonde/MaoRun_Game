@@ -21,7 +21,6 @@ abstract public class Pantalla {
     protected TextPaint tpBeige;
     protected TextPaint tpVerde;
     protected Typeface face;
-
     public Paint pBotonVerde;
     public Paint pBotonBeige;
 
@@ -33,29 +32,46 @@ abstract public class Pantalla {
 
         pBotonVerde = new Paint();
         pBotonVerde.setColor(Color.argb(225,129,157,80));
+        //pBotonVerde.setTextAlign(Paint.Align.CENTER);
+        pBotonVerde.setStyle(Paint.Style.FILL);
 
         pBotonBeige = new Paint();
         pBotonBeige.setColor(Color.argb(250,233,217,168));
 
-
         face=Typeface.createFromAsset(context.getAssets(),"fonts/PolandCannedIntoFuture-OxE3.ttf");
+
         tpBeige = new TextPaint();
         tpBeige.setTextSize(altoPantalla/10);
         tpBeige.setColor(Color.argb(250,233,217,168));
         tpBeige.setTypeface(face);
+        tpBeige.setTextAlign(Paint.Align.CENTER);
 
         tpVerde = new TextPaint();
         tpVerde.setTextSize(altoPantalla/10);
         tpVerde.setColor(Color.argb(225,129,157,80));
         tpVerde.setTypeface(face);
+        tpVerde.setTextAlign(Paint.Align.CENTER);
     }
 
+    /**
+     * Dibuja un fondo negro en el lienzo. Será el que tengan por defecto todas las pantallas.
+     * @param c
+     */
     public void dibuja(Canvas c){
+        c.drawColor(Color.BLACK);
     }
 
+    /**
+     * Función encargada de actualizar el movimiento en las escenas.
+     */
     public void actualizaFisica(){
     }
 
+    /**
+     * Gestiona las pulsaciones
+     * @param event evento
+     * @return -1 por defecto
+     */
     public int onTouchEvent(MotionEvent event){
         return -1;
     }

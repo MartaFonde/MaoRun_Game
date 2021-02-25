@@ -17,9 +17,9 @@ import com.example.juego.ElemEscena.Gato;
 import com.example.juego.Escenas.Escena1;
 import com.example.juego.Escenas.Escena2;
 import com.example.juego.Escenas.Escena3;
-import com.example.juego.MenuEscenas.GuardarRecord;
-import com.example.juego.MenuEscenas.MenuFinPartida;
-import com.example.juego.MenuEscenas.PantallaFinPartida;
+import com.example.juego.FinPartida.GuardarRecord;
+import com.example.juego.FinPartida.MenuFinPartida;
+import com.example.juego.FinPartida.PantallaFinPartida;
 import com.example.juego.MenuPpal.MenuAyuda;
 import com.example.juego.MenuPpal.MenuCreditos;
 import com.example.juego.MenuPpal.MenuOpciones;
@@ -72,32 +72,27 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
-     * Obtiene las coordenadas x,y y la acción de la pulsación. Al pulsar con un único dedo,
-     * se obtiene el valor que devuelve el mismo evento de la pantallaActual.
-     * Si este valor es -10 se ejecuta salir.
-     * Si el valor es distinto a -1 ejecuta cambiaPantalla pasándole ese valor.
-     * @param event
-     * @return true si el evento es capturado por la acción
+     * Recibe el valor devuelto por pantallaActual al pulsar la pantalla y en función de este valor
+     * sale de la aplicación o llama al método cambiaPantalla si el valor es distinto a -1 (-1 indica
+     * que no procede ningún cambio importante).
+     * @param event evento de pulsación
+     * @return true si el evento es controlado, false en caso contrario.
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         synchronized(surfaceHolder) {
-            int accion = event.getAction(); // Solo gestiona la pulsación de un dedo.
-            int x=(int)event.getX();
-            int y=(int)event.getY();
-
-            switch (accion){
-                case MotionEvent.ACTION_DOWN:
-                    numPantallaNueva = pantallaActual.onTouchEvent(event);
-                    if(numPantallaNueva == 0){
-                        salir();
-                        return true;
-                    }
-                    if(numPantallaNueva != -1 ) cambiaPantalla(numPantallaNueva);   //por defecto
+            if(event.getAction() == MotionEvent.ACTION_DOWN){
+                numPantallaNueva = pantallaActual.onTouchEvent(event);
+                if(numPantallaNueva == 0){
+                    mediaPlayer.stop();
+                    salir();
                     return true;
+                }
+                if(numPantallaNueva != -1) cambiaPantalla(numPantallaNueva);   //por defecto
+                return true;
             }
         }
-        return super.onTouchEvent(event);       //TODO como se doc esto??
+        return super.onTouchEvent(event);
     }
 
     /**
@@ -111,6 +106,10 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         ((Activity)context).finish();
     }
 
+    /**
+     * Lee el archivo de configuración de sonido, música y vibración. Si el archivo no existe
+     * o está corrupto, asigna por defecto estas variables a true.
+     */
     private void leerConfig(){
         try (FileInputStream fis = context.openFileInput("config.txt");
              InputStreamReader reader = new InputStreamReader(fis);
@@ -127,10 +126,11 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
-     * Gestiona el control de pantallas a partir de un número de Pantalla. Si el parámetro es distinto
-     * al número de pantalla de pantallaActual asigna a pantalla actual la correspondiente clase.
-     * @param nuevaPantalla número de pantalla que representa una posible nueva asignación de
-     *                      pantallaActual
+     * Gestiona el control de pantallas a partir del número de Pantalla. Si el parámetro es distinto
+     * al número de pantalla de pantallaActual procede un cambio de pantalla, y asigna a pantallaActual
+     * la correspondiente clase.
+     * @param nuevaPantalla número de pantalla que representa el número de la nueva pantalla o el
+     *  número de pantallaActual
      */
     public static void cambiaPantalla(int nuevaPantalla){
         if (pantallaActual.numPantalla != nuevaPantalla){
@@ -155,6 +155,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
                 case 8: pantallaActual = new Escena3(context, anchoPantalla, altoPantalla, 8, gato);
                     break;
                 case 9:
+                    mediaPlayer.stop();
                     boolean sinVidas = gato.numVidas==0? true : false;
                     pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9,
                            sinVidas , gato.puntos);
@@ -170,7 +171,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
-     * Se ejecuta cuendo cambia el tamaño de la pantalla
+     * Se ejecuta cuendo cambia el tamaño de la pantalla.
      * @param w nuevo ancho de pantalla
      * @param h nuevo alto de pantalla
      * @param oldw  antiguo ancho de pantalla
@@ -181,9 +182,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         super.onSizeChanged(w, h, oldw, oldh);
         this.anchoPantalla = w;
         this.altoPantalla = h;
-        //hilo.setSurfaceSize(w, h);
     }
-
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
@@ -192,7 +191,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * Se ejecuta si hay algún cambio en la superficie de dibujo. Obtenemos su nuevo tamaño.
-     * Si hay cambios, la pantalla MenuPrincipal es asignada a pantallaActual
+     * Si hay cambios, la pantalla MenuPrincipal es asignada a pantallaActual y se lanza el hilo.
      * @param holder
      * @param format
      * @param width ancho de pantalla
@@ -203,21 +202,16 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         anchoPantalla = width;
         altoPantalla = height;
 
-        //pantallaActual = new GuardarRecord(context, anchoPantalla, altoPantalla, 1, 3000);
-        //pantallaActual = new MenuRecords(context, anchoPantalla, altoPantalla, 1, true);
-
         pantallaActual = new MenuPrincipal(context, anchoPantalla, altoPantalla, 1);
-
 
         if (hilo.getState() == Thread.State.NEW) hilo.start();
         if (hilo.getState() == Thread.State.TERMINATED) {
             hilo.start();
         }
-        //hilo.setSurfaceSize(width, height);
     }
 
     /**
-     * Al finalizar el surface, se para el hilo
+     * Al finalizar el surface, se para el hilo.
      * @param holder
      */
     @Override
@@ -235,8 +229,9 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         /**
-         * Ejecuta las acciones del hilo. Ejecuta el método de dibujo y de física para que se haga
-         * en paralelo con la gestión de la interfaz de usuario.
+         * Ejecuta las acciones del hilo: llama al método dibujo y actualiza física para que se haga
+         * en paralelo con la gestión de la interfaz de usuario. Se repite en función del fragmento
+         * temporal estipulado.
          */
         @Override
         public void run() {
@@ -299,20 +294,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
             funcionando = flag;
         }
 
-        // Función llamada si cambia el tamaño del view
-//        public void setSurfaceSize(int width, int height) {
-//            synchronized (surfaceHolder) { // Se recomienda realizarlo de forma atómica
-//
-//                //escenaActual = new Escena1(context, 1, anchoPantalla, altoPantalla);
-//
-//            }
-//        }
-
-
     }
-
-
-
 }
 
 

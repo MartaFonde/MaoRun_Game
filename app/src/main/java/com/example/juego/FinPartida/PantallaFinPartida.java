@@ -1,22 +1,24 @@
-package com.example.juego.MenuEscenas;
+package com.example.juego.FinPartida;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 import com.example.juego.JuegoSV;
-import com.example.juego.Menu;
 import com.example.juego.Pantalla;
+import com.example.juego.R;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class PantallaFinPartida extends Menu {
+public class PantallaFinPartida extends Pantalla {
     RectF btnAvanzar;
     Bitmap avanzaBitmap;
     boolean sinVidas;
@@ -28,19 +30,23 @@ public class PantallaFinPartida extends Menu {
         this.sinVidas = sinVidas;
         this.puntos = puntos;
         this.monedas = Pantalla.escala(context, "moneda/monedas_controles.png", anchoPantalla/32*2, altoPantalla/16*2);
-        btnAvanzar = new RectF(anchoPantalla/32 * 29, altoPantalla/16 * 13, anchoPantalla, altoPantalla);
+        btnAvanzar = new RectF(anchoPantalla/32 * 28, altoPantalla/16 * 13, anchoPantalla, altoPantalla);
         avanzaBitmap = Pantalla.escala(context, "menu/menu_avance.png",
                 anchoPantalla / 32 * 3, altoPantalla/16*3);
 
         if(JuegoSV.musica){
+            JuegoSV.mediaPlayer = MediaPlayer.create(context, R.raw.bensound_highoctane);
+            JuegoSV.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            JuegoSV.mediaPlayer.setLooping(true);
+            JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen / 3, JuegoSV.volumen / 3);
             JuegoSV.mediaPlayer.start();
         }
-
     }
 
     /**
-     * Dibuja el texto correspondiente al final de la partida, el motivo de finalización.
-     * Dibuja dos botones (rect) como opciones a realizar y el texto indicativo
+     * Dibuja el texto indicando final de la partida, el motivo de finalización y la puntuación
+     * lograda con una imagen de monedas.
      * @param c lienzo
      */
     @Override
@@ -63,13 +69,12 @@ public class PantallaFinPartida extends Menu {
     }
 
     /**
-     * Obtiene las coordenadas de pulsación. Si los rect de los botones de opciones los contienen:
-     * si los contiene btnRepetir se hace un cambio de pantalla a Escena1; si los contiene btnMenuPpal
-     * se hace un cambio de pantalla a pantalla MenuPrincipal
-     * @param event
-     * @return 5 número de pantalla de Escena1, 1 número de pantalla de MenuPrincipal. Si los rect
-     * no contienen las coordenadas de la pulsación devuelve número de la pantalla actual (8) y no
-     * se hace cambio de pantalla
+     * Si las coordenadas de pulsación están contenidas en el rect del botón avanzar, llama a la
+     * función que comprueba si se logra superar algún récord.
+     * @param event evento
+     * @return 13 si se logra superar algún récord para avanzar a la pantalla GuardarRecord, en la que
+     * se pide el nombre y guarda el récord. Si no se consigue entrar en la lista de récords, devuelve
+     * 14, pantalla que muestra récords. Devuelve -1 si el rect del botón avanzar no contiene las coordenadas.
      */
     @Override
     public int onTouchEvent(MotionEvent event) {
@@ -88,6 +93,13 @@ public class PantallaFinPartida extends Menu {
         return super.onTouchEvent(event);
     }
 
+    /**
+     * Comprueba si en el fichero records están registrados menos de 5 récords o si el último récord
+     * es menor o igual que la variable puntos. Si se cumple alguna de esas condiciones, el récord
+     * puede ser guardado.
+     * @return true si la lista no está completa o si el récord supera o iguala la menor puntuación
+     * guardada, false en caso contrario.
+     */
     public boolean guardaRecord(){
         ArrayList<String> rec = new ArrayList<>();
         try (FileInputStream fis = context.openFileInput("records.txt");
@@ -95,7 +107,7 @@ public class PantallaFinPartida extends Menu {
              BufferedReader buffer = new BufferedReader(reader)) {
             String linea = "";
             while((linea = buffer.readLine()) != null){
-                rec.add(linea+("\n"));
+                rec.add(linea);
             }
         } catch (Exception e) {
             e.printStackTrace();

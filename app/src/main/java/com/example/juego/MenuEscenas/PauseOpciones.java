@@ -6,10 +6,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 import com.example.juego.JuegoSV;
 import com.example.juego.Pantalla;
+import com.example.juego.R;
 
 import java.io.FileOutputStream;
 
@@ -26,33 +29,20 @@ public class PauseOpciones extends PauseEscena {
     Bitmap sonidoDesactBitmap;
     Bitmap vibracionActBitmap;
     Bitmap vibracionDesactBitmap;
-    public Paint pAct;
-    public Paint pDesact;
 
     Bitmap atrasbtmp;
     RectF rectAtras;
-
     Paint pCircle;
-
     boolean cambios;
 
     public PauseOpciones(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
-
         cambios = false;
         pCircle = new Paint();
         pCircle.setColor(Color.argb(150, 255, 128, 128));
 
-        pAct = new Paint();
-        pAct.setColor(Color.GREEN);
-        pDesact = new Paint();
-        pDesact.setColor(Color.RED);
-        setRect();
-        tpBeige.setARGB(225,129,157,80);
-
-        atrasbtmp = Pantalla.escala(context, "menu/menu_atras.png", anchoPantalla/32*2, altoPantalla/16 *2);
-        tpBeige.setARGB(250,233,217,168);
-        setRect();
+        atrasbtmp = Pantalla.escala(context, "menu/menu_atras.png",
+                anchoPantalla/32*2, altoPantalla/16 *2);
 
         sonidoActBitmap = Pantalla.escala(context, "opciones/sonido_activado.png",
                 anchoPantalla/32*2, altoPantalla/16*2);
@@ -62,6 +52,8 @@ public class PauseOpciones extends PauseEscena {
                 anchoPantalla/32*2, altoPantalla/16*2);
         vibracionDesactBitmap = Pantalla.escala(context, "opciones/vibracion_desactivada.png",
                 anchoPantalla/32*2, altoPantalla/16*2);
+
+        setRect();
     }
 
     /**
@@ -71,10 +63,6 @@ public class PauseOpciones extends PauseEscena {
      */
     @Override
     public void dibuja(Canvas c) {
-        //super.dibuja(c);
-        //c.drawRect(rectAtras, null);
-        //c.drawBitmap(atrasbtmp, anchoPantalla/32*8, altoPantalla/16*2, null);
-
         tpBeige.setTextAlign(Paint.Align.CENTER);
         tpBeige.setTextSize(altoPantalla/15);
         c.drawText("OPCIONES", anchoPantalla/2, altoPantalla/16 * 3.5f, tpBeige);
@@ -109,26 +97,32 @@ public class PauseOpciones extends PauseEscena {
     }
 
     /**
-     * Inicializa los rect de activación/desactivación de sonido. música y vibración y el de retroceso
+     * Inicializa los rect de activación/desactivación de sonido. música y vibración y el de retroceso.
      */
     public void setRect() {
-        rectAtras = new RectF(anchoPantalla / 32 *8, altoPantalla/16*2, anchoPantalla/32*10, altoPantalla/16*4);
+        rectAtras = new RectF(anchoPantalla / 32 *8, altoPantalla/16*2,
+                anchoPantalla/32*10, altoPantalla/16*4);
 
-        rectSonAct = new RectF(anchoPantalla/32 * 16, altoPantalla / 16 * 4.5f, anchoPantalla/32 * 18, altoPantalla/16 * 6.5f);
-        rectSonDesact = new RectF(anchoPantalla/32 * 20, altoPantalla / 16 * 4.5f, anchoPantalla/32 * 22, altoPantalla/16 * 6.5f);
-        rectMusicaAct = new RectF(anchoPantalla/32 * 16, altoPantalla / 16 * 7.5f, anchoPantalla/32 * 18, altoPantalla/16 * 9.5f);
-        rectMusicaDesact = new RectF(anchoPantalla/32 * 20, altoPantalla / 16 * 7.5f, anchoPantalla/32 * 22, altoPantalla/16 * 9.5f);
-        rectVibracionAct = new RectF(anchoPantalla/32 * 16, altoPantalla / 16 * 10.5f, anchoPantalla/32 * 18, altoPantalla/16 * 12.5f);
-        rectVibracionDesact = new RectF(anchoPantalla/32 * 20, altoPantalla / 16 * 10.5f, anchoPantalla/32 * 22, altoPantalla/16 * 12.5f);
+        rectSonAct = new RectF(anchoPantalla/32 * 16, altoPantalla / 16 * 4.5f,
+                anchoPantalla/32 * 18, altoPantalla/16 * 6.5f);
+        rectSonDesact = new RectF(anchoPantalla/32 * 20, altoPantalla / 16 * 4.5f,
+                anchoPantalla/32 * 22, altoPantalla/16 * 6.5f);
+        rectMusicaAct = new RectF(anchoPantalla/32 * 16, altoPantalla / 16 * 7.5f,
+                anchoPantalla/32 * 18, altoPantalla/16 * 9.5f);
+        rectMusicaDesact = new RectF(anchoPantalla/32 * 20, altoPantalla / 16 * 7.5f,
+                anchoPantalla/32 * 22, altoPantalla/16 * 9.5f);
+        rectVibracionAct = new RectF(anchoPantalla/32 * 16, altoPantalla / 16 * 10.5f,
+                anchoPantalla/32 * 18, altoPantalla/16 * 12.5f);
+        rectVibracionDesact = new RectF(anchoPantalla/32 * 20, altoPantalla / 16 * 10.5f,
+                anchoPantalla/32 * 22, altoPantalla/16 * 12.5f);
     }
 
     /**
      * Obtiene la coordenada de las pulsaciones. Si se presiona sobre algún rect de activación/
-     * desactivación se gestiona la acción en la clase padre MenuOpciones. Comprueba si se
-     * presiona sobre el rect de retroceso y si es así se vuelve a pantalla PauseMenu mediante el
-     * retorno de su número de pantalla.
+     * desactivación se realizan los cambios. Si se presiona sobre el rect de retroceso y se han
+     * hecho cambios llama a la función que guarda la configuración y se vuelve a pantalla PauseMenu.
      * @param event
-     * @return 10 para volver a pantalla PauseMenu, -1 en caso contrario
+     * @return 10 para volver a pantalla PauseMenu, -1 en caso contrario.
      */
     @Override
     public int onTouchEvent(MotionEvent event) {
@@ -156,15 +150,18 @@ public class PauseOpciones extends PauseEscena {
                     if (!JuegoSV.musica) {
                         JuegoSV.musica = true;
                         cambios = true;
+                        JuegoSV.mediaPlayer= MediaPlayer.create(context, R.raw.city_ambience);
+                        JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                        JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen/3, JuegoSV.volumen/3);
+                        JuegoSV.mediaPlayer.setLooping(true);
                         JuegoSV.mediaPlayer.start();
                     }
                 } else if (rectMusicaDesact.contains(x, y)) {     //TODO
                     if (JuegoSV.musica) {
                         JuegoSV.musica = false;
                         cambios = true;
-                        JuegoSV.mediaPlayer.pause();
+                        JuegoSV.mediaPlayer.stop();
                     }
-
                 } else if (rectVibracionAct.contains(x, y)) {
                     if (!JuegoSV.vibracion){
                         JuegoSV.vibracion = true;
@@ -176,12 +173,14 @@ public class PauseOpciones extends PauseEscena {
                         cambios = true;
                     }
                 }
-
             }
         }
         return -1;
     }
 
+    /**
+     * Guarda la configuración de sonido, música y vibración en el fichero config.
+     */
     private void guardarConfig(){
         try(FileOutputStream fos = context.openFileOutput("config.txt", Context.MODE_PRIVATE)){
             fos.write((JuegoSV.sonido+"\n").getBytes());

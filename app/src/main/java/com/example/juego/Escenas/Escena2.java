@@ -17,11 +17,8 @@ public class Escena2 extends Escena {
 
     public Escena2(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
         super(context, anchoPantalla, altoPantalla, numPantalla, gato);
-
         fondo = Pantalla.getBitmapFromAssets(context, "mapas/mapa_nivel2.png");
-        //fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.mapa_nivel2);
         setFondo(fondo);
-
         setArbolesRect();
         setPosicionMonedas();
         gato.setVelocidad(anchoPantalla / (32*2.5f));
@@ -30,7 +27,7 @@ public class Escena2 extends Escena {
     }
 
     /**
-     * Dibuja en lienzo función dibuja de clase padre Escena
+     * Dibuja en lienzo dibuja de clase Escena.
      * @param c lienzo
      */
     @Override
@@ -44,8 +41,8 @@ public class Escena2 extends Escena {
      * Si el rect de gato interseca el rect marcado para el cambio de escena, se cambia de escena:
      * se reposiciona gato y se devuelve el número de la nueva escena
      * @param event
-     * @return incremento de numPantalla si se supera el nivel, numPantalla (7) si no y no se hace
-     * cambio de pantalla
+     * @return incremento de numPantalla a 8 si se supera el nivel. En caso contrario, se retorna
+     * el numPantalla de esta escena (7) y no se hace cambio de pantalla.
      */
     @Override
     public int onTouchEvent(MotionEvent event) {
@@ -66,16 +63,15 @@ public class Escena2 extends Escena {
         return super.onTouchEvent(event);
     }
 
-
     /**
-     * Inicializa los rect de arboles según las posiciones determinadas por el fondo y los ajusta
+     * Inicializa los rect de arboles según las posiciones determinadas por los árboles de fondo y los ajusta.
      */
     public void setArbolesRect(){
         arbolesRect = new RectF[25];
         //fila1
         arbolesRect[0] = new RectF(0, propH  * 13 * 1.02f, propW  * 6 , altoPantalla);
         arbolesRect[1] = new RectF(propW * 6, propH  * 14 * 1.02f, propW * 7 *0.99f, altoPantalla);
-        arbolesRect[2] = new RectF(propW  * 7, propH  * 15 * 1.015f, propW  * 14 * 0.99f, altoPantalla);
+        arbolesRect[2] = new RectF(propW  * 7, propH  * 15 * 1.02f, propW  * 14 * 0.99f, altoPantalla);
         arbolesRect[3] = new RectF(propW  * 9 * 1.015f, propH  * 13 * 1.007f, propW * 11 * 1.01f, propH * 14);
         arbolesRect[4] = new RectF(propW  * 19 * 1.015f, propH  * 13 * 1.02f, propW  * 21 , propH * 14);
         arbolesRect[5] = new RectF(propW  * 17 * 1.025f, propH  * 15 * 1.02f, propW  * 23 , altoPantalla);
@@ -110,28 +106,43 @@ public class Escena2 extends Escena {
      * La imagen del coche será una imagen aleatoria del array de imágenes de la dirección del
      * coche.
      * Los índices pares son coches que circulan hacia la derecha, y los impares coches que circulan
-     * hacia la izquierda. Esto facilita la ejecución del movimiento en la función actualiza física
-     * de Escena.
+     * hacia la izquierda.
      */
     public void setCoches(){
-        trafico.coches[0] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], anchoPantalla / 2, altoPantalla / 16 * 11, velocidadCoches);
-        trafico.coches[1] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)], anchoPantalla / 5, altoPantalla / 16 * 10, velocidadCoches);
-        trafico.coches[2] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], -trafico.anchoCoche, altoPantalla / 16 * 11, velocidadCoches);
-        trafico.coches[3] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 10, velocidadCoches);
+        trafico.coches[0] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla / 2, altoPantalla / 16 * 11, velocidadCoches);
+        trafico.coches[1] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla / 5, altoPantalla / 16 * 10, velocidadCoches);
+        trafico.coches[2] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
+                -trafico.anchoCoche, altoPantalla / 16 * 11, velocidadCoches);
+        trafico.coches[3] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla, altoPantalla / 16 * 10, velocidadCoches);
 
-        trafico.coches[4] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], anchoPantalla / 7, altoPantalla / 16 * 8, velocidadCoches);
-        trafico.coches[5] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 7, velocidadCoches);
-        trafico.coches[6] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], anchoPantalla, altoPantalla / 16 * 8, velocidadCoches);
-        trafico.coches[7] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)], anchoPantalla/2, altoPantalla / 16 * 7, velocidadCoches);
+        trafico.coches[4] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla / 7, altoPantalla / 16 * 8, velocidadCoches);
+        trafico.coches[5] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla, altoPantalla / 16 * 7, velocidadCoches);
+        trafico.coches[6] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla, altoPantalla / 16 * 8, velocidadCoches);
+        trafico.coches[7] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla/2, altoPantalla / 16 * 7, velocidadCoches);
 
-        trafico.coches[8] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], -trafico.anchoCoche, altoPantalla / 16 * 6, velocidadCoches);
-        trafico.coches[9] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)], anchoPantalla, altoPantalla /16 * 5, velocidadCoches);
-        trafico.coches[10] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], anchoPantalla/2, altoPantalla /16 * 6, velocidadCoches);
-        trafico.coches[11] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)], anchoPantalla/3, altoPantalla / 16 * 5, velocidadCoches);
+        trafico.coches[8] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
+                -trafico.anchoCoche, altoPantalla / 16 * 6, velocidadCoches);
+        trafico.coches[9] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla, altoPantalla /16 * 5, velocidadCoches);
+        trafico.coches[10] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla/2, altoPantalla /16 * 6, velocidadCoches);
+        trafico.coches[11] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla/3, altoPantalla / 16 * 5, velocidadCoches);
 
-        trafico.coches[12] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], anchoPantalla / 16, altoPantalla /16 *3, velocidadCoches);
-        trafico.coches[13] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)], -trafico.anchoCoche, altoPantalla / 16 * 2, velocidadCoches);
-        trafico.coches[14] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], anchoPantalla/3, altoPantalla / 16 * 3, velocidadCoches);
-        trafico.coches[15] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)], anchoPantalla/2, altoPantalla / 16 * 2, velocidadCoches);
+        trafico.coches[12] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla / 16, altoPantalla /16 *3, velocidadCoches);
+        trafico.coches[13] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
+                -trafico.anchoCoche, altoPantalla / 16 * 2, velocidadCoches);
+        trafico.coches[14] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla/3, altoPantalla / 16 * 3, velocidadCoches);
+        trafico.coches[15] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla/2, altoPantalla / 16 * 2, velocidadCoches);
     }
 }

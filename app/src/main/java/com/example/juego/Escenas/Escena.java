@@ -16,7 +16,6 @@ import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
 import com.example.juego.ElemEscena.Controles;
 import com.example.juego.ElemEscena.Gato;
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 abstract public class Escena extends Pantalla {
     Context context;
     Bitmap fondo;
-    int numEscena;
     int anchoPantalla;
     int altoPantalla;
 
@@ -65,13 +63,10 @@ abstract public class Escena extends Pantalla {
     Bitmap vidaBitmap;
     Bitmap monedasPuntuacionBitmap;
 
-    //AudioManager audioManager;
     SoundPool efectosSonido;
     int sonidoCoche, sonidoGato, sonidoMoneda;
     final int maxSonidosSimultaneos = 10;
-    //static MediaPlayer mediaPlayer;
     int actualizaVolumen = 0;
-    //int volumen;
 
     Vibrator vibrator;
 
@@ -83,11 +78,9 @@ abstract public class Escena extends Pantalla {
 
     public Escena(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
         super(context, anchoPantalla,altoPantalla, numPantalla);
-
         this.context = context;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
-
         this.propW = anchoPantalla / 32;
         this.propH = altoPantalla / 16;
 
@@ -110,8 +103,10 @@ abstract public class Escena extends Pantalla {
         this.gato = gato;
 
         setPaintPuntuacion();
-        vidaBitmap = Pantalla.escala(context, "gato/heart.png",  anchoPantalla / 32, altoPantalla / 16);
-        monedasPuntuacionBitmap = Pantalla.escala(context, "moneda/monedas_controles.png", anchoPantalla / 32, altoPantalla / 16);
+        vidaBitmap = Pantalla.escala(context, "gato/heart.png",
+                anchoPantalla / 32, altoPantalla / 16);
+        monedasPuntuacionBitmap = Pantalla.escala(context, "moneda/monedas_controles.png",
+                anchoPantalla / 32, altoPantalla / 16);
 
         setSonidosMusica();
 
@@ -124,7 +119,7 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Establece el fondo de la escena adaptándolo al ancho y alto de la pantalla
+     * Establece el fondo de la escena adaptándolo al ancho y alto de la pantalla.
      * @param fondo imagen de fondo
      */
     public void setFondo(Bitmap fondo) {
@@ -132,7 +127,7 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Dibuja fondo de escena
+     * Dibuja fondo de escena.
      * @param c lienzo
      */
     public void dibujaFondo(Canvas c){
@@ -143,8 +138,8 @@ abstract public class Escena extends Pantalla {
      * Dibuja todos los elementos de Escena: fondo, monedas, coches, gato, puntuación, controles y
      * botón de pausa. Si el juego está en pausa, además de dibujar todos los elementos, dibuja
      * lo correspondiente en la función dibuja de pantallaPause.
-     * Si se produce colisión con coche, se dibuja fondo rojo
-     * @param c
+     * Si se produce colisión con coche, se dibuja fondo rojo momentáneo.
+     * @param c lienzo
      */
     @Override
     public void dibuja(Canvas c){
@@ -159,14 +154,11 @@ abstract public class Escena extends Pantalla {
             gato.dibujaGato(c);
             dibujaPuntuacion(c);
             controles.dibujaControles(c);
-
-            //rectPausa = new RectF(propW * 0.5f, propH * 0.5f, propW*2.5f, propH*2.5f);
             c.drawBitmap(bitmapPausa, propW * 0.5f, propH*0.5f, pPausa);
 
             if(pause){
                 pantallaPause.dibuja(c);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -176,10 +168,10 @@ abstract public class Escena extends Pantalla {
      * Realiza el movimiento automático del juego, actualizando las posiciones de cada coche de tráfico.
      * Comprueba si el rect de cada coche colisiona con el rect de gato, y si es así, produce sonidos,
      * vibración y resta una vida. Comprueba que el gato sigue teniendo vidas después de la colisión.
-     * Si vidas es cero, ejecuta cambiaPantalla a pantalla finPartida.
+     * Si vidas es cero, ejecuta cambiaPantalla a pantalla FinPartida.
      * Si la pantalla está en pause no hace nada.
      */
-    public void actualizaFisica() {        //movimiento automatico del juego
+    public void actualizaFisica() {
         if (trafico.coches.length > 0 && !pause) {
             for (int i = 0; i < trafico.coches.length; i++) {
                 nuevoCoche = i;
@@ -194,10 +186,10 @@ abstract public class Escena extends Pantalla {
                 if (trafico.coches[i].rectangulo.intersect(gato.rectangulo) && nuevoCoche != cocheColision) {
                     colisionCoche = true;
                     if(JuegoSV.sonido){
-                        if(actualizaVolumen % 10 == 0){
-                            JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                        }
-                        actualizaVolumen++;
+//                        if(actualizaVolumen % 10 == 0){
+//                            JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//                        }
+                        //actualizaVolumen++;
                         efectosSonido.play(sonidoCoche, JuegoSV.volumen, JuegoSV.volumen, 1, 0, 1);
                         efectosSonido.play(sonidoGato, JuegoSV.volumen, JuegoSV.volumen, 1, 0, 1);
                     }
@@ -206,14 +198,12 @@ abstract public class Escena extends Pantalla {
                     }
                     cocheColision = i;
                     gato.numVidas--;
-                        //para que dibuxe pantalla roja
                     if(gato.numVidas == 0){
-                       //JuegoSV.pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9, true, gato.puntos);
                         JuegoSV.mediaPlayer.stop();
                         JuegoSV.cambiaPantalla(9);
                     }
                 }
-                //Cando coche colisión deixe de interset o xogador, xa podería volver colisionar
+                //Cuando el coche colisión deje de interset el jugador, ya podría volver a colisionar
                 if (cocheColision != -1 && !trafico.coches[cocheColision].rectangulo.intersect(gato.rectangulo)) {
                     cocheColision = -1;
                 }
@@ -232,8 +222,8 @@ abstract public class Escena extends Pantalla {
      * Si el rect pause contiene las coordenadas, se pausa la dinámica del juego y se crea PauseMenu.
      * Si el juego está pausado, y el TouchEvent de pantallaPause retorna 0, las dinámicas del juego
      * vuelven a funcionar.
-     * Si ningún rect contiene las coordenadas, la imagen del gato es sprite gato parado.
-     * @param event
+     * Si ningún rect contiene las coordenadas, la imagen del gato es el gato parado.
+     * @param event evento
      * @return número de Escena
      */
     public int onTouchEvent(MotionEvent event){
@@ -264,9 +254,8 @@ abstract public class Escena extends Pantalla {
                     pause = true;
                     pantallaPause = new PauseEscena(context, anchoPantalla, altoPantalla, 10);
                 } else{
-                    gato.parado(); //TODO mirar onde meter isto
+                    gato.parado();
                 }
-
             }
         }else{
             int aux = pantallaPause.onTouchEvent(event);
@@ -278,16 +267,14 @@ abstract public class Escena extends Pantalla {
                 pause = false;
             }
         }
-        //return numEscena;
         return numPantalla;
     }
 
     /**
-     * Compruebo si la posición futura de gato colisiona con algún rect Arbol para comprobar si el
+     * Comprueba si la posición futura de gato colisiona con algún rect Arbol para comprobar si el
      * gato puede efectuar el movimiento.
      * @param posFutura posición futura de gato
-     * @return true si colisiona (el gato no puede efectuar movimiento), false si no colisiona
-     * (el gato sí puede efectuar movimiento)
+     * @return true si colisiona (el gato no puede efectuar movimiento), false en caso contrario.
      */
     public boolean colisionArboles(RectF posFutura) {
         for (RectF arbol : arbolesRect) {
@@ -300,36 +287,36 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Compruebo si el rect de gato colisiona con algún rect de monedas. Si colisiona, se ejecuta
-     * el sonido correspondiente si está activado sonido, incremento la variable puntos de gato y
-     * elimino el rect de la colección monedas
+     * Comprueba si el rect de gato colisiona con algún rect de monedas. Si colisiona, se ejecuta
+     * el sonido correspondiente si está activado sonido, incrementa la variable puntos de gato y
+     * elimina el rect de la colección monedas.
      */
     public void colisionMonedas(){
         for (int i = monedasRect.size() -1 ; i >= 0; i--) {
             if(monedasRect.get(i).intersect(gato.rectangulo)){
                 if(JuegoSV.sonido){
-                    if(actualizaVolumen % 10 == 0){
-                        JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                    }
+//                    if(actualizaVolumen % 10 == 0){
+//                        JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//                    }
                     efectosSonido.play(sonidoMoneda, JuegoSV.volumen, JuegoSV.volumen, 1, 0, 1);
-                    actualizaVolumen++;
+                    //actualizaVolumen++;
                 }
                 gato.puntos+=100;
                 monedasRect.remove(i);
-                //posicionMonedas.remove(i);
-                //break;
+                break;
             }
         }
     }
 
     /**
-     * Creo el array de imágenes de moneda a partir de la imagen que las contiene todas para crear
-     * la animación, y asigno a monedaActual la imagen en la que la moneda estaría estática
+     * Crea el array de imágenes de moneda a partir de la imagen que las contiene todas para crear
+     * la animación, y asigna a monedaActual la imagen en la que la moneda está estática.
      * @param conjuntoMonedas imagen que contiene todas las imágenes de moneda
      */
     public void setBitmapMoneda(Bitmap conjuntoMonedas){
         for (int i = 0; i < monedas.length; i++) {
-            monedas[i] = Bitmap.createBitmap(conjuntoMonedas, conjuntoMonedas.getWidth()/5*i, 0, anchoMoneda, altoMoneda);
+            monedas[i] = Bitmap.createBitmap(conjuntoMonedas, conjuntoMonedas.getWidth()/5*i,
+                    0, anchoMoneda, altoMoneda);
         }
         this.monedaActual = monedas[0];
     }
@@ -342,8 +329,8 @@ abstract public class Escena extends Pantalla {
      * monedasRect.
      * Para que las monedas no se situen muy en los extremos de la pantalla se limita la superficie
      * en la que pueden aparecer las monedas en con respecto a ancho y alto pantalla.
-     * Se calcularán posiciones hasta que el tamaño de la colección monedasRect se corresponda con
-     * el total monedas.
+     * Se calculan posiciones hasta que el tamaño de la colección monedasRect se corresponda con
+     * el valor de la variable totalMonedas.
      */
     public void setPosicionMonedas(){
         float x;
@@ -378,7 +365,6 @@ abstract public class Escena extends Pantalla {
 
             if(posValida){
                 monedasRect.add(new RectF(x, y, x+anchoMoneda, y+altoMoneda));
-                //posicionMonedas.add(new PointF(x,y));
             }
         }
     }
@@ -386,10 +372,9 @@ abstract public class Escena extends Pantalla {
     /**
      * Si la escena no está en pause, actualiza el valor de monedaActual según la animación y recrea
      * y reasigna los rect de monedas según sus coordenadas left, top y sus medidas, porque en la
-     * dinámica cambian las dimensiones de algunos rect y la colisión con el rect de gato se hace
-     * imperfecta y variante.
+     * dinámica cambian las dimensiones de algunos rect.
      * Dibuja la imagen monedaActual en cada una de las posiciones de monedasRect
-     * @param c
+     * @param c lienzo
      */
     public void dibujaMonedas(Canvas c){
         if(!pause){
@@ -397,8 +382,6 @@ abstract public class Escena extends Pantalla {
                 monedaActual = actualizaImagenMoneda();     //bitmap de la animacion de moneda que se va a mostrar
             }
         }
-        //Repintando os rect de monedasRect algúns cambiaban de dimensions ancho + alto
-        //Gardo pos left, top e repinto coas súas medidas. Volvo asignar a monedasRect
         for (int i = 0; i < monedasRect.size(); i++) {
             monedasRect.set(i, new RectF(monedasRect.get(i).left, monedasRect.get(i).top,
                     monedasRect.get(i).left+anchoMoneda, monedasRect.get(i).top + altoMoneda));
@@ -408,7 +391,7 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Actualiza la imagen animada de moneda apartir del array de imágenes moneda
+     * Actualiza la imagen de moneda apartir del array de imágenes de moneda.
      * @return imagen que será la actual de moneda
      */
     public Bitmap actualizaImagenMoneda() {
@@ -430,18 +413,14 @@ abstract public class Escena extends Pantalla {
         pPuntuacion.setColor(Color.GRAY);
         pPuntuacion.setStyle(Paint.Style.FILL);
         pPuntuacion.setAlpha(150);
-
-        //textPaint = new TextPaint();
-        //textPaint.setTypeface(face);
-        tpBeige.setTextSize(altoPantalla / 20); // tamaño del texto en pixels
-        //textPaint.setTextAlign(Paint.Align.CENTER); // Alineación del texto
-        tpBeige.setColor(Color.BLACK); // C
+        tpBeige.setTextSize(altoPantalla / 20);
+        tpBeige.setColor(Color.BLACK);
     }
 
     /**
-     * Dibuja el rect de fondo de la puntuación, tantas imágenes de vidaBitmap como vidas tenga el
-     * gato, el número correspondiente a la puntuación y monedasPuntuaciónBitmap a la derecha del número
-     * @param c
+     * Dibuja el rect de fondo de la puntuación, tantos corazones como vidas tenga el gato, el
+     * número correspondiente a la puntuación y una imagen de monedas a la derecha del número.
+     * @param c lienzo
      */
     public void dibujaPuntuacion(Canvas c){
         puntuacionRect = new RectF(anchoPantalla/32*24, 0, anchoPantalla, altoPantalla/16*2.5f);
@@ -454,10 +433,9 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Inicializa los sonidos y la música
+     * Inicializa los sonidos y la música.
      */
     public void setSonidosMusica(){
-        //JuegoSV.audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         if ((android.os.Build.VERSION.SDK_INT) >= 21) {
             SoundPool.Builder spb=new SoundPool.Builder();
             spb.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
@@ -473,6 +451,7 @@ abstract public class Escena extends Pantalla {
         sonidoMoneda = efectosSonido.load(context, R.raw.sonido_monedas, 1);
 
         if(numPantalla == 6){
+            //JuegoSV.mediaPlayer.stop();
             JuegoSV.mediaPlayer= MediaPlayer.create(context,R.raw.city_ambience);
             JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
             JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen/3, JuegoSV.volumen/3);
@@ -485,7 +464,7 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Inicializa el vibrador
+     * Inicializa el vibrador.
      */
     public void efectoVibracion(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -497,13 +476,13 @@ abstract public class Escena extends Pantalla {
 
     /**
      * Inicializa el array de los rect de árboles. Las posiciones de los rect y el tamaño del array
-     * dependen de cada escena
+     * dependen de cada escena.
      */
     abstract  void setArbolesRect();
 
     /**
      * Inicializa el array de los rect de coches. Las posiciones de los coches dependen de
-     * cada escena
+     * cada escena.
      */
     abstract void setCoches();
 

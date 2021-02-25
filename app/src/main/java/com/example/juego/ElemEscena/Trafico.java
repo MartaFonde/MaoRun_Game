@@ -25,12 +25,9 @@ public class Trafico {
         this.context = context;
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
-
         this.anchoCoche = anchoPantalla/32;
         this.altoCoche = altoPantalla/16;
-
         coches = new Coche[16];
-
         setImgCochesRight();
         setImgCochesLeft();
     }
