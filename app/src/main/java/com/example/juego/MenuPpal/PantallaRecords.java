@@ -50,7 +50,7 @@ public class PantallaRecords extends Pantalla {
 
     /**
      * Dibuja el fondo negro, el botón de retroceso si es opción de menú principal o botón de avance
-     * si se muestra al final de la partida, y los réccords.
+     * si se muestra al final de la partida, y los récords.
      * @param c lienzo
      */
     @Override
@@ -62,7 +62,9 @@ public class PantallaRecords extends Pantalla {
         }else{
             c.drawBitmap(avanzaBitmap,anchoPantalla/32 * 29, altoPantalla/16 * 13, null );
         }
+        tpVerde.setTextSize(altoPantalla/10);
         c.drawText("RÉCORDS", anchoPantalla / 2, altoPantalla / 16 * 2, tpVerde);
+        tpVerde.setTextSize(altoPantalla/12);
         for (int i = 0; i < records.size(); i++) {
             c.drawText(records.get(i), anchoPantalla / 32 * POS_X, altoPantalla/16 * y, tpVerde);
             y += 2.5f;

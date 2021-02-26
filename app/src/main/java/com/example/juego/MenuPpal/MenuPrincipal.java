@@ -5,10 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.juego.JuegoSV;
 import com.example.juego.R;
+
+import java.io.IOException;
 
 public class MenuPrincipal extends Menu {
 
@@ -22,13 +25,12 @@ public class MenuPrincipal extends Menu {
     public MenuPrincipal(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
         setBotonesRect();
-
         if(JuegoSV.musica  && JuegoSV.restartMusica) {
             JuegoSV.mediaPlayer = MediaPlayer.create(context, R.raw.bensound_highoctane);
-            JuegoSV.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            //JuegoSV.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             JuegoSV.mediaPlayer.setLooping(true);
             JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-            JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen / 3, JuegoSV.volumen / 3);
+            JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen, JuegoSV.volumen );
             JuegoSV.mediaPlayer.start();
         }
     }
@@ -88,7 +90,7 @@ public class MenuPrincipal extends Menu {
     }
 
     /**
-     * Instancia los rect que representan los botones de las opciones de menú.
+     * Instancia los rect de los botones que representan los botones de las opciones de menú.
      */
     public void setBotonesRect(){
         btnJugar = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16,

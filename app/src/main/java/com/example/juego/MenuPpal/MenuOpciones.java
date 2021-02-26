@@ -123,7 +123,7 @@ public class MenuOpciones extends Menu {
         float y = event.getY();
 
         if(event.getAction() == MotionEvent.ACTION_DOWN){
-            int aux=super.onTouchEvent(event);  //se se pulsa btnAtras volve a mnu ppal -- menu return 1
+            int aux=super.onTouchEvent(event);  //si se pulsa btnAtras vuelve a mnu ppal -- menu return 1
             if (aux == 1){
                 if(cambios){
                     guardarConfig();
@@ -143,8 +143,7 @@ public class MenuOpciones extends Menu {
                     JuegoSV.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     JuegoSV.mediaPlayer.setLooping(true);
                     JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                    JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen / 3, JuegoSV.volumen / 3);
-                    //JuegoSV.mediaPlayer.prepareAsync();
+                    JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen, JuegoSV.volumen);
                     JuegoSV.mediaPlayer.start();
                 } else if(rectMusicaDesact.contains(x,y) && JuegoSV.musica) {
                     JuegoSV.musica = false;
@@ -165,7 +164,7 @@ public class MenuOpciones extends Menu {
     }
 
     /**
-     * Reescribe el archivo que guarda los récords para que quede vacío.
+     * Reescribe el archivo que guarda los récords para que eliminarlos.
      */
     private void reiniciarRecords(){
         try(FileOutputStream fos = context.openFileOutput("records.txt", Context.MODE_PRIVATE)){

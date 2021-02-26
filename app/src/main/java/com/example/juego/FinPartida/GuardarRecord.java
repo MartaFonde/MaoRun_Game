@@ -69,8 +69,10 @@ public class GuardarRecord extends Pantalla {
         c.drawBitmap(avanzaBitmap, btnAvanza.left, btnAvanza.top, null);
         c.drawText("GUARDAR RÉCORD", anchoPantalla/2, altoPantalla/16 * 2, tpBeige);
 
+        tpBeige.setTextSize(altoPantalla/12);
         c.drawRect(btnborrar, pBorrar);
         c.drawText("Borrar", (btnborrar.left + btnborrar.right)/2, btnborrar.bottom - propH/2, tpBeige);
+        tpBeige.setTextSize(altoPantalla/10);
         c.drawRect(btnOK, pOk);
         c.drawText("OK", (btnOK.left + btnOK.right)/2, btnOK.bottom - propH/2, tpBeige);
 

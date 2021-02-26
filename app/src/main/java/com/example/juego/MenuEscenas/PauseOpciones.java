@@ -152,7 +152,7 @@ public class PauseOpciones extends PauseEscena {
                         cambios = true;
                         JuegoSV.mediaPlayer= MediaPlayer.create(context, R.raw.city_ambience);
                         JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                        JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen/3, JuegoSV.volumen/3);
+                        JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen, JuegoSV.volumen);
                         JuegoSV.mediaPlayer.setLooping(true);
                         JuegoSV.mediaPlayer.start();
                     }

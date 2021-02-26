@@ -15,6 +15,7 @@ import android.media.SoundPool;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.juego.ElemEscena.Controles;
@@ -89,7 +90,6 @@ abstract public class Escena extends Pantalla {
         this.anchoMoneda = anchoPantalla/32;
         this.altoMoneda = altoPantalla/16;
         this.imagenMoneda = Pantalla.escala(context, "moneda/moneda.png" , anchoMoneda*5, altoMoneda);
-        monedas = new Bitmap[5];
         setBitmapMoneda(imagenMoneda);
 
         p = new Paint();
@@ -314,9 +314,11 @@ abstract public class Escena extends Pantalla {
      * @param conjuntoMonedas imagen que contiene todas las imágenes de moneda
      */
     public void setBitmapMoneda(Bitmap conjuntoMonedas){
+        monedas = new Bitmap[5];
         for (int i = 0; i < monedas.length; i++) {
+            Log.i("aaa2",  conjuntoMonedas.getWidth()/5+ " - "+conjuntoMonedas.getWidth());
             monedas[i] = Bitmap.createBitmap(conjuntoMonedas, conjuntoMonedas.getWidth()/5*i,
-                    0, anchoMoneda, altoMoneda);
+                    0, conjuntoMonedas.getWidth()/5, altoMoneda);
         }
         this.monedaActual = monedas[0];
     }
@@ -454,7 +456,7 @@ abstract public class Escena extends Pantalla {
             //JuegoSV.mediaPlayer.stop();
             JuegoSV.mediaPlayer= MediaPlayer.create(context,R.raw.city_ambience);
             JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-            JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen/3, JuegoSV.volumen/3);
+            JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen, JuegoSV.volumen);
             JuegoSV.mediaPlayer.setLooping(true);
         }
 

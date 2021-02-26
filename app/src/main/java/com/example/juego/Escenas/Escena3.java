@@ -97,8 +97,7 @@ public class Escena3 extends Escena {
      * La imagen del coche será una imagen aleatoria del array de imágenes de la dirección del
      * coche.
      * Los índices pares son coches que circulan hacia la derecha, y los impares coches que circulan
-     * hacia la izquierda. Esto facilita la ejecución del movimiento en la función actualiza física
-     * de Escena.
+     * hacia la izquierda.
      */
     public void setCoches() {
         trafico.coches[0] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)], anchoPantalla / 2, altoPantalla / 16 * 11, velocidadCoches);

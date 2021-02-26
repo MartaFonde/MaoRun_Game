@@ -47,6 +47,5 @@ public class MenuCreditos extends Menu {
         c.drawText("www.freesoundslibrary.com", anchoPantalla/32 * 16, altoPantalla / 16 * 12, tpVerde);
         c.drawText("www.soundeffectsplus.com", anchoPantalla/32 * 16, altoPantalla / 16 * 13.5f, tpVerde);
         c.drawText("www.bensound.com", anchoPantalla/32 * 16, altoPantalla / 16 * 15, tpVerde);
-
     }
 }

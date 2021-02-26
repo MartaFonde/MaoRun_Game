@@ -21,7 +21,12 @@ public class MainActivity extends AppCompatActivity {
     JuegoSV juego;
     private boolean pausa=false;
 
-    //@RequiresApi(api = Build.VERSION_CODES.M)
+    /**
+     * Establece la pantalla completa en horizontal, oculta la barra de navegación y la ActionBar
+     * y crea el View que será el juego. También establece la pantalla siempre encendida.
+     * @param savedInstanceState
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +74,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (pausa && juego.mediaPlayer != null) juego.mediaPlayer.start();
+        if (pausa && juego.mediaPlayer != null)  juego.mediaPlayer.start();
     }
 }

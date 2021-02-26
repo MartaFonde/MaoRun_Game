@@ -62,7 +62,7 @@ abstract public class Pantalla {
     }
 
     /**
-     * Función encargada de actualizar el movimiento en las escenas.
+     * Actualiza el movimiento en las escenas.
      */
     public void actualizaFisica(){
     }
@@ -120,7 +120,5 @@ abstract public class Pantalla {
             return null;
         }
     }
-
-
 }
 

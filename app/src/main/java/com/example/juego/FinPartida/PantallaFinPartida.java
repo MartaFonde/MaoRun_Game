@@ -29,7 +29,8 @@ public class PantallaFinPartida extends Pantalla {
         super(context, anchoPantalla, altoPantalla, numPantalla);
         this.sinVidas = sinVidas;
         this.puntos = puntos;
-        this.monedas = Pantalla.escala(context, "moneda/monedas_controles.png", anchoPantalla/32*2, altoPantalla/16*2);
+        this.monedas = Pantalla.escala(context, "moneda/monedas_controles.png",
+                anchoPantalla/32*2, altoPantalla/16*2);
         btnAvanzar = new RectF(anchoPantalla/32 * 28, altoPantalla/16 * 13, anchoPantalla, altoPantalla);
         avanzaBitmap = Pantalla.escala(context, "menu/menu_avance.png",
                 anchoPantalla / 32 * 3, altoPantalla/16*3);
@@ -39,7 +40,7 @@ public class PantallaFinPartida extends Pantalla {
             JuegoSV.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             JuegoSV.mediaPlayer.setLooping(true);
             JuegoSV.volumen = JuegoSV.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-            JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen / 3, JuegoSV.volumen / 3);
+            JuegoSV.mediaPlayer.setVolume(JuegoSV.volumen, JuegoSV.volumen);
             JuegoSV.mediaPlayer.start();
         }
     }

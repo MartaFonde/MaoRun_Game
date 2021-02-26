@@ -74,8 +74,7 @@ public class Trafico {
 
 
     /**
-     * Dibuja las imágenes del array coches en sus respectivas posiciones. El array coches se
-     * instancia en cada clase Escenario, ya que sus posiciones varían dependiendo del Escenario
+     * Dibuja las imágenes del array coches en sus respectivas posiciones.
      * @param c lienzo
      */
     public void dibujaCoches(Canvas c){
