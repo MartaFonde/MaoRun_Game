@@ -13,6 +13,15 @@ public class MenuFinPartida extends Pantalla {
     RectF btnRepetir;
     RectF btnMenuPpal;
 
+    /**
+     * Construye el menú del final de la partida a partir de unas dimensiones ancho y alto de
+     * pantalla y de un número identificativo. En este menú se elegirá si jugar otra partida o volver
+     * al menú principal.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número identificativo de la pantalla
+     */
     public MenuFinPartida(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
     }
@@ -37,7 +46,7 @@ public class MenuFinPartida extends Pantalla {
 
     /**
      * Si las coordenadas de la pulsación están contenidas en el botón repetir, vuelve a la primera
-     * escena del juego, si lo están en el botón de menú principal vuelve a este.
+     * escena del juego, si lo están en el botón de menú principal vuelve a éste.
      * @param event evento
      * @return 6 para volver a Escena1 y 1 para ir al menú principal. -1 si las coordenadas no están
      * contenidas en ningún rect de botón.

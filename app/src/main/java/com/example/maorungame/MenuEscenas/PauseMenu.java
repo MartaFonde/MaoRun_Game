@@ -15,16 +15,24 @@ public class PauseMenu extends Pantalla {
     RectF btnAyuda;
     RectF btnMenuPpal;
 
+    /**
+     * Construye el menú de pausa de Escena a partir de unas dimensiones de ancho y alto de pantalla
+     * y de un número identificativo. Llama a la función encargada de crear los rect de los botones de
+     * las opciones del menú y redimensiona el tamaño de la letra.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número identificativo de la pantalla
+     */
     public PauseMenu(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
-
         setRectBotones();
         tpBeige.setTextSize(altoPantalla/12);
     }
 
     /**
      * Dibuja sobre lienzo los rect botones y el texto indicativo.
-     * @param c
+     * @param c lienzo
      */
     @Override
     public void dibuja(Canvas c) {
@@ -39,7 +47,7 @@ public class PauseMenu extends Pantalla {
     }
 
     /**
-     * Inicializa los rect de botones de las opciones del menú.
+     * Crea los rect de botones de las opciones del menú.
      */
     public void setRectBotones(){
         btnVolver = new RectF(anchoPantalla/32 * 11, altoPantalla/16 * 2.5f,
@@ -53,12 +61,11 @@ public class PauseMenu extends Pantalla {
     }
 
     /**
-     * Obtiene las coordenadas de pulsación y si algún rect contiene la coordenadas devuelve el
-     * número de pantalla correspondiente a la opción seleccionada. Se gestiona en la clase
-     * PauseEscena el cambio de pantalla.
+     * Obtiene las coordenadas de pulsación y si algún rect de los botones de opciones contiene las
+     * coordenadas devuelve el número de pantalla correspondiente a la opción seleccionada.
+     * El cambio de pantalla se gestiona en la clase PauseEscena.
      * @param event evento
-     * @return 0 para retomar el juego, 11 para cambiar pantalla a PauseOpciones,
-     * 12 para cambiar pantalla a PauseAyuda o 1 para cambiar pantalla a MenuPrincipal.
+     * @return 0 para retomar el juego, 11 para ir a las Opciones, 12 para ir a Ayuda o 1 para ir al menú principal.
      * Devuelve -1 si ningún rect contiene las coordenadas de pulsación.
      */
     @Override

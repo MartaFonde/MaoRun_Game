@@ -27,8 +27,19 @@ public class PantallaRecords extends Pantalla {
 
     ArrayList<String> records;
 
-        //Esta clase se usará para mostrar los récords de la opción del menú principal y para
-        //mostrarlos al final de la partida
+    /**
+     * Contruye la pantalla en la que se muestran los récords a partir de unas dimensiones de ancho y
+     * alto de pantalla y de un número identificativo. Esta pantalla se usa tanto como opción del menú
+     * principal como al final de la partida; se asigna un número identificativo distinto.
+     * En el primer caso, se crea  un rect del botón de retroceso y en el segundo caso un rect del botón
+     * de avance. Se redimensiona e inicializa la imagen usada para el respectivo botón.
+     * También se establece el tamaño de la letra que se usará en la pantalla y se llama a la función encargada
+     * de leer el fichero que guarda los récods.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número identificativo de la pantalla
+     */
     public PantallaRecords(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
 
@@ -38,11 +49,13 @@ public class PantallaRecords extends Pantalla {
             atrasBitmap = Pantalla.escala(context, "menu/menu_atras.png",
                     anchoPantalla / 32 * 3, altoPantalla/16*3);
         }else{      //fin de partida
-            btnAvanzar = new RectF(anchoPantalla/32 * 29, altoPantalla/16 * 13, anchoPantalla, altoPantalla);
+            btnAvanzar = new RectF(anchoPantalla/32 * 28.5f, altoPantalla/16 * 13, anchoPantalla, altoPantalla);
             avanzaBitmap = Pantalla.escala(context, "menu/menu_avance.png",
                     anchoPantalla / 32 * 3, altoPantalla/16*3);
         }
-        leerFichero();
+        tpVerde.setTextSize(altoPantalla/10);
+        tpBeige.setTextSize(altoPantalla/12);
+        leerRecords();
     }
 
     /**
@@ -57,13 +70,13 @@ public class PantallaRecords extends Pantalla {
         if(numPantalla == 2){
             c.drawBitmap(atrasBitmap, 0, altoPantalla/16*13, null);
         }else{
-            c.drawBitmap(avanzaBitmap,anchoPantalla/32 * 29, altoPantalla/16 * 13, null );
+            c.drawBitmap(avanzaBitmap,anchoPantalla/32 * 28.5f, altoPantalla/16 * 13, null );
         }
-        tpVerde.setTextSize(altoPantalla/10);
+
         c.drawText("RÉCORDS", anchoPantalla / 2, altoPantalla / 16 * 2, tpVerde);
-        tpVerde.setTextSize(altoPantalla/12);
+
         for (int i = 0; i < records.size(); i++) {
-            c.drawText(records.get(i), anchoPantalla / 32 * POS_X, altoPantalla/16 * y, tpVerde);
+            c.drawText(records.get(i), anchoPantalla / 32 * POS_X, altoPantalla/16 * y, tpBeige);
             y += 2.5f;
             if(i == records.size() - 1){
                 y = POS_Y;
@@ -102,7 +115,7 @@ public class PantallaRecords extends Pantalla {
     /**
      * Lee el fichero que guarda los récords y los añade línea a línea al arrayList records.
      */
-    public void leerFichero(){
+    public void leerRecords(){
         records = new ArrayList<>();
         try (FileInputStream fis = context.openFileInput("records.txt");
              InputStreamReader reader = new InputStreamReader(fis);

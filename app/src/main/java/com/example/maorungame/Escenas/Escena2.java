@@ -15,6 +15,17 @@ public class Escena2 extends Escena {
     Bitmap fondo;
     float velocidadCoches;
 
+    /**
+     * Construye el segundo nivel del juego a partir de las dimensiones de ancho y alto de la pantalla,
+     * del número identificativo y del personaje gato. Inicializa el fondo y llama a la función
+     * que crea los rect de árboles, a la que establece la posición de las monedas y la que fija la
+     * posición inicial de los coches.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número identificativo de la pantalla
+     * @param gato personaje del jugador
+     */
     public Escena2(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
         super(context, anchoPantalla, altoPantalla, numPantalla, gato);
         fondo = Pantalla.getBitmapFromAssets(context, "mapas/mapa_nivel2.png");
@@ -40,7 +51,7 @@ public class Escena2 extends Escena {
      * Gestiona el movimiento hacia arriba (decremento de posición y) de gato.
      * Si el rect de gato interseca el rect marcado para el cambio de escena, se cambia de escena:
      * se reposiciona gato y se devuelve el número de la nueva escena
-     * @param event
+     * @param event evento
      * @return incremento de numPantalla a 8 si se supera el nivel. En caso contrario, se retorna
      * el numPantalla de esta escena (7) y no se hace cambio de pantalla.
      */
@@ -64,7 +75,7 @@ public class Escena2 extends Escena {
     }
 
     /**
-     * Inicializa los rect de arboles según las posiciones determinadas por los árboles de fondo y los ajusta.
+     * Crea los rect de arboles según las posiciones determinadas por los árboles de fondo y los ajusta.
      */
     public void setArbolesRect(){
         arbolesRect = new RectF[25];
@@ -102,7 +113,7 @@ public class Escena2 extends Escena {
     }
 
     /**
-     * Inicializa el array de coches según la posición y determinada por las carreteras del fondo.
+     * Crea el array de coches según la posición y determinada por las carreteras del fondo.
      * La imagen del coche será una imagen aleatoria del array de imágenes de la dirección del
      * coche.
      * Los índices pares son coches que circulan hacia la derecha, y los impares coches que circulan

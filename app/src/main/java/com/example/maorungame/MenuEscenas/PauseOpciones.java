@@ -35,14 +35,20 @@ public class PauseOpciones extends PauseEscena {
     Paint pCircle;
     boolean cambios;
 
+    /**
+     * Construye la pantalla de las opciones del menú de pausa Escena a partir de unas dimensiones de
+     * ancho y alto de pantalla y de un número identificativo. Redimensiona las imágenes de los iconos
+     * de activación y desactivación de sonido, música y vibración, y crea el círculo que marcará el estado de
+     * dicha configuración. Inicializa la imagen del botón de retroceso a partir de su redimensionamiento.
+     * Llama a la función encargada de crear los rect de los botones de los iconos de sonido, música y
+     * vibración.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número identificativo de la pantalla
+     */
     public PauseOpciones(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
-        cambios = false;
-        pCircle = new Paint();
-        pCircle.setColor(Color.argb(150, 255, 128, 128));
-
-        atrasbtmp = Pantalla.escala(context, "menu/menu_atras.png",
-                anchoPantalla/32*2, altoPantalla/16 *2);
 
         sonidoActBitmap = Pantalla.escala(context, "opciones/sonido_activado.png",
                 anchoPantalla/32*2, altoPantalla/16*2);
@@ -52,6 +58,13 @@ public class PauseOpciones extends PauseEscena {
                 anchoPantalla/32*2, altoPantalla/16*2);
         vibracionDesactBitmap = Pantalla.escala(context, "opciones/vibracion_desactivada.png",
                 anchoPantalla/32*2, altoPantalla/16*2);
+
+        cambios = false;
+        pCircle = new Paint();
+        pCircle.setColor(Color.argb(150, 255, 128, 128));
+
+        atrasbtmp = Pantalla.escala(context, "menu/menu_atras.png",
+                anchoPantalla/32*2, altoPantalla/16 *2);
 
         setRect();
     }
@@ -97,7 +110,7 @@ public class PauseOpciones extends PauseEscena {
     }
 
     /**
-     * Inicializa los rect de activación/desactivación de sonido. música y vibración y el de retroceso.
+     * Crea los rect de activación/desactivación de sonido. música y vibración y el de retroceso.
      */
     public void setRect() {
         rectAtras = new RectF(anchoPantalla / 32 *8, altoPantalla/16*2,
@@ -120,9 +133,9 @@ public class PauseOpciones extends PauseEscena {
     /**
      * Obtiene la coordenada de las pulsaciones. Si se presiona sobre algún rect de activación/
      * desactivación se realizan los cambios. Si se presiona sobre el rect de retroceso y se han
-     * hecho cambios llama a la función que guarda la configuración y se vuelve a pantalla PauseMenu.
-     * @param event
-     * @return 10 para volver a pantalla PauseMenu, -1 en caso contrario.
+     * hecho cambios llama a la función que guarda la configuración y se vuelve a pantalla del menú de pausa.
+     * @param event evento
+     * @return 10 para volver a pantalla del menú de pausa, -1 en caso contrario.
      */
     @Override
     public int onTouchEvent(MotionEvent event) {

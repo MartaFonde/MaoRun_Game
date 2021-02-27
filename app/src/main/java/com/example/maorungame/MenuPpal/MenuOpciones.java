@@ -36,6 +36,19 @@ public class MenuOpciones extends Menu {
 
     boolean cambios;
 
+    /**
+     * Construye la pantalla de la opción de menú Opciones a partir de unas dimensiones ancho y alto de
+     * pantalla y de un número identificativo. Crea el paint que se usará para los iconos de
+     * activación y desativación de sonido, música y vibración, y el círculo que marcará el estado de
+     * dicha configuración. Redimensiona las imágenes de los iconos.
+     * Establece la alineación del texto y define su dimensión.
+     * Llama a la función encargada de crear los rect de los botones de los iconos de sonido, música y
+     * vibración y del botón de reiniciar los récords.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número identificativo de la pantalla
+     */
     public MenuOpciones(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
         //paint iconos de act y desact
@@ -46,11 +59,6 @@ public class MenuOpciones extends Menu {
         pCircle = new Paint();
         pCircle.setColor(Color.argb(150, 255, 128, 128));
 
-        cambios = false;    //si no hay cambios no se reescribe archivo config
-
-        tpBeige.setTextSize(altoPantalla/12);
-        setRect();
-
         sonidoActBitmap = Pantalla.escala(context, "opciones/sonido_activado.png",
                 anchoPantalla/32*2, altoPantalla/16*2);
         sonidoDesactBitmap = Pantalla.escala(context, "opciones/sonido_desactivado.png",
@@ -60,6 +68,12 @@ public class MenuOpciones extends Menu {
         vibracionDesactBitmap = Pantalla.escala(context, "opciones/vibracion_desactivada.png",
                 anchoPantalla/32*2, altoPantalla/16*2);
 
+        cambios = false;    //si no hay cambios no se reescribe archivo config
+
+        tpVerde.setTextAlign(Paint.Align.CENTER);
+        tpVerde.setTextSize(altoPantalla/10);
+        tpBeige.setTextSize(altoPantalla/12);
+        setRect();
     }
 
     /**
@@ -70,14 +84,13 @@ public class MenuOpciones extends Menu {
     @Override
     public void dibuja(Canvas c) {
         super.dibuja(c);    //fondo+btnAtras
-        tpVerde.setTextAlign(Paint.Align.CENTER);
-        tpVerde.setTextSize(altoPantalla/10);
+
         c.drawText("OPCIONES", anchoPantalla/2, altoPantalla/16 * 2, tpVerde);
 
-        tpVerde.setTextAlign(Paint.Align.LEFT);
-        tpVerde.setTextSize(altoPantalla/12);
-
-        c.drawText("SONIDO", anchoPantalla/32 * 10, altoPantalla / 16 * 5, tpVerde);
+//        tpVerde.setTextAlign(Paint.Align.LEFT);
+//        tpVerde.setTextSize(altoPantalla/12);
+        tpBeige.setTextAlign(Paint.Align.LEFT);
+        c.drawText("SONIDO", anchoPantalla/32 * 8, altoPantalla / 16 * 5, tpBeige);
         if(JuegoSV.sonido) c.drawCircle( rectSonAct.left + (rectSonAct.right - rectSonAct.left)/2,
                 rectSonAct.top + (rectSonAct.bottom-rectSonAct.top)/2, altoPantalla/16, pCircle);
         else c.drawCircle(rectSonDesact.left + (rectSonDesact.right - rectSonDesact.left)/2,
@@ -85,7 +98,7 @@ public class MenuOpciones extends Menu {
         c.drawBitmap(sonidoActBitmap, rectSonAct.left, rectSonAct.top, p);
         c.drawBitmap(sonidoDesactBitmap, rectSonDesact.left, rectSonDesact.top, p);
 
-        c.drawText("MÚSICA", anchoPantalla/32 * 10, altoPantalla / 16 * 8, tpVerde);
+        c.drawText("MÚSICA", anchoPantalla/32 * 8, altoPantalla / 16 * 8, tpBeige);
         if(JuegoSV.musica) c.drawCircle( rectMusicaAct.left + (rectMusicaAct.right - rectMusicaAct.left)/2,
                 rectMusicaAct.top + (rectMusicaAct.bottom-rectMusicaAct.top)/2, altoPantalla/16, pCircle);
         else c.drawCircle(rectMusicaDesact.left + (rectMusicaDesact.right - rectMusicaDesact.left)/2,
@@ -93,7 +106,7 @@ public class MenuOpciones extends Menu {
         c.drawBitmap(sonidoActBitmap, rectMusicaAct.left, rectMusicaAct.top, p);
         c.drawBitmap(sonidoDesactBitmap, rectMusicaDesact.left, rectMusicaDesact.top, p);
 
-        c.drawText("VIBRACIÓN", anchoPantalla/32 * 10, altoPantalla / 16 * 11, tpVerde);
+        c.drawText("VIBRACIÓN", anchoPantalla/32 * 8, altoPantalla / 16 * 11, tpBeige);
         if(JuegoSV.vibracion) c.drawCircle( rectVibracionAct.left + (rectVibracionAct.right - rectVibracionAct.left)/2,
                 rectVibracionAct.top + (rectVibracionAct.bottom-rectVibracionAct.top)/2, altoPantalla/16, pCircle);
         else c.drawCircle(rectVibracionDesact.left + (rectVibracionDesact.right - rectVibracionDesact.left)/2,
@@ -101,20 +114,21 @@ public class MenuOpciones extends Menu {
         c.drawBitmap(vibracionActBitmap, rectVibracionAct.left, rectVibracionAct.top, p);
         c.drawBitmap(vibracionDesactBitmap, rectVibracionDesact.left, rectVibracionDesact.top, p);
 
+        tpBeige.setTextAlign(Paint.Align.CENTER);
         c.drawRect(rectReiniciarRecords, pBotonVerde);
         c.drawText("REINICIAR RÉCORDS", (rectReiniciarRecords.left+rectReiniciarRecords.right)/2,
                 rectReiniciarRecords.bottom - (anchoPantalla/16)/3, tpBeige);
     }
 
     /**
-     * Gestiona la pulsación de un dedo sobre pantalla. Si se pulsa sobre botón de retroceso vuelve
-     * a la pantalla Menú principal. Si hay cambios, llama a la función para guardar la config.
-     * Si las coordenadas de la pulsación están contenidas en algún botón (rect) creado para activar
+     * Gestiona la pulsación sobre pantalla. Si se pulsa sobre botón de retroceso vuelve a la pantalla
+     * de menú principal. Previamente, si hay cambios, llama a la función que guarda la configuración.
+     * Si las coordenadas de la pulsación están contenidas en algún rect de botón creado para activar
      * o desactivar las diferentes opciones, cambia el valor de la opción correspondiente, si tiene
      * lugar, contenida en su respectiva variable en la clase JuegoSV.
      * Si hay cambios asigna la variable cambios a true.
-     * @param event
-     * @return devuelve 1 si se pulsa el botón de retroceso, que hace retornar a Menú Principal.
+     * @param event evento
+     * @return devuelve 1 si se pulsa el botón de retroceso, que hace retornar al menú principal.
      * Si se pulsa en cualquier otro punto, devuelve -1.
      */
     @Override
@@ -164,7 +178,7 @@ public class MenuOpciones extends Menu {
     }
 
     /**
-     * Reescribe el archivo que guarda los récords para que eliminarlos.
+     * Sobreescribe el archivo que guarda los récords con una cadena vacía para que eliminarlos.
      */
     private void reiniciarRecords(){
         try(FileOutputStream fos = context.openFileOutput("records.txt", Context.MODE_PRIVATE)){
@@ -175,7 +189,8 @@ public class MenuOpciones extends Menu {
     }
 
     /**
-     * Escribe la configuración sobre sonido, música y vibración en el archivo config.
+     * Sobreescribe el archivo que guarda la configuración de sonido, música y vibración a partir
+     * del estado actual.
      */
     private void guardarConfig(){
         try(FileOutputStream fos = context.openFileOutput("config.txt", Context.MODE_PRIVATE)){
@@ -188,7 +203,7 @@ public class MenuOpciones extends Menu {
     }
 
     /**
-     * Asigna los rect que se corresponden con la activación y desactivación de las diferentes opciones
+     * Crea los rect que se corresponden con la activación y desactivación de las diferentes opciones
      * y el de reinicio de récords.
      */
     public void setRect(){
@@ -205,7 +220,7 @@ public class MenuOpciones extends Menu {
         rectVibracionDesact = new RectF(anchoPantalla/32 * 22, altoPantalla / 16 * 9.5f,
                 anchoPantalla/32 * 24, altoPantalla/16 * 11.5f);
 
-        rectReiniciarRecords = new RectF(anchoPantalla/32 * 10, altoPantalla / 16 * 13,
-                anchoPantalla/32 * 24, altoPantalla/16 *15);
+        rectReiniciarRecords = new RectF(anchoPantalla/32 * 8, altoPantalla / 16 * 13,
+                anchoPantalla/32 * 24.5f, altoPantalla/16 *15);
     }
 }

@@ -8,13 +8,19 @@ public class Coche {
     public PointF posicion;
     float x;
     float y;
-
     public Bitmap imagen;
     public RectF rectangulo;
     int anchoCoche;
     int altoCoche;
     float velocidad;
 
+    /**
+     * Construye un coche a partir de una imagen, una posición x,y y una velocidad.
+     * @param imagen imagen del coche
+     * @param x posición x
+     * @param y posición y
+     * @param velocidad velocidad
+     */
     public Coche(Bitmap imagen, float x, float y, float velocidad) {
         setImagen(imagen);
         this.posicion = new PointF(x, y);
@@ -26,7 +32,7 @@ public class Coche {
     }
 
     /**
-     * Devuelve la propiedad x del coche, que representa su coordenada x
+     * Devuelve la propiedad x del coche, que representa su coordenada x.
      * @return coordenada x
      */
     public float getX() {
@@ -35,7 +41,7 @@ public class Coche {
 
     /**
      * Establece la propiedad x del coche, que representa su coordenada x,
-     * y actualiza el rect, que utiliza este valor en su definición
+     * y actualiza el rect, que utiliza este valor en su definición.
      * @param x coordenada x
      */
     public void setX(float x) {
@@ -45,7 +51,7 @@ public class Coche {
     }
 
     /**
-     * Devuelve la propiedad y del coche, que representa su coordenada y
+     * Devuelve la propiedad y del coche, que representa su coordenada y.
      * @return propiedad y
      */
     public float getY() {
@@ -54,7 +60,7 @@ public class Coche {
 
     /**
      * Establece la propiedad y del coche, que representa su coordenada y,
-     * y actualiza el rect, que utiliza este valor en su definición
+     * y actualiza el rect, que utiliza este valor en su definición.
      * @param y coordenada y
      */
     public void setY(float y) {
@@ -64,7 +70,7 @@ public class Coche {
     }
 
     /**
-     * Devuelve la propiedad velocidad del coche
+     * Devuelve la propiedad velocidad del coche.
      * @return velocidad
      */
     public float getVelocidad() {
@@ -72,15 +78,15 @@ public class Coche {
     }
 
     /**
-     * Establece la propiedad velocidad del coche
-     * @param velocidad
+     * Establece la propiedad velocidad del coche.
+     * @param velocidad velocidad
      */
     public void setVelocidad(float velocidad) {
         this.velocidad = velocidad;
     }
 
     /**
-     * Devuelve la propiedad imagen del coche
+     * Devuelve la propiedad imagen del coche.
      * @return imagen
      */
     public Bitmap getImagen() {
@@ -88,23 +94,25 @@ public class Coche {
     }
 
     /**
-     * Establece la propiedad imagen del coche
-     * @param imagen
+     * Establece la propiedad imagen del coche.
+     * @param imagen imagen
      */
     public void setImagen(Bitmap imagen) {
         this.imagen = imagen;
     }
 
     /**
-     * Establece el rect del coche a partir de su posición
+     * Establece el rect del coche a partir de su posición.
      */
     public void setRectangulo() {
-        rectangulo = new RectF(posicion.x, posicion.y+ altoCoche *0.3f, posicion.x+ anchoCoche, posicion.y+ altoCoche);
+        rectangulo = new RectF(posicion.x, posicion.y+ altoCoche *0.3f,
+                posicion.x+ anchoCoche, posicion.y+ altoCoche);
     }
 
     /**
      * Incrementa la propiedad x en velocidad, si x es menor que el parámetro anchoPantalla.
      * En caso contrario, el valor de x pasa a ser el negativo del ancho de la propiedad imagen.
+     * Así, el coche se sitúa en el lado izquierdo de la pantalla y no se mostraría.
      * @param anchoPantalla ancho de la pantalla
      */
     public void moverDerecha(int anchoPantalla) {
@@ -118,6 +126,7 @@ public class Coche {
     /**
      * Decrementa propiedad x en velocidad, si x es mayor o igual que 0.
      * En caso contrario, x será igual al parámetro ancho pantalla.
+     * Así, el coche se sitúa en el lado derecho de la pantalla y no se mostraría.
      * @param anchoPantalla ancho de la pantalla
      */
     public void moverIzquierda(int anchoPantalla) {
@@ -129,7 +138,7 @@ public class Coche {
     }
 
     /**
-     * Devuelve la propiedad posición de coche
+     * Devuelve la propiedad posición de coche.
      * @return posición
      */
     public PointF getPosicion() {
@@ -137,7 +146,7 @@ public class Coche {
     }
 
     /**
-     * Establece propiedad posición de coche
+     * Establece propiedad posición de coche.
      * @param posicion
      */
     public void setPosicion(PointF posicion) {

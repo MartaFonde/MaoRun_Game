@@ -18,40 +18,53 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class GuardarRecord extends Pantalla {
+public class PantallaGuardaRecord extends Pantalla {
 
     float propW;
     float propH;
     ArrayList<String> nombre = new ArrayList<>();
     Hashtable<RectF, String> teclas;
     RectF btnborrar;
-    RectF btnOK;
+    RectF btnGuardar;
 
     RectF[] letras;
     int puntos;
 
-    Paint pOk;
+    Paint pGuardar;
     Paint pBorrar;
 
     RectF btnAvanza;
     Bitmap avanzaBitmap;
 
-    public GuardarRecord(Context context, int anchoPantalla, int altoPantalla, int numPantalla, int puntos) {
+    /**
+     * Construye la pantalla en la que se introduce el nombre que compondrá el récord junto a la puntuación
+     * a partir de las dimensiones ancho y alto de la pantalla, de un número identificativo y de la puntuación.
+     * Crea el estilo de los botones guardar récord y de borrar letra.
+     * Asigna la imagen del botón de avanza redimensionada.
+     * Llama a la función que crea los rect de los botones de las letras del teclado.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número identificativo de la pantalla
+     * @param puntos puntuación lograda en la partida
+     */
+    public PantallaGuardaRecord(Context context, int anchoPantalla, int altoPantalla, int numPantalla, int puntos) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
 
-        pOk = new Paint();
-        pOk.setStyle(Paint.Style.FILL);
-        pOk.setColor(Color.argb(220, 0, 128, 64));
+        pGuardar = new Paint();
+        pGuardar.setStyle(Paint.Style.FILL);
+        pGuardar.setColor(Color.argb(220, 0, 128, 64));
 
         pBorrar = new Paint();
         pBorrar.setStyle(Paint.Style.FILL);
         pBorrar.setColor(Color.argb(220, 255, 40,40));
 
-        propW = anchoPantalla /32 ;
+        propW = anchoPantalla /32;
         propH = altoPantalla / 16;
         this.puntos = puntos;
 
-        avanzaBitmap = Pantalla.escala(context, "menu/menu_avance.png", (int)propW * 2, (int)propH * 2);
+        avanzaBitmap = Pantalla.escala(context, "menu/menu_avance.png",
+                (int)propW * 2, (int)propH * 2);
 
         teclas = new Hashtable<>();
         letras = new RectF[3];
@@ -59,8 +72,8 @@ public class GuardarRecord extends Pantalla {
     }
 
     /**
-     * Dibuja fondo negro, el botón de avanza, los botones de borrar letra y OK, las letras del nombre
-     * y las teclas para escribir el nombre.
+     * Dibuja fondo negro, el botón de avanza, los botones de borrar letra y guardar récord,
+     * las letras del nombre y las teclas para escribir el nombre.
      * @param c lienzo
      */
     @Override
@@ -72,9 +85,8 @@ public class GuardarRecord extends Pantalla {
         tpBeige.setTextSize(altoPantalla/12);
         c.drawRect(btnborrar, pBorrar);
         c.drawText("Borrar", (btnborrar.left + btnborrar.right)/2, btnborrar.bottom - propH/2, tpBeige);
-        tpBeige.setTextSize(altoPantalla/10);
-        c.drawRect(btnOK, pOk);
-        c.drawText("OK", (btnOK.left + btnOK.right)/2, btnOK.bottom - propH/2, tpBeige);
+        c.drawRect(btnGuardar, pGuardar);
+        c.drawText("Guardar", (btnGuardar.left + btnGuardar.right)/2, btnGuardar.bottom - propH/2, tpBeige);
 
         for (Map.Entry<RectF, String> e : teclas.entrySet()){
             c.drawRect(e.getKey(), pBotonVerde);
@@ -89,9 +101,9 @@ public class GuardarRecord extends Pantalla {
     }
 
     /**
-     * Si las coordenadas de pulsación están contenidas en el botón de borrar elimina la última letra
-     * del nombre. Si están contenidas en alguna tecla añade la letra asociada al nombre con un límite
-     * máximo de tres letras. Si lo están en en el botón OK y el nombre tiene más de una letra llama
+     * Si las coordenadas de pulsación están contenidas en el rect del botón de borrar elimina la última letra
+     * del nombre. Si están contenidas en el rect de alguna tecla añade la letra asociada al nombre con un límite
+     * máximo de tres letras. Si lo están en en el botón guardar y el nombre tiene más de una letra llama
      * a la función que guarda el récord, y si lo están en el botón de avanzar no guarda el récord.
      * En los dos últimos casos, avanza a la pantalla que muestra los récords.
      * @param event evento
@@ -111,7 +123,7 @@ public class GuardarRecord extends Pantalla {
                     if(nombre.size() < 3 ) nombre.add(e.getValue());
                 }
             }
-            if(btnOK.contains(x,y) && nombre.size() > 0){
+            if(btnGuardar.contains(x,y) && nombre.size() > 0){
                 escribirFichero();
                 return 14;
             }
@@ -180,14 +192,14 @@ public class GuardarRecord extends Pantalla {
 
 
     /**
-     * Inicializa los rect de los botones y añade a la hashtable letras el rect y la letra
-     * asociada.
+     * Crea los rect de los botones de avanzar, borrar, guardar y los de las letras del nombre
+     * y añade a la hashtable letras el rect de los botones de las letras y la letra asociada.
      */
     public void setTeclas(){
-        btnAvanza = new RectF(propW * 29, propH*14, anchoPantalla, altoPantalla);
+        btnAvanza = new RectF(propW * 29.5f, propH*14, anchoPantalla, altoPantalla);
 
-        btnborrar = new RectF(propW * 3, propH * 3, propW * 8, propH * 5);
-        btnOK = new RectF(propW * 23, propH * 3, propW * 30, propH * 5);
+        btnborrar = new RectF(propW * 2, propH * 3, propW * 8, propH * 5);
+        btnGuardar = new RectF(propW * 23, propH * 3, propW * 31, propH * 5);
 
         letras[0] = new RectF(propW * 11, propH * 3, propW * 13, propH * 5);
         letras[1] = new RectF(propW * 14, propH * 3, propW * 16, propH * 5);

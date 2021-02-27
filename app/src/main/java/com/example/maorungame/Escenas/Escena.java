@@ -29,11 +29,7 @@ import com.example.maorungame.ElemEscena.Trafico;
 import java.util.ArrayList;
 
 abstract public class Escena extends Pantalla {
-    Context context;
     Bitmap fondo;
-    int anchoPantalla;
-    int altoPantalla;
-
     RectF[] arbolesRect;
 
     ArrayList<RectF> monedasRect;
@@ -77,11 +73,22 @@ abstract public class Escena extends Pantalla {
     boolean pause = false;
     Paint pPausa;
 
+    /**
+     * Clase base de cada Escena. Éstas se crearán a partir de unas dimensiones ancho y alto de pantalla,
+     * de un número identificativo y de un objeto tipo Gato, que será el jugador.
+     * Instancia elementos básicos que componen todas las escenas y con los que interactúa el jugador:
+     * monedas, tráfico y controles.
+     * Llama a la función encargada de crear todos los componentes de puntuación y a la función
+     * que encargada de establecer la música y los sonidos. También crea el rect del botón de pausa
+     * y su imagen redimensionada asociada.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número identificativo de la pantalla
+     * @param gato jugador
+     */
     public Escena(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
         super(context, anchoPantalla,altoPantalla, numPantalla);
-        this.context = context;
-        this.anchoPantalla = anchoPantalla;
-        this.altoPantalla = altoPantalla;
         this.propW = anchoPantalla / 32;
         this.propH = altoPantalla / 16;
 
@@ -102,11 +109,7 @@ abstract public class Escena extends Pantalla {
         controles = new Controles(context, anchoPantalla, altoPantalla);
         this.gato = gato;
 
-        setPaintPuntuacion();
-        vidaBitmap = Pantalla.escala(context, "gato/heart.png",
-                anchoPantalla / 32, altoPantalla / 16);
-        monedasPuntuacionBitmap = Pantalla.escala(context, "moneda/monedas_controles.png",
-                anchoPantalla / 32, altoPantalla / 16);
+        setPuntuacion();
 
         setSonidosMusica();
 
@@ -136,9 +139,9 @@ abstract public class Escena extends Pantalla {
 
     /**
      * Dibuja todos los elementos de Escena: fondo, monedas, coches, gato, puntuación, controles y
-     * botón de pausa. Si el juego está en pausa, además de dibujar todos los elementos, dibuja
-     * lo correspondiente en la función dibuja de pantallaPause.
-     * Si se produce colisión con coche, se dibuja fondo rojo momentáneo.
+     * botón de pausa. Si se produce colisión del gato con algún coche, se dibuja fondo rojo momentáneo.
+     * Si el juego está en pausa, además de dibujar todos los elementos, dibuja lo correspondiente
+     * en la función dibuja de la pantalla de pausa.
      * @param c lienzo
      */
     @Override
@@ -168,7 +171,7 @@ abstract public class Escena extends Pantalla {
      * Realiza el movimiento automático del juego, actualizando las posiciones de cada coche de tráfico.
      * Comprueba si el rect de cada coche colisiona con el rect de gato, y si es así, produce sonidos,
      * vibración y resta una vida. Comprueba que el gato sigue teniendo vidas después de la colisión.
-     * Si vidas es cero, ejecuta cambiaPantalla a pantalla FinPartida.
+     * Si vidas es cero, cambia pantalla a fin de partida.
      * Si la pantalla está en pause no hace nada.
      */
     public void actualizaFisica() {
@@ -212,19 +215,19 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Obtiene las coordenadas de pulsación y, si pause es false, comprueba si los rect de controles
-     * contienen las coordenadas. Si alguno las contiene, comprueba si el gato se puede mover (no
-     * colisiona con árboles) y ejecuta la función encargada de modificar las posiciones del rect de
-     * gato. Si puede el gato efectúa el cambio de posición, llama a colisionMonedas para comprobar
+     * Obtiene las coordenadas de pulsación y, si la escena no está en pausa, comprueba si los rect de
+     * controles contienen las coordenadas. Si alguno las contiene, comprueba si el gato se puede mover
+     * (no colisiona con árboles) y ejecuta la función encargada de modificar las posiciones del rect de
+     * gato. Cuando el gato efectúa el cambio de posición, llama a la función que comprueba
      * si en la nueva posición colisiona con algún rect de monedas.
      * Si el movimiento es en dirección arriba (decrementa coordenada y) se gestiona el movimiento
      * en cada Escena, porque varían sus acciones dependiendo de la Escena.
-     * Si el rect pause contiene las coordenadas, se pausa la dinámica del juego y se crea PauseMenu.
+     * Si el rect de pausa contiene las coordenadas, se pausa la dinámica del juego y se crea el menú.
      * Si el juego está pausado, y el TouchEvent de pantallaPause retorna 0, las dinámicas del juego
      * vuelven a funcionar.
      * Si ningún rect contiene las coordenadas, la imagen del gato es el gato parado.
      * @param event evento
-     * @return número de Escena
+     * @return número de pantalla
      */
     public int onTouchEvent(MotionEvent event){
         float x = event.getX();
@@ -407,16 +410,20 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Inicializa el paint que se utiliza de fondo en la parte de la pantalla donde se sitúa la puntuación
-     * y las vidas y el textPaint que se usará para pintar el número de la puntuación
+     * Crea el fondo del recuadro puntuación y vidas y el textPaint que se usará para pintar el número
+     * de puntuación. Inicializa las imágenes redimensionadas de puntuación y vidas.
      */
-    public void setPaintPuntuacion(){
+    public void setPuntuacion(){
         pPuntuacion = new Paint();
         pPuntuacion.setColor(Color.GRAY);
         pPuntuacion.setStyle(Paint.Style.FILL);
         pPuntuacion.setAlpha(150);
         tpBeige.setTextSize(altoPantalla / 20);
         tpBeige.setColor(Color.BLACK);
+        vidaBitmap = Pantalla.escala(context, "gato/heart.png",
+                anchoPantalla / 32, altoPantalla / 16);
+        monedasPuntuacionBitmap = Pantalla.escala(context, "moneda/monedas_controles.png",
+                anchoPantalla / 32, altoPantalla / 16);
     }
 
     /**
@@ -435,7 +442,7 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Inicializa los sonidos y la música.
+     * Establece los sonidos y la música.
      */
     public void setSonidosMusica(){
         if ((android.os.Build.VERSION.SDK_INT) >= 21) {
@@ -466,7 +473,7 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Inicializa el vibrador.
+     * Define el vibrador.
      */
     public void efectoVibracion(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -477,13 +484,13 @@ abstract public class Escena extends Pantalla {
     }
 
     /**
-     * Inicializa el array de los rect de árboles. Las posiciones de los rect y el tamaño del array
+     * Crea el array de los rect de árboles. Las posiciones de los rect y el tamaño del array
      * dependen de cada escena.
      */
     abstract  void setArbolesRect();
 
     /**
-     * Inicializa el array de los rect de coches. Las posiciones de los coches dependen de
+     * Crea el array de los rect de coches. Las posiciones de los coches dependen de
      * cada escena.
      */
     abstract void setCoches();

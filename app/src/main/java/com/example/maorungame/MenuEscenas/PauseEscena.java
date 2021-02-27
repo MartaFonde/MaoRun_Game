@@ -19,6 +19,17 @@ public class PauseEscena extends Pantalla {
     protected Bitmap atrasbtmp;
     protected RectF rectAtras;
 
+    /**
+     * Contruye la pantalla que gestiona el cambio de pantallas del menú de pausa de Escena a partir de
+     * unas dimensiones ancho y alto de pantalla y de un número identificativo. Crea y establece
+     * el color de fondo que se usa en las pantallas del menú y dimensiona la letra.
+     * Define el rect del fondo, el de botón de retroceso y reescala la imagen que usará dicho botón.
+     * Instancia la pantalla actual como el menú de pausa. Será la que primero se verá al crear esta clase.
+     * @param context contexto
+     * @param anchoPantalla ancho de pantalla
+     * @param altoPantalla alto de pantalla
+     * @param numPantalla número identificativo de la pantalla
+     */
     public PauseEscena(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
 
@@ -39,7 +50,7 @@ public class PauseEscena extends Pantalla {
 
     /**
      * Dibuja rect oscuro que ocupa parte central de la pantalla, sobre fondo transparente y
-     * si la pantalla no es PauseMenu dibuja botón de retroceso. Sobre esto dibuja lo descrito
+     * si la pantalla no es el menú de pausa dibuja botón de retroceso. Sobre esto dibuja lo descrito
      * en la función dibuja de pantallaActual.
      * @param c lienzo
      */
@@ -54,20 +65,15 @@ public class PauseEscena extends Pantalla {
     }
 
     /**
-     * Obtiene las coordenadas de pulsación. Si el valor devuelto por pantallaActual es 1,
-     * se produce un cambio de pantalla a Pantalla MenuPrincipal,
-     * si el valor es 0, vuelve a la escena y finalizaría la pausa del juego.
-     * Si el valor es distinto a -1, se cambia de pantalla al valor devuelto. Se retorna
-     *  -1 cuando la pulsación no implica ninguna acción concreta de cambio de pantalla.
-     * @param event
-     * @return 1 para cambiar pantalla a MenuPrincipal, 0 para retomar Escena y -1 en el resto de
+     * Toma el valor devuelto por la pantallaActual cuando se toca la pantalla, y dependiendo de éste
+     * se produce un cambio de pantalla a menú principal, se retoma la Escena o se cambia de pantalla
+     * del menú de pausa.
+     * @param event evento
+     * @return 1 para cambiar pantalla a menú principal, 0 para reanudar Escena y -1 en el resto de
      * los casos
      */
     @Override
     public int onTouchEvent(MotionEvent event) {
-        int x=(int)event.getX();
-        int y=(int)event.getY();
-
        if(event.getAction() == MotionEvent.ACTION_DOWN){
             numPantallaNueva = pantallaPauseActual.onTouchEvent(event);
             if(numPantallaNueva == 1) return 1; //mnu ppal
@@ -78,8 +84,9 @@ public class PauseEscena extends Pantalla {
     }
 
     /**
-     * Gestiona el control de pantalla del menú de pause de la Escena
-     * @param num número de pantalla nueva
+     * Gestiona el control de pantalla del menú de pausa de Escena, instanciando la pantalla correspondiente
+     * al número identificativo pasado como parámetro y asignándola a la pantalla actual.
+     * @param num número identificativo de la pantalla nueva
      */
     private void cambiaPantalla(int num){
         switch (num){

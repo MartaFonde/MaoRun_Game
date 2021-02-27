@@ -18,6 +18,13 @@ public class Trafico {
     public int anchoCoche;
     public int altoCoche;
 
+    /**
+     * Inicializa las dimensiones de las imágenes de coches a partir de un ancho y alto de pantalla.
+     * Llama a las funciones encargadas de crear los array de imágenes de coches.
+     * @param context contexto
+     * @param anchoPantalla ancho de pantalla
+     * @param altoPantalla alto de pantalla
+     */
     public Trafico(Context context, int anchoPantalla, int altoPantalla) {
         this.context = context;
         this.anchoPantalla = anchoPantalla;

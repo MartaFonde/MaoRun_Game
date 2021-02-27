@@ -16,7 +16,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Establece la pantalla completa en horizontal, oculta la barra de navegación y la ActionBar
-     * y crea el View que será el juego. También establece la pantalla siempre encendida.
+     * y crea el View que será el juego. También establece que en el juego la pantalla siempre
+     * estará encendida.
      * @param savedInstanceState
      */
     @RequiresApi(api = Build.VERSION_CODES.M)

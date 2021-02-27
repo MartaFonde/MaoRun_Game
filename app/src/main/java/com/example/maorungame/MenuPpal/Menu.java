@@ -15,6 +15,15 @@ abstract public class Menu extends Pantalla {
     protected RectF btnAtras;
     protected Bitmap atrasBitmap;
 
+    /**
+     * Construye la pantalla de menú a partir de unas dimensiones alto y ancho de pantalla y de
+     * un número identificativo. Si la pantalla de menú no es la pantalla de menú principal se
+     * crea un rect de botón de retroceso y la imagen correspondiente a dicho botón.
+     * @param context contexto
+     * @param anchoPantalla ancho de pantalla
+     * @param altoPantalla alto de pantalla
+     * @param numPantalla número identificativo de la pantalla
+     */
     public Menu(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
         this.context = context;
@@ -28,7 +37,7 @@ abstract public class Menu extends Pantalla {
     }
 
     /**
-     * Dibuja en el lienzo un fondo negro y un bitmap de retroceso, excepto en la pantalla MenuPrincipal
+     * Dibuja en el lienzo un fondo negro y un bitmap de retroceso, excepto en la pantalla de menú principal.
      * @param c lienzo
      */
     @Override
@@ -41,9 +50,9 @@ abstract public class Menu extends Pantalla {
 
     /**
      * Obtiene coordenadas de pulsaciones al tocar pantalla. Si la pantalla actual no es el menú
-     * principal (numPantalla 1), es una opción del menú que contiene un botón de retroceso y si
-     * rect del botón contiene las coordenadas x,y retorna al menú principal. Para que el mediaPlayer
-     * no vuelva a reproducir la música, pone la booleana restartMusica a false.
+     * principal, es una opción del menú que contiene un botón de retroceso y si rect del botón contiene
+     * las coordenadas x,y retorna al menú principal. Para que el mediaPlayer no vuelva a reproducir la
+     * música, pone la booleana restartMusica a false.
      * @param event evento de pulsación
      * @return devuelve 1 para volver al menú principal. En caso contrario, o si la pantalla actual es
      * el menú principal, devuelve el número de la pantalla actual.

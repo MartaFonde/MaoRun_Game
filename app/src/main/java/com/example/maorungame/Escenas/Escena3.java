@@ -15,6 +15,17 @@ public class Escena3 extends Escena {
     Bitmap fondo;
     float velocidadCoches;
 
+    /**
+     * Construye el tercero y último nivel del juego a partir de las dimensiones de ancho y alto de la
+     * pantalla, del número identificativo y del personaje gato. Inicializa el fondo y llama a la función
+     * que crea los rect de árboles, a la que establece la posición de las monedas y la que fija la
+     * posición inicial de los coches.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número identificativo de la pantalla
+     * @param gato personaje del jugador
+     */
     public Escena3(Context context, int anchoPantalla, int altoPantalla, int numPantalla, Gato gato) {
         super(context, anchoPantalla, altoPantalla, numPantalla, gato);
         fondo = Pantalla.getBitmapFromAssets(context, "mapas/mapa_nivel3.png");
@@ -39,10 +50,9 @@ public class Escena3 extends Escena {
     /**
      * Gestiona el movimiento hacia arriba (decremento de posición y) de gato.
      * Si el rect de gato interseca el rect marcado para el cambio de escena, se finaliza el juego.
-     * Se caambia pantalla Pantalla FinPartida.
      * @param event evento
-     * @return 9 si supera el nivel, que lleva a pantalla FinPartida. En caso contrario, devuelve
-     * el numPantalla de esta escena (8) y no se hace cambio de pantalla.
+     * @return 9 si supera el nivel, que lleva a la pantalla de fin de partida. En caso contrario,
+     * devuelve el numPantalla de esta escena (8) y no se hace cambio de pantalla.
      */
     @Override
     public int onTouchEvent(MotionEvent event) {
@@ -62,7 +72,7 @@ public class Escena3 extends Escena {
     }
 
     /**
-     * Inicializa los rect de arboles según las posiciones determinadas por el fondo y los ajusta.
+     * Crea los rect de arboles según las posiciones determinadas por el fondo y los ajusta.
      */
     public void setArbolesRect(){
         arbolesRect = new RectF[19];
@@ -93,7 +103,7 @@ public class Escena3 extends Escena {
     }
 
     /**
-     * Inicializa el array de coches según la posición y determinada por las carreteras del fondo.
+     * Crea el array de coches según la posición y determinada por las carreteras del fondo.
      * La imagen del coche será una imagen aleatoria del array de imágenes de la dirección del
      * coche.
      * Los índices pares son coches que circulan hacia la derecha, y los impares coches que circulan

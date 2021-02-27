@@ -22,22 +22,27 @@ public class Controles {
 
     Paint pControles;
 
+    /**
+     * Llama a la función que crea los rect de los botones de controles y a la función que escala las
+     * imágenes de los mismos. Para ello toma las dimensiones de ancho y alto de pantalla pasadas como
+     * parámetro. También establece el paint de los controles.
+     * @param context contexto
+     * @param anchoPantalla ancho de pantalla
+     * @param altoPantalla alto de pantalla
+     */
     public Controles(Context context, int anchoPantalla, int altoPantalla) {
         this.context = context;
-
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
 
         escalaControles();
-
         pControles = new Paint();
         pControles.setAlpha(200);
-
         setRectControles();
     }
 
     /**
-     * Instancia los rect que representan los botones de los controles
+     * Crea los rect que representan los botones de los controles.
      */
     public void setRectControles(){
         abajo = new RectF(anchoPantalla / 32 * 24 , altoPantalla / 16 * 13, anchoPantalla / 32 * 27 , altoPantalla);
@@ -47,7 +52,7 @@ public class Controles {
     }
 
     /**
-     * Dibuja los bitmap asociados a cada botón
+     * Dibuja las imágenes asociadas a cada botón de los controles.
      * @param c lienzo
      */
     public void dibujaControles(Canvas c) {
@@ -58,7 +63,7 @@ public class Controles {
     }
 
     /**
-     * Escala los bitmap correspondientes a cada botón
+     * Escala las imágenes correspondientes a cada botón de controles.
      */
     public void escalaControles(){
         int anchoControles = anchoPantalla/32 * 3;

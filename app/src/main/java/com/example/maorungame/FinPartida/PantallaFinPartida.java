@@ -25,13 +25,27 @@ public class PantallaFinPartida extends Pantalla {
     int puntos;
     Bitmap monedas;
 
+    /**
+     * Construye la pantalla que aparece al final de la partida a partir de unas dimensiones de ancho
+     * y alto de pantalla, de un número identificativo, del motivo de finalización y de la puntuación
+     * lograda. Crea el rect del botón de avance y asigna la imagen redimensionada asociada al botón.
+     * Pone la música de menú a sonar si la música está activada. También asigna la imagen redimensionada
+     * de monedas usada para indicar la puntuación.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número identificativo de pantalla
+     * @param sinVidas motivo de finalización de la partida: true si el jugador perdió todas las vidas,
+     *                 false si ha superado todos los niveles.
+     * @param puntos puntuación lograda en la partida
+     */
     public PantallaFinPartida(Context context, int anchoPantalla, int altoPantalla, int numPantalla, boolean sinVidas, int puntos) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
         this.sinVidas = sinVidas;
         this.puntos = puntos;
         this.monedas = Pantalla.escala(context, "moneda/monedas_controles.png",
                 anchoPantalla/32*2, altoPantalla/16*2);
-        btnAvanzar = new RectF(anchoPantalla/32 * 28, altoPantalla/16 * 13, anchoPantalla, altoPantalla);
+        btnAvanzar = new RectF(anchoPantalla/32 * 28.5f, altoPantalla/16 * 13, anchoPantalla, altoPantalla);
         avanzaBitmap = Pantalla.escala(context, "menu/menu_avance.png",
                 anchoPantalla / 32 * 3, altoPantalla/16*3);
 
@@ -66,16 +80,16 @@ public class PantallaFinPartida extends Pantalla {
         }
         c.drawBitmap(monedas, anchoPantalla/32 * 13, altoPantalla/16*10.5f, null);
         c.drawText(puntos+"", anchoPantalla/32*17.5f, altoPantalla/16*12, tpBeige);
-        c.drawBitmap(avanzaBitmap,anchoPantalla/32 * 29, altoPantalla/16 * 13, null );
+        c.drawBitmap(avanzaBitmap,anchoPantalla/32 * 28.5f, altoPantalla/16 * 13, null );
     }
 
     /**
      * Si las coordenadas de pulsación están contenidas en el rect del botón avanzar, llama a la
      * función que comprueba si se logra superar algún récord.
      * @param event evento
-     * @return 13 si se logra superar algún récord para avanzar a la pantalla GuardarRecord, en la que
-     * se pide el nombre y guarda el récord. Si no se consigue entrar en la lista de récords, devuelve
-     * 14, pantalla que muestra récords. Devuelve -1 si el rect del botón avanzar no contiene las coordenadas.
+     * @return 13 si se logra superar algún récord para avanzar a la pantalla que guarda récord.
+     * Si no se consigue entrar en la lista de récords, devuelve 14, pantalla que muestra récords.
+     * Devuelve -1 si el rect del botón avanzar no contiene las coordenadas.
      */
     @Override
     public int onTouchEvent(MotionEvent event) {

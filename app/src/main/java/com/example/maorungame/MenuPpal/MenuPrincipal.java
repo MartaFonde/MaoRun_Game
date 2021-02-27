@@ -19,6 +19,17 @@ public class MenuPrincipal extends Menu {
     RectF btnOpciones;
     RectF btnSalir;
 
+    /**
+     * Construye la pantalla del menú principal a partir de unas dimensiones ancho y alto de pantalla
+     * y de un número identificativo. Llama a la función encargada de crear los rect de los botones de
+     * las opciones de menú. Si la música está activada y si no se crea esta pantalla a partir de alguna
+     * opción del menú, mediante el retroceso, se reproduce la música del menú, en bucle y con el volumen
+     * preestablecido del sistema para la música.
+     * @param context contexto
+     * @param anchoPantalla ancho de pantalla
+     * @param altoPantalla alto de pantalla
+     * @param numPantalla número identificativo de la pantalla
+     */
     public MenuPrincipal(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
         setBotonesRect();
@@ -33,7 +44,7 @@ public class MenuPrincipal extends Menu {
     }
 
     /**
-     * Dibuja botones (rect) de las opciones de menú y el texto asociado, y el fondo negro.
+     * Dibuja los rect de los botones de las opciones de menú y el texto asociado, y el fondo negro.
      * @param c lienzo
      */
     @Override
@@ -55,9 +66,9 @@ public class MenuPrincipal extends Menu {
 
     /**
      * Obtiene las coordenadas de la pulsación y comprueba si algún rect de las opciones las contiene.
-     * Si hay alguno que las contenga, en JuegoSV se llevará a cabo el cambioPantalla a la pantalla
+     * Si hay alguno que las contenga, en JuegoSV se llevará a cabo el cambio de Pantalla a la pantalla
      * correspondiente al rect.
-     * @param event
+     * @param event evento
      * @return número de la nueva pantalla o -1 si ningún rect contiene las coordenadas y no se cambia
      * pantalla.
      */
@@ -87,7 +98,7 @@ public class MenuPrincipal extends Menu {
     }
 
     /**
-     * Instancia los rect de los botones que representan los botones de las opciones de menú.
+     * Crea los rect de los botones que representan los botones de las opciones de menú.
      */
     public void setBotonesRect(){
         btnJugar = new RectF(anchoPantalla / 32 * 8, altoPantalla / 16,

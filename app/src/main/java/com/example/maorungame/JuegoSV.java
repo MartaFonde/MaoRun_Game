@@ -17,7 +17,7 @@ import com.example.maorungame.ElemEscena.Gato;
 import com.example.maorungame.Escenas.Escena1;
 import com.example.maorungame.Escenas.Escena2;
 import com.example.maorungame.Escenas.Escena3;
-import com.example.maorungame.FinPartida.GuardarRecord;
+import com.example.maorungame.FinPartida.PantallaGuardaRecord;
 import com.example.maorungame.FinPartida.MenuFinPartida;
 import com.example.maorungame.FinPartida.PantallaFinPartida;
 import com.example.maorungame.MenuPpal.MenuAyuda;
@@ -55,6 +55,14 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     public static boolean restartMusica = true;
     public static int volumen;
 
+    /**
+     * Obtiene el holder e indica donde van las funciones callback. Instancia el hilo encargado de
+     * las dinámicas del juego y establece la variable que lo pone en funcionamiento.
+     * Asegura que reciba eventos de toque. También llama a la función encargada de establecer la
+     * configuración del estado de sonido, música y vibración e inicializa el audioManager como
+     * servicio de audio.
+     * @param context contexto
+     */
     public JuegoSV(Context context) {
         super(context);
         this.surfaceHolder = getHolder(); // Se obtiene el holder
@@ -62,19 +70,15 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         this.context = context;
         hilo = new Hilo(); // Inicializamos el hilo
         setFocusable(true); // Aseguramos que reciba eventos de toque
-
-        hilo = new Hilo();
         hilo.setFuncionando(true);
-
         leerConfig();
-
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
 
     /**
      * Recibe el valor devuelto por pantallaActual al pulsar la pantalla y en función de este valor
-     * sale de la aplicación o llama al método cambiaPantalla si el valor es distinto a -1 (-1 indica
-     * que no procede ningún cambio importante).
+     * sale de la aplicación o llama al método que cambia la pantalla si el valor es distinto a -1
+     * (-1 indica que no procede ningún cambio importante).
      * @param event evento de pulsación
      * @return true si el evento es controlado, false en caso contrario.
      */
@@ -97,7 +101,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * Llama al recolector de basura para liberar memoria y finaliza la activity que contiene
-     * esta clase
+     * esta clase.
      */
     private void salir(){
         funcionando = false;
@@ -160,7 +164,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
                     pantallaActual = new PantallaFinPartida(context, anchoPantalla, altoPantalla, 9,
                            sinVidas , gato.puntos);
                     break;
-                case 13: pantallaActual = new GuardarRecord(context, anchoPantalla, altoPantalla, 13, gato.puntos);
+                case 13: pantallaActual = new PantallaGuardaRecord(context, anchoPantalla, altoPantalla, 13, gato.puntos);
                 break;
                 case 14: pantallaActual = new PantallaRecords(context, anchoPantalla, altoPantalla, 14);
                     break;

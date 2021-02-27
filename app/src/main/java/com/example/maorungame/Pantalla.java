@@ -24,7 +24,16 @@ abstract public class Pantalla {
     public Paint pBotonVerde;
     public Paint pBotonBeige;
 
-    public Pantalla( Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
+    /**
+     * Crea una pantalla a partir de unas dimensiones ancho y alto y de un número identificativo.
+     * También crea el paint de los botones verdes y beige, el tipo de fuente y los textpaint que se
+     * usarán en la clase.
+     * @param context contexto
+     * @param anchoPantalla ancho de la pantalla
+     * @param altoPantalla alto de la pantalla
+     * @param numPantalla número que identifica la pantalla
+     */
+    public Pantalla(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         this.altoPantalla = altoPantalla;
         this.anchoPantalla = anchoPantalla;
         this.context = context;
@@ -38,7 +47,7 @@ abstract public class Pantalla {
         pBotonBeige = new Paint();
         pBotonBeige.setColor(Color.argb(250,233,217,168));
 
-        face=Typeface.createFromAsset(context.getAssets(),"fonts/PolandCannedIntoFuture-OxE3.ttf");
+        face=Typeface.createFromAsset(context.getAssets(),"fonts/FtyStrategycideNcv-elGl.ttf");
 
         tpBeige = new TextPaint();
         tpBeige.setTextSize(altoPantalla/10);
@@ -68,7 +77,7 @@ abstract public class Pantalla {
     }
 
     /**
-     * Gestiona las pulsaciones
+     * Gestiona las pulsaciones.
      * @param event evento
      * @return -1 por defecto
      */
@@ -77,7 +86,7 @@ abstract public class Pantalla {
     }
 
     /**
-     * Crea un bitmap con un ancho y un alto determinados a partir de una imagen
+     * Crea un bitmap con un ancho y un alto determinados a partir de una imagen.
      * @param context contexto
      * @param fichero ruta de la imagen
      * @param nuevoAncho nuevo ancho del bitmap
