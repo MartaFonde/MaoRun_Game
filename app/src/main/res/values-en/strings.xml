@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MaoRun</string>
+    <string name="jugar">Play</string>
+    <string name="records">Records</string>
+    <string name="creditos">Credits</string>
+    <string name="ayuda">Help</string>
+    <string name="opciones">Options</string>
+    <string name="salir">Exit</string>
+    <string name="agradecimientos">Appreciation</string>
+    <string name="imagenes">Images</string>
+    <string name="estiloFuente">Type Style</string>
+    <string name="musica">Music</string>
+    <string name="ayudaTitulo">How to play</string>
+    <string name="ayuda1">The objective of the game is to guide the cat to</string>
+    <string name="ayuda2">get as many coins as possible.</string>
+    <string name="ayuda3">The game consists of three levels, with their respective</string>
+    <string name="ayuda4">scenarios, in which trees are obstacles</string>
+    <string name="ayuda5">and cars are driving through. In each collision</string>
+    <string name="ayuda6">with a car, the cat will lose a life.</string>
+    <string name="ayuda7">" As a good cat, he will initially have seven lives."</string>
+    <string name="ayuda8">To pass each level, the cat must traverse</string>
+    <string name="ayuda9">the marked dirt road.</string>
+    <string name="sonidos">Sounds</string>
+    <string name="vibracion">Vibration</string>
+    <string name="reiniciarRecords">Reset records</string>
+    <string name="idioma">Language</string>
+    <string name="volver">Back</string>
+    <string name="menuPpal">Main menu</string>
+    <string name="ayudaPause1">"Get as many coins as possible. "</string>
+    <string name="ayudaPause2">You will have to dodge the cars</string>
+    <string name="ayudaPause3">to avoid losing lives.</string>
+    <string name="ayudaPause4">"Trees are obstacles. "</string>
+    <string name="ayudaPause5">"To clear each level, direct the "</string>
+    <string name="ayudaPause6">"cat towards the dirt road. "</string>
+    <string name="finPartida">GAME OVER</string>
+    <string name="sinVidas">"You lost all the lives "</string>
+    <string name="superadosNiveles">"You passed all the levels "</string>
+    <string name="guardaRecordsTitulo">SAVE RECORD</string>
+    <string name="borrar">Delete</string>
+    <string name="guardar">Save</string>
+    <string name="volverJugar">Play again</string>
+</resources>

@@ -9,23 +9,56 @@ import android.graphics.RectF;
 import com.example.maorungame.Pantalla;
 
 public class Controles {
+
+    /**
+     * Contexto
+     */
     Context context;
+
+    /**
+     * Ancho de pantalla del dispositivo
+     */
     int anchoPantalla;
+
+    /**
+     * Alto de pantalla del dispositivo
+     */
     int altoPantalla;
 
+    /**
+     * Imágenes de los botones de controles
+     */
     Bitmap[] bitmapControles;
 
+    /**
+     * Botón para mover a la derecha
+     */
     public RectF der;
+
+    /**
+     * Botón para mover a la izquierda
+     */
     public RectF izq;
+
+    /**
+     * Botón para mover hacia arriba
+     */
     public RectF arriba;
+
+    /**
+     * Botón para mover hacia abajo
+     */
     public RectF abajo;
 
+    /**
+     * Estilo de los botones de controles
+     */
     Paint pControles;
 
     /**
      * Llama a la función que crea los rect de los botones de controles y a la función que escala las
      * imágenes de los mismos. Para ello toma las dimensiones de ancho y alto de pantalla pasadas como
-     * parámetro. También establece el paint de los controles.
+     * parámetro. Establece el paint de los controles.
      * @param context contexto
      * @param anchoPantalla ancho de pantalla
      * @param altoPantalla alto de pantalla

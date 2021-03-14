@@ -7,15 +7,45 @@ import android.graphics.Canvas;
 import com.example.maorungame.Pantalla;
 
 public class Trafico {
+
+    /**
+     * Contexto
+     */
     Context context;
+
+    /**
+     * Conjunto de coches que circulan en la escena
+     */
     public Coche[] coches;
 
+    /**
+     * Imágenes de los coches que circulan hacia la derecha
+     */
     public Bitmap[] imgCochesRight;
+
+    /**
+     * Imágenes de los coches que circulan hacia la izquierda
+     */
     public Bitmap[] imgCochesLeft;
 
+    /**
+     * Ancho de la pantalla
+     */
     int anchoPantalla;
+
+    /**
+     * Alto de la pantalla
+     */
     int altoPantalla;
+
+    /**
+     * Ancho del coche
+     */
     public int anchoCoche;
+
+    /**
+     * Alto del coche
+     */
     public int altoCoche;
 
     /**
@@ -31,7 +61,7 @@ public class Trafico {
         this.altoPantalla = altoPantalla;
         this.anchoCoche = anchoPantalla/32;
         this.altoCoche = altoPantalla/16;
-        coches = new Coche[16];
+
         setImgCochesRight();
         setImgCochesLeft();
     }
@@ -84,7 +114,55 @@ public class Trafico {
     public void dibujaCoches(Canvas c){
         for (Coche coche : coches) {
             c.drawBitmap(coche.imagen, coche.getX(), coche.getY(), null);
-            //c.drawRect(coche.rectangulo,p);
         }
+    }
+
+    /**
+     * Crea el array de coches a partir de las coordenadas y pasadas como parámetro.
+     * La imagen del coche será una imagen aleatoria del array de imágenes correspondiente a la
+     * dirección del coche.
+     * Los índices pares son coches que circulan hacia la derecha, y los impares coches que circulan
+     * hacia la izquierda.
+     * @param pos posiciones en eje y
+     * @param velocidad velocidad de los coches
+     */
+    public void setCoches(int[] pos, float velocidad){
+        coches = new Coche[16];
+        coches[0] = new Coche(imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla / 2, altoPantalla / 16 * pos[6], velocidad);
+        coches[1] = new Coche(imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla / 5, altoPantalla / 16 * pos[7], velocidad);
+        coches[2] = new Coche(imgCochesRight[(int)(Math.random()*5)],
+                -anchoCoche, altoPantalla / 16 * pos[6], velocidad);
+        coches[3] = new Coche(imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla, altoPantalla / 16 * pos[7], velocidad);
+
+        coches[4] = new Coche(imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla / 7, altoPantalla / 16 * pos[4], velocidad);
+        coches[5] = new Coche(imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla, altoPantalla / 16 * pos[5], velocidad);
+        coches[6] = new Coche(imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla, altoPantalla / 16 * pos[4], velocidad);
+        coches[7] = new Coche(imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla/2, altoPantalla / 16 * pos[5], velocidad);
+
+        coches[8] = new Coche(imgCochesRight[(int)(Math.random()*5)],
+                -anchoCoche, altoPantalla / 16 * pos[2], velocidad);
+        coches[9] = new Coche(imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla, altoPantalla / 16 * pos[3], velocidad);
+        coches[10] = new Coche(imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla/2, altoPantalla / 16 * pos[2], velocidad);
+        coches[11] = new Coche(imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla/3, altoPantalla / 16 * pos[3], velocidad);
+
+        coches[12] = new Coche(imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla / 16, altoPantalla / 16 * pos[0], velocidad);
+        coches[13] = new Coche(imgCochesLeft[(int)(Math.random()*5)],
+                -anchoCoche, altoPantalla / 16 * pos[1], velocidad);
+        coches[14] = new Coche(imgCochesRight[(int)(Math.random()*5)],
+                anchoPantalla/3, altoPantalla / 16 * pos[0], velocidad);
+        coches[15] = new Coche(imgCochesLeft[(int)(Math.random()*5)],
+                anchoPantalla/2, altoPantalla / 16 * pos[1], velocidad);
+
     }
 }

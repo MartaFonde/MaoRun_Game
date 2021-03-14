@@ -12,13 +12,25 @@ import com.example.maorungame.Pantalla;
 
 public class Escena2 extends Escena {
 
+    /**
+     * Imagen de fondo
+     */
     Bitmap fondo;
+
+    /**
+     * Velocidad a la que circulan los coches
+     */
     float velocidadCoches;
+
+    /**
+     * Posiciones del eje y en las que circulan coches
+     */
+    int[] posicionesCoches = {2,3,5,6,7,8,10,11};
 
     /**
      * Construye el segundo nivel del juego a partir de las dimensiones de ancho y alto de la pantalla,
      * del número identificativo y del personaje gato. Inicializa el fondo y llama a la función
-     * que crea los rect de árboles, a la que establece la posición de las monedas y la que fija la
+     * que crea los rect de árboles, la que establece la posición de las monedas y la que fija la
      * posición inicial de los coches.
      * @param context contexto
      * @param anchoPantalla ancho de la pantalla
@@ -31,10 +43,10 @@ public class Escena2 extends Escena {
         fondo = Pantalla.getBitmapFromAssets(context, "mapas/mapa_nivel2.png");
         setFondo(fondo);
         setArbolesRect();
-        setPosicionMonedas();
+        moneda.setPosicionMonedas(arbolesRect);
         gato.setVelocidad(anchoPantalla / (32*2.5f));
         velocidadCoches = anchoPantalla / (32*10);
-        setCoches();
+        trafico.setCoches(posicionesCoches, velocidadCoches);
     }
 
     /**
@@ -110,50 +122,5 @@ public class Escena2 extends Escena {
         arbolesRect[22] = new RectF(propW * 4 * 1.015f, 0, propW* 9 / 1.015f, propH / 1.07f);
         arbolesRect[23] = new RectF(propW  * 22 * 1.01f, 0, propW  * 28, propH / 1.06f);
         arbolesRect[24] = new RectF(propW  * 28 * 1.015f, 0, anchoPantalla, propH *2 / 1.03f);
-    }
-
-    /**
-     * Crea el array de coches según la posición y determinada por las carreteras del fondo.
-     * La imagen del coche será una imagen aleatoria del array de imágenes de la dirección del
-     * coche.
-     * Los índices pares son coches que circulan hacia la derecha, y los impares coches que circulan
-     * hacia la izquierda.
-     */
-    public void setCoches(){
-        trafico.coches[0] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
-                anchoPantalla / 2, altoPantalla / 16 * 11, velocidadCoches);
-        trafico.coches[1] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
-                anchoPantalla / 5, altoPantalla / 16 * 10, velocidadCoches);
-        trafico.coches[2] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
-                -trafico.anchoCoche, altoPantalla / 16 * 11, velocidadCoches);
-        trafico.coches[3] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
-                anchoPantalla, altoPantalla / 16 * 10, velocidadCoches);
-
-        trafico.coches[4] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
-                anchoPantalla / 7, altoPantalla / 16 * 8, velocidadCoches);
-        trafico.coches[5] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
-                anchoPantalla, altoPantalla / 16 * 7, velocidadCoches);
-        trafico.coches[6] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
-                anchoPantalla, altoPantalla / 16 * 8, velocidadCoches);
-        trafico.coches[7] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
-                anchoPantalla/2, altoPantalla / 16 * 7, velocidadCoches);
-
-        trafico.coches[8] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
-                -trafico.anchoCoche, altoPantalla / 16 * 6, velocidadCoches);
-        trafico.coches[9] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
-                anchoPantalla, altoPantalla /16 * 5, velocidadCoches);
-        trafico.coches[10] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
-                anchoPantalla/2, altoPantalla /16 * 6, velocidadCoches);
-        trafico.coches[11] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
-                anchoPantalla/3, altoPantalla / 16 * 5, velocidadCoches);
-
-        trafico.coches[12] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
-                anchoPantalla / 16, altoPantalla /16 *3, velocidadCoches);
-        trafico.coches[13] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
-                -trafico.anchoCoche, altoPantalla / 16 * 2, velocidadCoches);
-        trafico.coches[14] = new Coche(trafico.imgCochesRight[(int)(Math.random()*5)],
-                anchoPantalla/3, altoPantalla / 16 * 3, velocidadCoches);
-        trafico.coches[15] = new Coche(trafico.imgCochesLeft[(int)(Math.random()*5)],
-                anchoPantalla/2, altoPantalla / 16 * 2, velocidadCoches);
     }
 }

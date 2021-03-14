@@ -7,10 +7,18 @@ import android.view.MotionEvent;
 
 import com.example.maorungame.JuegoSV;
 import com.example.maorungame.Pantalla;
+import com.example.maorungame.R;
 
 public class MenuFinPartida extends Pantalla {
 
+    /**
+     * Botón para volver a la escena 1 del juego
+     */
     RectF btnRepetir;
+
+    /**
+     * Botón de menú principal
+     */
     RectF btnMenuPpal;
 
     /**
@@ -33,15 +41,17 @@ public class MenuFinPartida extends Pantalla {
     @Override
     public void dibuja(Canvas c) {
         super.dibuja(c);
+        c.drawBitmap(fondoMenu, 0, 0, null);
+
         tpBeige.setTextSize(altoPantalla/10);
         btnRepetir = new RectF(anchoPantalla / 32 *  9.5f, altoPantalla/16*5,
                 anchoPantalla / 32 *22.5f, altoPantalla/16*7);
-        c.drawRect(btnRepetir, pBotonVerde);
-        c.drawText("Volver a jugar", anchoPantalla / 2, altoPantalla/16 * 6.5f, tpBeige);
+        c.drawRect(btnRepetir, pBotonNaranja);
+        c.drawText(context.getResources().getText(R.string.volverJugar).toString(), anchoPantalla / 2, altoPantalla/16 * 6.5f, tpBeige);
         btnMenuPpal = new RectF(anchoPantalla / 32 *  9.5f, altoPantalla/16*9,
                 anchoPantalla / 32 *22.5f, altoPantalla/16*11);
-        c.drawRect(btnMenuPpal, pBotonVerde);
-        c.drawText("Menú principal", anchoPantalla / 2, altoPantalla/16 * 10.5f, tpBeige);
+        c.drawRect(btnMenuPpal, pBotonNaranja);
+        c.drawText(context.getResources().getText(R.string.menuPpal).toString(), anchoPantalla / 2, altoPantalla/16 * 10.5f, tpBeige);
     }
 
     /**
@@ -60,7 +70,7 @@ public class MenuFinPartida extends Pantalla {
             JuegoSV.mediaPlayer.stop();
             return 6;
         }else if(btnMenuPpal.contains(x,y)){
-            JuegoSV.restartMusica = false;
+            JuegoSV.resetMusic = false;
             return 1;
         }
         return super.onTouchEvent(event);

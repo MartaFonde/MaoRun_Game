@@ -19,17 +19,37 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class PantallaFinPartida extends Pantalla {
+
+    /**
+     * Botón de avance
+     */
     RectF btnAvanzar;
+
+    /**
+     * Imagen del botón de avance
+     */
     Bitmap avanzaBitmap;
+
+    /**
+     * Indica si se ha finalizado el juego con vidas
+     */
     boolean sinVidas;
+
+    /**
+     * Puntos logrados
+     */
     int puntos;
+
+    /**
+     * Imagen de monedas
+     */
     Bitmap monedas;
 
     /**
      * Construye la pantalla que aparece al final de la partida a partir de unas dimensiones de ancho
      * y alto de pantalla, de un número identificativo, del motivo de finalización y de la puntuación
      * lograda. Crea el rect del botón de avance y asigna la imagen redimensionada asociada al botón.
-     * Pone la música de menú a sonar si la música está activada. También asigna la imagen redimensionada
+     * Reproduce la música de menú si la música está activada. Asigna la imagen redimensionada
      * de monedas usada para indicar la puntuación.
      * @param context contexto
      * @param anchoPantalla ancho de la pantalla
@@ -67,20 +87,24 @@ public class PantallaFinPartida extends Pantalla {
     @Override
     public void dibuja(Canvas c) {
         super.dibuja(c);
-        tpBeige.setTextSize(altoPantalla/8);
-        tpBeige.setTextAlign(Paint.Align.CENTER);
-        c.drawText("FIN DE LA PARTIDA", anchoPantalla/2, altoPantalla/16*5, tpBeige);
-        tpBeige.setTextSize(altoPantalla/12);
+        c.drawBitmap(fondoMenu, 0, 0, null);
+
+        c.drawRect(rectFondo, pFondo);
+
+        tpNaranja.setTextSize(altoPantalla/8);
+        tpNaranja.setTextAlign(Paint.Align.CENTER);
+        c.drawText(context.getResources().getText(R.string.finPartida).toString(), anchoPantalla/2, altoPantalla/16*5, tpNaranja);
+        tpNaranja.setTextSize(altoPantalla/12);
         if(sinVidas){
-            tpBeige.setTextSize(altoPantalla/10);
-            c.drawText("Has perdido todas las vidas", anchoPantalla/2, altoPantalla/16*8, tpBeige);
+            tpNaranja.setTextSize(altoPantalla/10);
+            c.drawText(context.getResources().getText(R.string.sinVidas).toString(), anchoPantalla/2, altoPantalla/16*8, tpNaranja);
         }else{
-            tpBeige.setTextSize(altoPantalla/14);
-            c.drawText("Has superado todos los niveles", anchoPantalla/2, altoPantalla/16*8, tpBeige);
+            tpNaranja.setTextSize(altoPantalla/14);
+            c.drawText(context.getResources().getText(R.string.superadosNiveles).toString(), anchoPantalla/2, altoPantalla/16*8, tpNaranja);
         }
         c.drawBitmap(monedas, anchoPantalla/32 * 13, altoPantalla/16*10.5f, null);
-        c.drawText(puntos+"", anchoPantalla/32*17.5f, altoPantalla/16*12, tpBeige);
-        c.drawBitmap(avanzaBitmap,anchoPantalla/32 * 28.5f, altoPantalla/16 * 13, null );
+        c.drawText(puntos+"", anchoPantalla/32*17.5f, altoPantalla/16*12, tpNaranja);
+        c.drawBitmap(avanzaBitmap,anchoPantalla/32 * 29, altoPantalla/16 * 13, null );
     }
 
     /**

@@ -9,15 +9,30 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.example.maorungame.Pantalla;
+import com.example.maorungame.R;
 
 public class PauseEscena extends Pantalla {
 
+    /**
+     * Pantalla actual del menú de pausa
+     */
     Pantalla pantallaPauseActual;
+
+    /**
+     * Número identificativo de la nueva pantalla
+     */
     int numPantallaNueva;
-    protected Paint pFondo;
-    RectF rectFondo;
-    protected Bitmap atrasbtmp;
+
+    /**
+     * Botón de retroceso
+     */
     protected RectF rectAtras;
+
+    /**
+     * Imagen del botón de retroceso
+     */
+    protected Bitmap atrasbtmp;
+
 
     /**
      * Contruye la pantalla que gestiona el cambio de pantallas del menú de pausa de Escena a partir de
@@ -32,9 +47,7 @@ public class PauseEscena extends Pantalla {
      */
     public PauseEscena(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
-
-        pFondo = new Paint();
-        pFondo.setColor(Color.argb(210, 50,50,50));
+        pFondo.setAlpha(210);
 
         tpBeige.setTextSize(altoPantalla/12);
 
@@ -49,15 +62,17 @@ public class PauseEscena extends Pantalla {
     }
 
     /**
-     * Dibuja rect oscuro que ocupa parte central de la pantalla, sobre fondo transparente y
+     * Dibuja rect de fondo oscuro que ocupa parte central de la pantalla, sobre fondo transparente y
      * si la pantalla no es el menú de pausa dibuja botón de retroceso. Sobre esto dibuja lo descrito
      * en la función dibuja de pantallaActual.
      * @param c lienzo
      */
     @Override
     public void dibuja(Canvas c) {
+        super.dibuja(c);
         c.drawColor(Color.TRANSPARENT);
         c.drawRect(rectFondo, pFondo);
+
         if(pantallaPauseActual.numPantalla != 10){
             c.drawBitmap(atrasbtmp, anchoPantalla/32*8, altoPantalla/16*2, null);
         }
@@ -79,8 +94,8 @@ public class PauseEscena extends Pantalla {
             if(numPantallaNueva == 1) return 1; //mnu ppal
             if(numPantallaNueva == 0) return 0; //vuelve a escena
             if(numPantallaNueva != -1 ) cambiaPantalla(numPantallaNueva);
-        }
-        return -1;
+       }
+       return -1;
     }
 
     /**

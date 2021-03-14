@@ -7,12 +7,28 @@ import android.view.MotionEvent;
 
 import com.example.maorungame.JuegoSV;
 import com.example.maorungame.Pantalla;
+import com.example.maorungame.R;
 
 public class PauseMenu extends Pantalla {
 
+    /**
+     * Botón para reanudar la escena del juego
+     */
     RectF btnVolver;
+
+    /**
+     * Botón de opciones
+     */
     RectF btnOpciones;
+
+    /**
+     * Botón de ayuda
+     */
     RectF btnAyuda;
+
+    /**
+     * Botón de menú principal
+     */
     RectF btnMenuPpal;
 
     /**
@@ -36,14 +52,15 @@ public class PauseMenu extends Pantalla {
      */
     @Override
     public void dibuja(Canvas c) {
-        c.drawRect(btnVolver, pBotonVerde);
-        c.drawText("Volver", anchoPantalla/2, altoPantalla/16*4, tpBeige);
-        c.drawRect(btnOpciones, pBotonVerde);
-        c.drawText("Opciones", anchoPantalla/2, altoPantalla/16*7, tpBeige);
-        c.drawRect(btnAyuda, pBotonVerde);
-        c.drawText("Ayuda", anchoPantalla/2, altoPantalla/16*10, tpBeige);
-        c.drawRect(btnMenuPpal, pBotonVerde);
-        c.drawText("Menú principal", anchoPantalla/2, altoPantalla/16*13, tpBeige);
+        super.dibuja(c);
+        c.drawRect(btnVolver, pBotonNaranja);
+        c.drawText(context.getResources().getText(R.string.volver).toString(), anchoPantalla/2, altoPantalla/16*4, tpBeige);
+        c.drawRect(btnOpciones, pBotonNaranja);
+        c.drawText(context.getResources().getText(R.string.opciones).toString(), anchoPantalla/2, altoPantalla/16*7, tpBeige);
+        c.drawRect(btnAyuda, pBotonNaranja);
+        c.drawText(context.getResources().getText(R.string.ayuda).toString(), anchoPantalla/2, altoPantalla/16*10, tpBeige);
+        c.drawRect(btnMenuPpal, pBotonNaranja);
+        c.drawText(context.getResources().getText(R.string.menuPpal).toString(), anchoPantalla/2, altoPantalla/16*13, tpBeige);
     }
 
     /**
@@ -82,7 +99,7 @@ public class PauseMenu extends Pantalla {
                 return 12;
             }else if(btnMenuPpal.contains(x,y)){
                 JuegoSV.mediaPlayer.stop();
-                JuegoSV.restartMusica = true;
+                JuegoSV.resetMusic = true;
                 return 1;
             }
         }

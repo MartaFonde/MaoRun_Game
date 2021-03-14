@@ -18,21 +18,74 @@ import java.io.FileOutputStream;
 
 public class PauseOpciones extends PauseEscena {
 
+    /**
+     * Botón para activar los efectos de sonido
+     */
     public RectF rectSonAct;
+
+    /**
+     * Botón para desactivar los efectos de sonido
+     */
     public RectF rectSonDesact;
+
+    /**
+     * Botón para activar la música
+     */
     public RectF rectMusicaAct;
+
+    /**
+     * Botón para desactivar la música
+     */
     public RectF rectMusicaDesact;
+
+    /**
+     * Botón para activar la vibración
+     */
     public RectF rectVibracionAct;
+
+    /**
+     * Botón para desactivar la vibración
+     */
     public RectF rectVibracionDesact;
 
+    /**
+     * Imagen del botón para activar sonido y música
+     */
     Bitmap sonidoActBitmap;
+
+    /**
+     * Imagen del botón para desactivar sonido y música
+     */
     Bitmap sonidoDesactBitmap;
+
+    /**
+     * Imagen del botón para activar vibración
+     */
     Bitmap vibracionActBitmap;
+
+    /**
+     * Imagen del botón para desactivar vibración
+     */
     Bitmap vibracionDesactBitmap;
 
+    /**
+     * Imagen del botón de retroceso
+     */
     Bitmap atrasbtmp;
+
+    /**
+     * Botón de retroceso
+     */
     RectF rectAtras;
+
+    /**
+     * Estilo del círculo que indica activo
+     */
     Paint pCircle;
+
+    /**
+     * Se asigna a true si la configuración cambia
+     */
     boolean cambios;
 
     /**
@@ -76,14 +129,15 @@ public class PauseOpciones extends PauseEscena {
      */
     @Override
     public void dibuja(Canvas c) {
+
         tpBeige.setTextAlign(Paint.Align.CENTER);
         tpBeige.setTextSize(altoPantalla/15);
-        c.drawText("OPCIONES", anchoPantalla/2, altoPantalla/16 * 3.5f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.opciones).toString(), anchoPantalla/2, altoPantalla/16 * 3.5f, tpBeige);
 
         tpBeige.setTextAlign(Paint.Align.LEFT);
         tpBeige.setTextSize(altoPantalla/18);
 
-        c.drawText("SONIDO", anchoPantalla/32 * 10, altoPantalla / 16 * 6, tpBeige);
+        c.drawText(context.getResources().getText(R.string.sonidos).toString(), anchoPantalla/32 * 10, altoPantalla / 16 * 6, tpBeige);
         if(JuegoSV.sonido) c.drawCircle( rectSonAct.left + (rectSonAct.right - rectSonAct.left)/2,
                 rectSonAct.top + (rectSonAct.bottom-rectSonAct.top)/2, altoPantalla/16, pCircle);
         else c.drawCircle(rectSonDesact.left + (rectSonDesact.right - rectSonDesact.left)/2,
@@ -91,7 +145,7 @@ public class PauseOpciones extends PauseEscena {
         c.drawBitmap(sonidoActBitmap, rectSonAct.left, rectSonAct.top, null);
         c.drawBitmap(sonidoDesactBitmap, rectSonDesact.left, rectSonDesact.top, null);
 
-        c.drawText("MÚSICA", anchoPantalla/32 * 10, altoPantalla / 16 * 9, tpBeige);
+        c.drawText(context.getResources().getText(R.string.musica).toString(), anchoPantalla/32 * 10, altoPantalla / 16 * 9, tpBeige);
         if(JuegoSV.musica) c.drawCircle( rectMusicaAct.left + (rectMusicaAct.right - rectMusicaAct.left)/2,
                 rectMusicaAct.top + (rectMusicaAct.bottom-rectMusicaAct.top)/2, altoPantalla/16, pCircle);
         else c.drawCircle(rectMusicaDesact.left + (rectMusicaDesact.right - rectMusicaDesact.left)/2,
@@ -100,7 +154,7 @@ public class PauseOpciones extends PauseEscena {
         c.drawBitmap(sonidoDesactBitmap, rectMusicaDesact.left, rectMusicaDesact.top, null);
 
 
-        c.drawText("VIBRACIÓN", anchoPantalla/32 * 10, altoPantalla / 16 * 12, tpBeige);
+        c.drawText(context.getResources().getText(R.string.vibracion).toString(), anchoPantalla/32 * 10, altoPantalla / 16 * 12, tpBeige);
         if(JuegoSV.vibracion) c.drawCircle( rectVibracionAct.left + (rectVibracionAct.right - rectVibracionAct.left)/2,
                 rectVibracionAct.top + (rectVibracionAct.bottom-rectVibracionAct.top)/2, altoPantalla/16, pCircle);
         else c.drawCircle(rectVibracionDesact.left + (rectVibracionDesact.right - rectVibracionDesact.left)/2,
@@ -199,6 +253,7 @@ public class PauseOpciones extends PauseEscena {
             fos.write((JuegoSV.sonido+"\n").getBytes());
             fos.write((JuegoSV.musica+"\n").getBytes());
             fos.write((JuegoSV.vibracion+"\n").getBytes());
+            fos.write(JuegoSV.codLang.getBytes());
         }catch (Exception e){
             e.printStackTrace();
         }

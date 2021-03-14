@@ -2,11 +2,14 @@ package com.example.maorungame;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,36 +32,103 @@ import com.example.maorungame.MenuPpal.PantallaRecords;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
-    private SurfaceHolder surfaceHolder; // Interfaz abstracta para manejar la superficie de dibujado
-    static Context context;
-
-    private Hilo hilo; // Hilo encargado de dibujar y actualizar la física
-    private boolean funcionando = false;
-
-    static int anchoPantalla;
-    static int altoPantalla;
-
-    static Pantalla pantallaActual;
-    int numPantallaNueva;
-
-    static Bitmap bitmapGato;
-    static Gato gato;
-
-    public static boolean sonido;
-    public static boolean musica;
-    public static boolean vibracion;
-
-    public static MediaPlayer mediaPlayer;
-    public static AudioManager audioManager;
-    public static boolean restartMusica = true;
-    public static int volumen;
 
     /**
-     * Obtiene el holder e indica donde van las funciones callback. Instancia el hilo encargado de
-     * las dinámicas del juego y establece la variable que lo pone en funcionamiento.
-     * Asegura que reciba eventos de toque. También llama a la función encargada de establecer la
+     * Interfaz abstracta para manejar la superficie de dibujado
+     */
+    private SurfaceHolder surfaceHolder;
+
+    /**
+     * Contexto de la aplicación
+     */
+    static Context context;
+
+    /**
+     * Hilo encargado de dibujar y actualizar la física del juego
+     */
+    private Hilo hilo;
+
+    /**
+     * Controla si el hilo corre
+     */
+    private boolean funcionando = false;
+
+    /**
+     * Ancho de pantalla del dispositivo
+     */
+    static int anchoPantalla;
+
+    /**
+     * Alto de pantalla del dispositivo
+     */
+    static int altoPantalla;
+
+    /**
+     * Pantalla actual del juego
+     */
+    static Pantalla pantallaActual;
+
+    /**
+     * Número identificativo de la nueva pantalla del juego
+     */
+    int numPantallaNueva;
+
+    /**
+     * Imagen que contiene los sprites animados de Gato
+     */
+    static Bitmap bitmapGato;
+
+    /**
+     * Personaje del gato
+     */
+    static Gato gato;
+
+    /**
+     * Controla si los efectos de sonido deben de sonar
+     */
+    public static boolean sonido;
+
+    /**
+     * Controla si la música debe de sonar
+     */
+    public static boolean musica;
+
+    /**
+     * Controla si la vibración debe de funcionar
+     */
+    public static boolean vibracion;
+
+    /**
+     * Controla el audio
+     */
+    public static MediaPlayer mediaPlayer;
+
+    /**
+     * Proporciona acceso al sonido del dispositivo
+     */
+    public static AudioManager audioManager;
+
+    /**
+     * Controla si se debe asignar música al mediaPlayer
+     */
+    public static boolean resetMusic = true;
+
+    /**
+     * Volumen al que se reproducirán los efectos de sonido y la música
+     */
+    public static float volumen;
+
+    /**
+     * Código de idioma
+     */
+    public static String codLang;
+
+    /**
+     * Obtiene el holder e indica donde van las funciones callback.
+     * Asegura que reciba eventos de toque. Llama a la función encargada de establecer la
      * configuración del estado de sonido, música y vibración e inicializa el audioManager como
      * servicio de audio.
      * @param context contexto
@@ -68,9 +138,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         this.surfaceHolder = getHolder(); // Se obtiene el holder
         this.surfaceHolder.addCallback(this); // y se indica donde van las funciones callback
         this.context = context;
-        hilo = new Hilo(); // Inicializamos el hilo
         setFocusable(true); // Aseguramos que reciba eventos de toque
-        hilo.setFuncionando(true);
         leerConfig();
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
@@ -88,7 +156,7 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
             if(event.getAction() == MotionEvent.ACTION_DOWN){
                 numPantallaNueva = pantallaActual.onTouchEvent(event);
                 if(numPantallaNueva == 0){
-                    mediaPlayer.stop();
+                    if(mediaPlayer != null) mediaPlayer.stop();
                     salir();
                     return true;
                 }
@@ -100,19 +168,15 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
-     * Llama al recolector de basura para liberar memoria y finaliza la activity que contiene
-     * esta clase.
+     * Finaliza la activity del juego.
      */
     private void salir(){
-        funcionando = false;
-        pantallaActual = null;
-        System.gc();
         ((Activity)context).finish();
     }
 
     /**
-     * Lee el archivo de configuración de sonido, música y vibración. Si el archivo no existe
-     * o está corrupto, asigna por defecto estas variables a true.
+     * Lee el archivo de configuración de sonido, música, vibración e idioma. Si el archivo no existe
+     * o está corrupto, asigna por defecto estas variables a true y el idioma a gallego.
      */
     private void leerConfig(){
         try (FileInputStream fis = context.openFileInput("config.txt");
@@ -121,12 +185,32 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
              sonido = Boolean.parseBoolean(buffer.readLine());
              musica = Boolean.parseBoolean(buffer.readLine());
              vibracion = Boolean.parseBoolean(buffer.readLine());
+             codLang = buffer.readLine();
+             if(codLang.equals("gl") || codLang.equals("es") || codLang.equals("en")){
+                 cambiaIdioma(codLang);
+             }else{
+                 cambiaIdioma("gl");
+             }
         } catch (Exception e) {
             sonido = true;
             musica = true;
             vibracion = true;
+            cambiaIdioma("gl");
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Establece el idioma del sistema
+     * @param codIdioma Codigo del nuevo lenguaje
+     */
+    public static void cambiaIdioma(String codIdioma) {
+        Resources res=context.getResources();
+        DisplayMetrics dm=res.getDisplayMetrics();
+        android.content.res.Configuration conf=res.getConfiguration();
+        conf.locale=new Locale(codIdioma.toLowerCase());
+        res.updateConfiguration(conf, dm);
+        codLang = codIdioma;
     }
 
     /**
@@ -195,6 +279,8 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * Se ejecuta si hay algún cambio en la superficie de dibujo. Obtenemos su nuevo tamaño.
+     * Instancia el hilo encargado de las dinámicas del juego y establece la variable que lo pone en
+     * funcionamiento.
      * Si hay cambios, la pantalla MenuPrincipal es asignada a pantallaActual y se lanza el hilo.
      * @param holder
      * @param format
@@ -207,6 +293,9 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
         altoPantalla = height;
 
         pantallaActual = new MenuPrincipal(context, anchoPantalla, altoPantalla, 1);
+
+        hilo = new Hilo();
+        hilo.setFuncionando(true);
 
         if (hilo.getState() == Thread.State.NEW) hilo.start();
         if (hilo.getState() == Thread.State.TERMINATED) {
@@ -256,8 +345,9 @@ public class JuegoSV extends SurfaceView implements SurfaceHolder.Callback {
                     if (c == null) c = surfaceHolder.lockCanvas();
 
                     synchronized (surfaceHolder) {
-                        if(pantallaActual != null)
-                        pantallaActual.dibuja(c);
+                        if(pantallaActual != null){
+                            pantallaActual.dibuja(c);
+                        }
 
                         if(pantallaActual != null
                                 && pantallaActual instanceof Escena1

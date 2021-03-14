@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MaoRun</string>
+    <string name="jugar">Xogar</string>
+    <string name="records">Récords</string>
+    <string name="creditos">Créditos</string>
+    <string name="ayuda">Axuda</string>
+    <string name="opciones">Opcións</string>
+    <string name="salir">Saír</string>
+    <string name="agradecimientos">Agradecementos</string>
+    <string name="imagenes">Imaxes</string>
+    <string name="estiloFuente">Tipo de fonte</string>
+    <string name="musica">Música</string>
+    <string name="ayudaTitulo">Como xogar</string>
+    <string name="ayuda1">O obxectivo do xogo é guiar o gato para</string>
+    <string name="ayuda2">conseguir o maior número de moedas posible.</string>
+    <string name="ayuda3">O xogo conta de tres niveis, cos seus respectvos</string>
+    <string name="ayuda4">escenarios, nos que as árbores son obstáculos</string>
+    <string name="ayuda5">e polos que circulan coches. En cada colisión</string>
+    <string name="ayuda6">cun coche o gato perderá unha vida.</string>
+    <string name="ayuda7">Coma bo gato, inicialmente contará con sete vidas.</string>
+    <string name="ayuda8">Para superar cada nivel, o gato debe de atravesar</string>
+    <string name="ayuda9">o camiño de terra marcado.</string>
+    <string name="sonidos">Sons</string>
+    <string name="vibracion">Vibración</string>
+    <string name="reiniciarRecords">Reiniciar récords</string>
+    <string name="idioma">Idioma</string>
+    <string name="volver">Voltar</string>
+    <string name="menuPpal">Menú principal</string>
+    <string name="ayudaPause1">Faite co maior número de moedas</string>
+    <string name="ayudaPause2">posible. Terás que esquivar aos</string>
+    <string name="ayudaPause3">coches para non perder vidas.</string>
+    <string name="ayudaPause4">As árbores son obstáculos.</string>
+    <string name="ayudaPause5">Para superar cada nivel, dirixe o</string>
+    <string name="ayudaPause6">gato cara o camiño de terra.</string>
+    <string name="finPartida">FIN DA PARTIDA</string>
+    <string name="sinVidas">Quedaches sen vidas</string>
+    <string name="superadosNiveles">Superaches todos os niveis</string>
+    <string name="guardaRecordsTitulo">GARDA RÉCORD</string>
+    <string name="borrar">Borrar</string>
+    <string name="guardar">Gardar</string>
+    <string name="volverJugar">Volver a xogar</string>
+</resources>

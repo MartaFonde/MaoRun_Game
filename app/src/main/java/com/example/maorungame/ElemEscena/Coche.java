@@ -5,13 +5,45 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 public class Coche {
+
+    /**
+     * Punto de la posición del coche
+     */
     public PointF posicion;
+
+    /**
+     * Coordenada x del coche
+     */
     float x;
+
+    /**
+     * Coordenada y del coche
+     */
     float y;
+
+    /**
+     * Imagen del coche
+     */
     public Bitmap imagen;
+
+    /**
+     * Superficie rect del coche
+     */
     public RectF rectangulo;
+
+    /**
+     * Ancho del coche
+     */
     int anchoCoche;
+
+    /**
+     * Alto del coche
+     */
     int altoCoche;
+
+    /**
+     * Velocidad a la que se mueve el coche
+     */
     float velocidad;
 
     /**

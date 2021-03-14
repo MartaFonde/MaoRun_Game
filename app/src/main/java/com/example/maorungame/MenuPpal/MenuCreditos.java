@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import com.example.maorungame.R;
+
 public class MenuCreditos extends Menu {
 
     /**
@@ -23,35 +25,39 @@ public class MenuCreditos extends Menu {
 
     /**
      * Dibuja sobre el lienzo texto que indica los autores de las imágenes, la fuente de letra y
-     * la música que se utilizaron para realizar el juego. También dibuja el fondo negro y el botón
-     * de retroceso.
+     * la música que se utilizaron para realizar el juego. Dibuja el fondo y el botón de retroceso.
      * @param c lienzo
      */
     @Override
     public void dibuja(Canvas c) {
-        super.dibuja(c); //fondo + btnAtras
-        tpVerde.setTextAlign(Paint.Align.CENTER);
-        tpVerde.setTextSize(altoPantalla/10);
-        c.drawText("AGRADECIMIENTOS", anchoPantalla/2, altoPantalla/16 * 2, tpVerde);
+        super.dibuja(c);
 
-        tpVerde.setTextAlign(Paint.Align.LEFT);
+        c.drawRect(rectFondo, pFondo);
 
-        tpVerde.setTextSize(altoPantalla/12);
-        c.drawText("IMÁGENES", anchoPantalla/32 * 4.5f, altoPantalla / 16 * 5.5f, tpVerde);
-        c.drawText("D.Paige",anchoPantalla/32 * 4.5f, altoPantalla / 16 * 7, tpBeige);
-        c.drawText("La Red Games", anchoPantalla/32 * 4.5f, altoPantalla / 16 * 8.5f, tpBeige);
-        c.drawText("Kyrise", anchoPantalla/32 * 4.5f, altoPantalla / 16 * 10, tpBeige);
-        c.drawText("Robert Brooks", anchoPantalla/32 * 4.5f, altoPantalla / 16 * 11.5f, tpBeige);
-        c.drawText("CarterArt", anchoPantalla/32 * 4.5f, altoPantalla / 16 * 13, tpBeige);
-        c.drawText("www.icon-icons.com", anchoPantalla/32 * 4.5f, altoPantalla / 16 * 14.5f, tpBeige);
+        tpNaranja.setTextAlign(Paint.Align.CENTER);
+        tpNaranja.setTextSize(altoPantalla/10);
+        c.drawText(context.getResources().getText(R.string.agradecimientos).toString(), anchoPantalla/2, altoPantalla/16 * 2, tpNaranja);
 
-        c.drawText("ESTILO DE FUENTE", anchoPantalla/32 * 16, altoPantalla / 16 * 5, tpVerde);
-        c.drawText("The Fontry", anchoPantalla/32 * 16, altoPantalla / 16 * 6.5f, tpBeige);
+        tpNaranja.setTextAlign(Paint.Align.LEFT);
 
-        c.drawText("MÚSICA", anchoPantalla/32 * 16, altoPantalla / 16 * 9, tpVerde);
-        c.drawText("www.mixkit.co", anchoPantalla/32 * 16, altoPantalla / 16 * 10.5f, tpBeige);
-        c.drawText("www.freesoundslibrary.com", anchoPantalla/32 * 16, altoPantalla / 16 * 12, tpBeige);
-        c.drawText("www.soundeffectsplus.com", anchoPantalla/32 * 16, altoPantalla / 16 * 13.5f, tpBeige);
-        c.drawText("www.bensound.com", anchoPantalla/32 * 16, altoPantalla / 16 * 15, tpBeige);
+        tpNaranja.setTextSize(altoPantalla/12);
+        c.drawText(context.getResources().getText(R.string.imagenes).toString(), anchoPantalla/32 * 4.5f, altoPantalla / 16 * 4.75f, tpNaranja);
+        c.drawText(context.getResources().getText(R.string.credImg1).toString(),anchoPantalla/32 * 4.5f, altoPantalla / 16 * 6.25f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.credImg2).toString(), anchoPantalla/32 * 4.5f, altoPantalla / 16 * 7.75f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.credImg3).toString(), anchoPantalla/32 * 4.5f, altoPantalla / 16 * 9.25f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.credImg4).toString(), anchoPantalla/32 * 4.5f, altoPantalla / 16 * 10.75f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.credImg5).toString(), anchoPantalla/32 * 4.5f, altoPantalla / 16 * 12.25f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.credImg6).toString(), anchoPantalla/32 * 4.5f, altoPantalla / 16 * 13.75f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.credImg7).toString(), anchoPantalla/32 * 4.5f, altoPantalla / 16 * 15.25f, tpBeige);
+
+
+        c.drawText(context.getResources().getText(R.string.estiloFuente).toString(), anchoPantalla/32 * 16, altoPantalla / 16 * 5, tpNaranja);
+        c.drawText(context.getResources().getText(R.string.credFont).toString(), anchoPantalla/32 * 16, altoPantalla / 16 * 6.5f, tpBeige);
+
+        c.drawText(context.getResources().getText(R.string.musica).toString(), anchoPantalla/32 * 16, altoPantalla / 16 * 9, tpNaranja);
+        c.drawText(context.getResources().getText(R.string.credMusic1).toString(), anchoPantalla/32 * 16, altoPantalla / 16 * 10.5f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.credMusic2).toString(), anchoPantalla/32 * 16, altoPantalla / 16 * 12, tpBeige);
+        c.drawText(context.getResources().getText(R.string.credMusic3).toString(), anchoPantalla/32 * 16, altoPantalla / 16 * 13.5f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.credMusic4).toString(), anchoPantalla/32 * 16, altoPantalla / 16 * 15, tpBeige);
     }
 }

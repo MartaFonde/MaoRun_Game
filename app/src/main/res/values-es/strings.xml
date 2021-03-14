@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MaoRun</string>
     <string name="jugar">Jugar</string>
@@ -24,33 +25,19 @@
     <string name="vibracion">Vibración</string>
     <string name="reiniciarRecords">Reiniciar récords</string>
     <string name="idioma">Idioma</string>
-    <string name="credImg1" translatable="false">D.Paige</string>
-    <string name="credImg2" translatable="false">La Red Games</string>
-    <string name="credImg3" translatable="false">Kyrise</string>
-    <string name="credImg4" translatable="false">Robert Brooks</string>
-    <string name="credImg5" translatable="false">CarterArt</string>
-    <string name="credImg6" translatable="false">www.icon-icons.com</string>
-    <string name="credImg7" translatable="false">Brgfx</string>
-    <string name="credFont" translatable="false">The Fontry</string>
-    <string name="credMusic1" translatable="false">www.mixkit.co</string>
-    <string name="credMusic2" translatable="false">www.freesoundlibrary.com</string>
-    <string name="credMusic3" translatable="false">www.soundeffectsplus.com</string>
-    <string name="credMusic4" translatable="false">www.bensound.com</string>
     <string name="volver">Volver</string>
     <string name="menuPpal">Menú principal</string>
     <string name="ayudaPause1">Consigue el mayor número de monedas</string>
-    <string name="ayudaPause2">posible. Tendrás que esquivar a los</string>
+    <string name="ayudaPause2">"posible. Tendrás que esquivar a "</string>
     <string name="ayudaPause3">coches para no perder vidas.</string>
-    <string name="ayudaPause4">Los árboles son obstáculos.</string>
+    <string name="ayudaPause4">Los árboles son obstáculos</string>
     <string name="ayudaPause5">Para superar cada nivel, dirige el</string>
     <string name="ayudaPause6">gato hacia el camino de tierra.</string>
     <string name="finPartida">FIN DE LA PARTIDA</string>
     <string name="sinVidas">Has perdido todas las vidas</string>
     <string name="superadosNiveles">Has superado todos los niveles</string>
     <string name="guardaRecordsTitulo">GUARDAR RÉCORD</string>
-    <string name="borrar">Borrar</string>
     <string name="guardar">Guardar</string>
+    <string name="borrar">Borrar</string>
     <string name="volverJugar">Volver a jugar</string>
-
-
 </resources>

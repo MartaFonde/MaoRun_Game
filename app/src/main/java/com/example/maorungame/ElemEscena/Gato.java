@@ -8,28 +8,95 @@ import android.graphics.RectF;
 import com.example.maorungame.Escenas.Escena;
 
 public class Gato {
-    private Bitmap imagenes; // Bitmap con todas las imágenes
 
+    /**
+     * Imagen que contiene todos los sprites del gato
+     */
+    private Bitmap imagenes;
+
+    /**
+     * Punto de la posición del gato
+     */
     public PointF posicion;
+
+    /**
+     * Superficie de la posición futura del gato
+     */
     RectF posicionFutura;
+
+    /**
+     * Coordenada x del gato
+     */
     float x;
+
+    /**
+     * Coordenada y del gato
+     */
     float y;
 
-    private int anchoImagenes; //Ancho bitmap todas imagenes
-    private int altoImagenes; //alto del bitmap todas imagenes
+    /**
+     * Ancho de la imagen que contiene todos los sprites del gato
+     */
+    private int anchoImagenes;
+
+    /**
+     * Alto de la imagen que contiene todos los sprites del gato
+     */
+    private int altoImagenes;
+
+    /**
+     * Ancho de cada sprite del gato
+     */
     int anchoImagen;
+
+    /**
+     * Alto de cada sprite del gato
+     */
     int altoImagen;
+
+    /**
+     * Número que representa el movimiento del gato, asociado a la fila del array de sprites
+     */
     public int fila = 2;
-    int col = 1; //Fila y columna de la imagen a representar
-    Bitmap imagenActual;      //imagen actual del gato
+
+    /**
+     * Columna del array de sprites para dar animación al movimiento
+     */
+    int col = 1;
+
+    /**
+     * Imagen actual del gato
+     */
+    Bitmap imagenActual;
+
+    /**
+     * Imágenes con los sprites del gato
+     */
     Bitmap[][] imgGato;
 
+    /**
+     * Superficie del cuerpo del gato
+     */
     public RectF rectangulo;
+
+    /**
+     * Establece si el gato se puede mover (si no colisiona con ningún árbol)
+     */
     public boolean puedeMoverse = true;
 
+    /**
+     * Velocidad del gato
+     */
     float velocidad;
 
+    /**
+     * Número de vidas del gato
+     */
     public int numVidas;
+
+    /**
+     * Puntuación lograda
+     */
     public int puntos;
 
     /**

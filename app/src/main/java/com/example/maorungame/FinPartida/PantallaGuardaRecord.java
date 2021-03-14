@@ -6,9 +6,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.text.TextPaint;
 import android.view.MotionEvent;
 
 import com.example.maorungame.Pantalla;
+import com.example.maorungame.R;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -20,20 +22,69 @@ import java.util.Map;
 
 public class PantallaGuardaRecord extends Pantalla {
 
+    /**
+     * Proporción del ancho de pantalla
+     */
     float propW;
+
+    /**
+     * Proporción del alto de pantalla
+     */
     float propH;
+
+    /**
+     * Letras del nombre
+     */
     ArrayList<String> nombre = new ArrayList<>();
+
+    /**
+     * Botones de las teclas del teclado y su letra correspondiente
+     */
     Hashtable<RectF, String> teclas;
+
+    /**
+     * Botón de borrar letra
+     */
     RectF btnborrar;
+
+    /**
+     * Botón de guardar récord
+     */
     RectF btnGuardar;
 
+    /**
+     * Rectángulos donde se sitúan las letras del nombre
+     */
     RectF[] letras;
+
+    /**
+     * Puntos logrados
+     */
     int puntos;
 
+    /**
+     * Estilo del botón de guardar récord
+     */
     Paint pGuardar;
+
+    /**
+     * Estilo del botón de borrar letra
+     */
     Paint pBorrar;
 
+    /**
+     * Estilo de las letras del nombre
+     */
+    TextPaint tpLetras;
+
+    /**
+     * Botón de avance
+     */
     RectF btnAvanza;
+
+    /**
+     * Imagen del botón de avance
+     */
     Bitmap avanzaBitmap;
 
     /**
@@ -53,11 +104,16 @@ public class PantallaGuardaRecord extends Pantalla {
 
         pGuardar = new Paint();
         pGuardar.setStyle(Paint.Style.FILL);
-        pGuardar.setColor(Color.argb(220, 0, 128, 64));
+        pGuardar.setColor(context.getResources().getColor(R.color.guardar));
 
         pBorrar = new Paint();
         pBorrar.setStyle(Paint.Style.FILL);
-        pBorrar.setColor(Color.argb(220, 255, 40,40));
+        pBorrar.setColor(context.getResources().getColor(R.color.borrar));
+
+        tpLetras = new TextPaint();
+        tpLetras.setColor(Color.BLACK);
+        tpLetras.setTextSize(tpBeige.getTextSize());
+        tpLetras.setTypeface(tpBeige.getTypeface());
 
         propW = anchoPantalla /32;
         propH = altoPantalla / 16;
@@ -79,23 +135,25 @@ public class PantallaGuardaRecord extends Pantalla {
     @Override
     public void dibuja(Canvas c) {
         super.dibuja(c);
+        c.drawBitmap(fondoMenu, 0, 0, null);
+
         c.drawBitmap(avanzaBitmap, btnAvanza.left, btnAvanza.top, null);
-        c.drawText("GUARDAR RÉCORD", anchoPantalla/2, altoPantalla/16 * 2, tpBeige);
+        c.drawText(context.getResources().getText(R.string.guardaRecordsTitulo).toString(), anchoPantalla/2, altoPantalla/16 * 2, tpBeige);
 
         tpBeige.setTextSize(altoPantalla/12);
         c.drawRect(btnborrar, pBorrar);
-        c.drawText("Borrar", (btnborrar.left + btnborrar.right)/2, btnborrar.bottom - propH/2, tpBeige);
+        c.drawText(context.getResources().getText(R.string.borrar).toString(), (btnborrar.left + btnborrar.right)/2, btnborrar.bottom - propH/2, tpBeige);
         c.drawRect(btnGuardar, pGuardar);
-        c.drawText("Guardar", (btnGuardar.left + btnGuardar.right)/2, btnGuardar.bottom - propH/2, tpBeige);
+        c.drawText(context.getResources().getText(R.string.guardar).toString(), (btnGuardar.left + btnGuardar.right)/2, btnGuardar.bottom - propH/2, tpBeige);
 
         for (Map.Entry<RectF, String> e : teclas.entrySet()){
-            c.drawRect(e.getKey(), pBotonVerde);
+            c.drawRect(e.getKey(), pBotonNaranja);
             c.drawText(e.getValue(), (e.getKey().left + e.getKey().right)/2, e.getKey().bottom - propH/2, tpBeige);
         }
 
         int i = 0;
         for (String n : nombre) {
-            c.drawText(n, (letras[i].left + letras[i].right)/2, letras[i].bottom - propH/2, tpBeige);
+            c.drawText(n, (letras[i].left + letras[i].right)/2, letras[i].bottom - propH/2, tpLetras);
             i++;
         }
     }
@@ -190,13 +248,12 @@ public class PantallaGuardaRecord extends Pantalla {
         }
     }
 
-
     /**
-     * Crea los rect de los botones de avanzar, borrar, guardar y los de las letras del nombre
-     * y añade a la hashtable letras el rect de los botones de las letras y la letra asociada.
+     * Crea los rect de los botones de avanzar, borrar, guardar y los de las letras del nombre.
+     * Añade a la hashtable letras el rect de los botones de las letras y la letra asociada.
      */
     public void setTeclas(){
-        btnAvanza = new RectF(propW * 29.5f, propH*14, anchoPantalla, altoPantalla);
+        btnAvanza = new RectF(propW * 30, propH*14, anchoPantalla, altoPantalla);
 
         btnborrar = new RectF(propW * 2, propH * 3, propW * 8, propH * 5);
         btnGuardar = new RectF(propW * 23, propH * 3, propW * 31, propH * 5);
@@ -205,34 +262,31 @@ public class PantallaGuardaRecord extends Pantalla {
         letras[1] = new RectF(propW * 14, propH * 3, propW * 16, propH * 5);
         letras[2] = new RectF(propW * 17, propH * 3, propW * 19, propH * 5);
 
-        teclas.put(new RectF(propW * 2, propH * 7, propW * 4, propH * 9), "Q");
-        teclas.put(new RectF(propW * 5, propH * 7, propW * 7, propH * 9), "W");
-        teclas.put(new RectF(propW * 8, propH * 7, propW * 10, propH * 9), "E");
-        teclas.put(new RectF(propW * 11, propH * 7, propW * 13, propH * 9), "R");
-        teclas.put(new RectF(propW * 14, propH * 7, propW * 16, propH * 9), "T");
-        teclas.put(new RectF(propW * 17, propH * 7, propW * 19, propH * 9), "Y");
-        teclas.put(new RectF(propW * 20, propH * 7, propW * 22, propH * 9), "U");
-        teclas.put(new RectF(propW * 23, propH * 7, propW * 25, propH * 9), "I");
-        teclas.put(new RectF(propW * 26, propH * 7, propW * 28, propH * 9), "O");
-        teclas.put(new RectF(propW * 29, propH * 7, propW * 31, propH * 9), "P");
+        String[][] filaLetras = {{"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"},
+                {"A", "S", "D", "F", "G", "H", "J", "K", "L", "Ñ"},
+                {"Z", "X", "C", "V", "B", "N", "M"}};
 
-        teclas.put(new RectF(propW * 2, propH * 10, propW * 4, propH * 12), "A");
-        teclas.put(new RectF(propW * 5, propH * 10, propW * 7, propH * 12), "S");
-        teclas.put(new RectF(propW * 8, propH * 10, propW * 10, propH * 12), "D");
-        teclas.put(new RectF(propW * 11, propH * 10, propW * 13, propH * 12), "F");
-        teclas.put(new RectF(propW * 14, propH * 10, propW * 16, propH * 12), "G");
-        teclas.put(new RectF(propW * 17, propH * 10, propW * 19, propH * 12), "H");
-        teclas.put(new RectF(propW * 20, propH * 10, propW * 22, propH * 12), "J");
-        teclas.put(new RectF(propW * 23, propH * 10, propW * 25, propH * 12), "K");
-        teclas.put(new RectF(propW * 26, propH * 10, propW * 28, propH * 12), "L");
-        teclas.put(new RectF(propW * 29, propH * 10, propW * 31, propH * 12), "Ñ");
-
-        teclas.put(new RectF(propW * 5, propH * 13, propW * 7, propH * 15), "Z");
-        teclas.put(new RectF(propW * 8, propH * 13, propW * 10, propH * 15), "X");
-        teclas.put(new RectF(propW * 11, propH * 13, propW * 13, propH * 15), "C");
-        teclas.put(new RectF(propW * 14, propH * 13, propW * 16, propH * 15), "V");
-        teclas.put(new RectF(propW * 17, propH * 13, propW * 19, propH * 15), "B");
-        teclas.put(new RectF(propW * 20, propH * 13, propW * 22, propH * 15), "N");
-        teclas.put(new RectF(propW * 23, propH * 13, propW * 25, propH * 15), "M");
+        int left = 2;
+        int right = left+2;
+        int top = 7;
+        int bottom = top+2;
+        for (int i = 0; i < filaLetras.length; i++) {
+            if(i == 1){
+                left = 2;
+                right = left+2;
+                top = 10;
+                bottom = top+2;
+            }else if(i == 2){
+                left = 5;
+                right = left + 2;
+                top = 13;
+                bottom = top + 2;
+            }
+            for (int j = 0; j < filaLetras[i].length; j++) {
+                teclas.put(new RectF(propW * left, propH * top, propW * right, propH * bottom), filaLetras[i][j]);
+                left+=3;
+                right+=3;
+            }
+        }
     }
 }

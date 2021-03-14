@@ -3,7 +3,6 @@ package com.example.maorungame.MenuPpal;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
@@ -11,8 +10,20 @@ import com.example.maorungame.JuegoSV;
 import com.example.maorungame.Pantalla;
 
 abstract public class Menu extends Pantalla {
+
+    /**
+     * Contexto
+     */
     protected Context context;
+
+    /**
+     * Botón de retroceso
+     */
     protected RectF btnAtras;
+
+    /**
+     * Imagen del botón de retroceso
+     */
     protected Bitmap atrasBitmap;
 
     /**
@@ -37,12 +48,13 @@ abstract public class Menu extends Pantalla {
     }
 
     /**
-     * Dibuja en el lienzo un fondo negro y un bitmap de retroceso, excepto en la pantalla de menú principal.
+     * Dibuja en el lienzo el fondo del menú y el botón de retroceso, excepto en la pantalla de menú principal.
      * @param c lienzo
      */
     @Override
     public void dibuja(Canvas c){
-        c.drawColor(Color.BLACK);
+        super.dibuja(c);
+        c.drawBitmap(fondoMenu, 0, 0, null);
         if(numPantalla != 1){       //1 menú ppal
             c.drawBitmap(atrasBitmap, 0, altoPantalla/16*13, null);
         }
@@ -52,7 +64,7 @@ abstract public class Menu extends Pantalla {
      * Obtiene coordenadas de pulsaciones al tocar pantalla. Si la pantalla actual no es el menú
      * principal, es una opción del menú que contiene un botón de retroceso y si rect del botón contiene
      * las coordenadas x,y retorna al menú principal. Para que el mediaPlayer no vuelva a reproducir la
-     * música, pone la booleana restartMusica a false.
+     * música, pone la booleana resettMusic a false.
      * @param event evento de pulsación
      * @return devuelve 1 para volver al menú principal. En caso contrario, o si la pantalla actual es
      * el menú principal, devuelve el número de la pantalla actual.
@@ -62,7 +74,7 @@ abstract public class Menu extends Pantalla {
         int y=(int)event.getY();
 
         if(numPantalla != 1 && btnAtras.contains(x,y)) {
-            JuegoSV.restartMusica = false; //para que no se reproduzca de nuevo la música (se solapa con la que ya suena)
+            JuegoSV.resetMusic = false; //para que no se reproduzca de nuevo la música (se solapa con la que ya suena)
             return 1;       //vuelve a menu principal
         }
         return numPantalla;

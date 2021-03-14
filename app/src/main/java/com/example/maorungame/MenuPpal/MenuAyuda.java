@@ -3,6 +3,8 @@ package com.example.maorungame.MenuPpal;
 import android.content.Context;
 import android.graphics.Canvas;
 
+import com.example.maorungame.R;
+
 public class MenuAyuda extends Menu {
 
     /**
@@ -15,29 +17,30 @@ public class MenuAyuda extends Menu {
      */
     public MenuAyuda(Context context, int anchoPantalla, int altoPantalla, int numPantalla) {
         super(context, anchoPantalla, altoPantalla, numPantalla);
-        tpVerde.setTextSize(altoPantalla/10);
+        tpNaranja.setTextSize(altoPantalla/10);
         tpBeige.setTextSize(altoPantalla/14);
     }
 
     /**
-     * Dibuja sobre el lienzo texto que indica como se juega al juego, el fondo negro y el botón de
+     * Dibuja sobre el lienzo texto que indica como se juega al juego, el fondo y el botón de
      * retroceso.
      * @param c lienzo
      */
     @Override
     public void dibuja(Canvas c) {
-        super.dibuja(c);        //fondo + btnAtras
+        super.dibuja(c);
+        c.drawRect(rectFondo, pFondo);
 
-        c.drawText("CÓMO JUGAR", anchoPantalla/2, altoPantalla/16 * 2, tpVerde);
+        c.drawText(context.getResources().getText(R.string.ayudaTitulo).toString(), anchoPantalla/2, altoPantalla/16 * 2, tpNaranja);
 
-        c.drawText("El objetivo del juego es guiar el gato para ", anchoPantalla/2, altoPantalla / 16 * 4, tpBeige);
-        c.drawText("conseguir el mayor número de monedas posible. ", anchoPantalla/2, altoPantalla / 16 * 5, tpBeige);
-        c.drawText("El juego consta de tres niveles, con sus respectivos ", anchoPantalla/2, altoPantalla / 16 * 6, tpBeige);
-        c.drawText("escenarios, en los que los árboles son obstáculos", anchoPantalla/2, altoPantalla / 16 * 7, tpBeige);
-        c.drawText("y por los que circulan coches. En cada colisión", anchoPantalla/2, altoPantalla / 16 * 8, tpBeige);
-        c.drawText("con un coche el gato perderá una vida.", anchoPantalla/2, altoPantalla / 16 * 9, tpBeige);
-        c.drawText("Como buen gato, inicialmente contará con siete vidas.", anchoPantalla/2, altoPantalla / 16 * 10, tpBeige);
-        c.drawText("Para superar cada nivel, el gato debe atravesar ", anchoPantalla/2, altoPantalla / 16 * 11, tpBeige);
-        c.drawText("el camino de tierra marcado.", anchoPantalla/2, altoPantalla / 16 * 12, tpBeige);
+        c.drawText(context.getResources().getText(R.string.ayuda1).toString(), anchoPantalla/2, altoPantalla / 16 * 4, tpBeige);
+        c.drawText(context.getResources().getText(R.string.ayuda2).toString(), anchoPantalla/2, altoPantalla / 16 * 5.25f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.ayuda3).toString(), anchoPantalla/2, altoPantalla / 16 * 6.5f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.ayuda4).toString(), anchoPantalla/2, altoPantalla / 16 * 7.75f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.ayuda5).toString(), anchoPantalla/2, altoPantalla / 16 * 9, tpBeige);
+        c.drawText(context.getResources().getText(R.string.ayuda6).toString(), anchoPantalla/2, altoPantalla / 16 * 10.25f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.ayuda7).toString(), anchoPantalla/2, altoPantalla / 16 * 11.5f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.ayuda8).toString(), anchoPantalla/2, altoPantalla / 16 * 12.75f, tpBeige);
+        c.drawText(context.getResources().getText(R.string.ayuda9).toString(), anchoPantalla/2, altoPantalla / 16 * 14, tpBeige);
     }
 }
